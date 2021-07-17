@@ -4,23 +4,22 @@ import java.io.*;
 import java.net.*;
 
 public class Main {
+//private attributes
 private static int port = 2342;
 
-	public static void main(String[] args) {
-		System.out.println("First server socket impl");
-		
-		try {
-			ServerSocket serverSocket = new ServerSocket(port);
-			System.out.println("waiting for client connection on port " + port);
-			Socket clientSocket = serverSocket.accept();
-			System.out.println("client conencted: " + clientSocket.getInetAddress());
-			PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
-			BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-		} catch (IOException e) {
-			e.printStackTrace();
-			System.exit(-1);
-		}
-
-	}
+//static main
+public static void main(String[] args) throws IOException {
+    try (ServerSocket listener = new ServerSocket(port)) {
+        System.out.println("The server is running...");
+        while (true) {
+            try (Socket socket = listener.accept()) {
+                PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
+                out.println(socket.toString());
+               System.out.println("client " + socket.toString() + " served.");
+                socket.close();
+            }
+        }
+    }
+}
 
 }
