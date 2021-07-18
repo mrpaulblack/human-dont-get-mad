@@ -2,19 +2,39 @@ package client;
 
 import java.awt.*;
 import java.awt.event.ComponentEvent;
+import java.util.concurrent.TimeUnit;
 
 import javax.swing.*;
 
 
 public class Launcher extends JFrame{
 	
-	public void LauncherUI() {
-		InitWindow();
-		
-		
+	//Constructor
+	public Launcher() {
+		Launcher();	
 	}
-
-	public void InitWindow() {
+	
+	public String ip = null;		// Transmit the Server Address
+	String port = null;			// Transmit the Port
+	String uname = null;		// Transmit the Username
+	Integer favColor = -1;
+	
+	/**
+	* Open the Launcher
+	* It will be always centered on the screen center
+	* It asks the user for the Server Address, Port, Username and the prefferd Color
+	* <p>
+	* This window is shows to establish a connection with a server
+	* if the connection failed it should reopen
+	*
+	* @param  
+	* It don't return anything, it will set the variables of another function
+	* @return	ip			(String)	Sets the ip from the "Serveraddress" field
+	* @return	port		(String)	Sets the port from the "port" field 
+	* @return	username	(String)	Sets the Username from the "username" field 
+	* @return	favColor	(String)	Sets the favcoler from the getcolor combobox
+	*/
+	public void Launcher() {
 
 		Dimension upperFieldSize;
 		Main Main = new Main();
@@ -25,8 +45,8 @@ public class Launcher extends JFrame{
 		Dimension size = new Dimension();
 		Dimension findMidPoint = new Dimension();
 
-		//Set Screen Size to this 
-		size.setSize(400, 550);
+		//Set Screen Size to this //So Parts are Hardcoded -> Changes may lead to errors
+		size.setSize(400, 450);
 		
 		//Put the Window MidPoint in the Screen Center
 		findMidPoint.setSize((gcd.width/2) - (size.width/2), (gcd.height/2) - (size.height/2));
@@ -35,14 +55,23 @@ public class Launcher extends JFrame{
 		this.setSize(size);
 		this.setResizable(false);
 		this.setLocation(findMidPoint.width, findMidPoint.height);
-		
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.setTitle("Human-Dont-Get-Mad");
 		
-		//*****************************************************************************************
+//*****************************************************************************************
+		
+		//Fetch UISettings object
+		UISettings uis = new UISettings();
 		
 	//Colors	
-		Color background = new Color(215, 215, 210);
-		Color interactionFields = new Color(255, 255, 255);
+		Color background = uis.background;
+		Color interactionFields = uis.interactionFields;
+		
+	//Fonts
+		Font generalFont = uis.generalFont;
+		Font labelFont = uis.labelFont;
+		
+//*****************************************************************************************
 		
 	//Panels
 		//Adds a panel in the Mainwindow for better control connect
@@ -65,6 +94,13 @@ public class Launcher extends JFrame{
 		JTextField serverAddress = new JTextField();
 		JTextField port = new JTextField();
 		JTextField userName = new JTextField();
+		
+	//Labels
+		JLabel userNameLbl = new JLabel();
+		JLabel colorSelectLbl = new JLabel();
+		JLabel colorSelectWarningLbl = new JLabel();
+		JLabel serverAdressLbl = new JLabel();
+		JLabel portLbl = new JLabel();
 		
 	//ComboBox
 		String[] colorStrings = { "Red", "Blue", "Green", "Yellow"};
@@ -105,55 +141,80 @@ public class Launcher extends JFrame{
 		//since the window is fixed and cant be changed the x y cords are hardcoded
 		upperInputField.add(serverAddress);
 		upperInputField.add(port);
+		upperInputField.add(serverAdressLbl);
+		upperInputField.add(portLbl);
 		
-		//Server Address Field Init
-		serverAddress.setBounds(new Rectangle(10, 50, 220, 50));
+		
+	//Server Address Field Init
+		serverAdressLbl.setBounds(new Rectangle(10, 19, 320, 12));
+		serverAdressLbl.setFont(labelFont);
+		serverAdressLbl.setText("Server Address");
+		
+		serverAddress.setBounds(new Rectangle(10, 32, 220, 35));
 		serverAddress.setBackground(interactionFields);	
 		serverAddress.setText("Server Adresse");
-		serverAddress.setFont(new Font("Serif",Font.PLAIN,20));
+		serverAddress.setFont(generalFont);
 		serverAddress.setForeground(Color.LIGHT_GRAY);
-		
+	
 		//this kind of if-statement set a low-visible Text as default
 		serverAddress.addActionListener(e -> {
 			if (serverAddress.getText() != "Server Adresse") {
-				serverAddress.setFont(new Font("Serif",Font.PLAIN,35));
+				serverAddress.setFont(generalFont);
 				serverAddress.setForeground(Color.BLACK);
 			}
 		});
 		
-		//Port Field Init
-		port.setBounds(new Rectangle(240, 50, 90, 50));
+	//Port Field Init
+		portLbl.setBounds(new Rectangle(240, 19, 320, 12));
+		portLbl.setFont(labelFont);
+		portLbl.setText("Port (Default: 2342)");
+		
+		port.setBounds(new Rectangle(240, 32, 90, 35));
 		port.setBackground(interactionFields);	
-		port.setText("Port");
-		port.setFont(new Font("Serif",Font.PLAIN,20));
+		port.setText("2342");
+		port.setFont(generalFont);
 		port.setForeground(Color.LIGHT_GRAY);
 		port.addActionListener(e -> {
 			if (port.getText() != "Server Adresse") {
-				port.setFont(new Font("Serif",Font.PLAIN,35));
+				port.setFont(generalFont);
 				port.setForeground(Color.BLACK);
 			}
 		});
 		
 		centerInputField.add(userName);
 		centerInputField.add(colorSelect);
+		centerInputField.add(userNameLbl);
+		centerInputField.add(colorSelectLbl);
+		centerInputField.add(colorSelectWarningLbl);
 		
-		//Username Init
-		userName.setBounds(new Rectangle(10, 20, 320, 50));
-		userName.setFont(new Font("Serif",Font.PLAIN,35));
+		
+		
+		
+	//Username Init
+		userNameLbl.setBounds(new Rectangle(10, 2, 320, 12));
+		userNameLbl.setFont(labelFont);
+		userNameLbl.setText("Username");
+		
+		userName.setBounds(new Rectangle(10, 15, 320, 35));
+		userName.setFont(generalFont);
 		userName.setBackground(interactionFields);
 		userName.setText("Username");
-		userName.setFont(new Font("Serif",Font.PLAIN,20));
+		userName.setFont(generalFont);
 		userName.setForeground(Color.LIGHT_GRAY);
 		userName.addActionListener(e -> {
 			if (userName.getText() != "Server Adresse") {
-				userName.setFont(new Font("Serif",Font.PLAIN,35));
+				userName.setFont(generalFont);
 				userName.setForeground(Color.BLACK);
 			}
 		});
 		
-		//ColorInit
-		colorSelect.setBounds(new Rectangle(10, 80, 320, 50));
-		colorSelect.setFont(new Font("Serif",Font.PLAIN,35));
+	//ColorInit
+		colorSelectLbl.setBounds(new Rectangle(10, 51, 320, 12));
+		colorSelectLbl.setFont(labelFont);
+		colorSelectLbl.setText("Chose your prefferd Color");
+			
+		colorSelect.setBounds(new Rectangle(10, 67, 320, 35));
+		colorSelect.setFont(generalFont);
 		colorSelect.setBackground(new Color(230, 240, 90));
 		colorSelect.addActionListener(e -> {switch (colorSelect.getSelectedIndex()) {
 			case 0: colorSelect.setBackground(new Color(250, 160, 150));
@@ -167,13 +228,17 @@ public class Launcher extends JFrame{
 		}});
 		//^^is for the chosen Color
 		
+		colorSelectWarningLbl.setBounds(new Rectangle(10, 101, 320, 12));
+		colorSelectWarningLbl.setFont(labelFont);
+		colorSelectWarningLbl.setText("(If your color is alrady taken you get a random Color)");
 		
-		//Connect Button Init
+		
+	//Connect Button Init
 		lowerInputField.add(connectButton);
-		connectButton.setBounds(new Rectangle(10, 50, 320, 50));
+		connectButton.setBounds(new Rectangle(10, 25, 320, 35));
 		connectButton.setBackground(interactionFields);	//DEBUG OPTION
 		connectButton.setText("Connect");
-		connectButton.setFont(new Font("Serif",Font.PLAIN,20));
+		connectButton.setFont(generalFont);
 		connectButton.addActionListener(e -> {
 			
 			this.setVisible(false);
@@ -187,7 +252,6 @@ public class Launcher extends JFrame{
 			System.out.println("username:" + Main.uname);
 			System.out.println("Picked Color:" + Main.favColor);
 			
-			System.exit(0); //PLaceHOLD
 		});
 		
 		this.setVisible(true);
