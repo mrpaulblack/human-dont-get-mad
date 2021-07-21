@@ -14,11 +14,6 @@ public class Launcher extends JFrame{
 		Launcher();	
 	}
 	
-	public String ip = null;		// Transmit the Server Address
-	String port = null;			// Transmit the Port
-	String uname = null;		// Transmit the Username
-	Integer favColor = -1;
-	
 	/**
 	* Open the Launcher
 	* It will be always centered on the screen center
@@ -36,10 +31,8 @@ public class Launcher extends JFrame{
 	*/
 	public void Launcher() {
 
-		Dimension upperFieldSize;
-		Main Main = new Main();
-		
 		//Create Object
+		Main Main = new Main();
 		GetScreenData gcd = new GetScreenData();
 		
 		Dimension size = new Dimension();
@@ -51,7 +44,7 @@ public class Launcher extends JFrame{
 		//Put the Window MidPoint in the Screen Center
 		findMidPoint.setSize((gcd.width/2) - (size.width/2), (gcd.height/2) - (size.height/2));
 		
-		//Set the Windows Parrameters
+		//Set the Windows Parameters
 		this.setSize(size);
 		this.setResizable(false);
 		this.setLocation(findMidPoint.width, findMidPoint.height);
@@ -60,7 +53,7 @@ public class Launcher extends JFrame{
 		
 //*****************************************************************************************
 		
-		//Fetch UISettings object
+	//Fetch UISettings object
 		UISettings uis = new UISettings();
 		
 	//Colors	
@@ -240,8 +233,7 @@ public class Launcher extends JFrame{
 		connectButton.setText("Connect");
 		connectButton.setFont(generalFont);
 		connectButton.addActionListener(e -> {
-			
-			this.setVisible(false);
+
 			Main.ip = serverAddress.getText();
 			Main.port = port.getText();
 			Main.uname = userName.getText();
@@ -252,8 +244,9 @@ public class Launcher extends JFrame{
 			System.out.println("username:" + Main.uname);
 			System.out.println("Picked Color:" + Main.favColor);
 			
+			Main.tryingConnect = true;
+			
 		});
-		
-		this.setVisible(true);
+
 	}
 }
