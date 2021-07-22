@@ -219,7 +219,7 @@ public class Launcher extends JFrame{
 		colorSelect.addActionListener(e -> {switch (colorSelect.getSelectedIndex()) {
 			case 0: colorSelect.setBackground(new Color(250, 160, 150));
 				break;
-			case 1: colorSelect.setBackground(new Color(140, 140, 180));
+			case 1: colorSelect.setBackground(new Color(105, 165, 200));
 				break;
 			case 2: colorSelect.setBackground(new Color(135, 200, 140));
 				break;

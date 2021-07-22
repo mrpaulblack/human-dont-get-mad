@@ -13,11 +13,10 @@ import java.awt.Font;
 */
 public class UISettings {
 
-	Color background = new Color(200, 200, 195);
+	Color background = Color.LIGHT_GRAY;
 	Color interactionFields = new Color(255, 255, 255);
 	
 //Fonts
 	Font generalFont = new Font("Serif",Font.PLAIN,15);
 	Font labelFont = new Font("Serif",Font.PLAIN,12);
-	
 }
