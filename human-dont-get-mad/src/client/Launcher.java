@@ -247,6 +247,5 @@ public class Launcher extends JFrame{
 			Main.tryingConnect = true;
 			
 		});
-
 	}
 }

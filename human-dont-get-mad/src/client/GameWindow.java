@@ -14,31 +14,52 @@ import javax.swing.*;
 *
 * @param  
 */
-public class GameWindow extends JFrame{
+public class GameWindow extends JFrame {
 
+//Panels
 	private JPanel mainWindowReplacer = new JPanel();
 	private JPanel mainGameArea= new JPanel();
 	private JPanel statsArea= new JPanel();
+	private JPanel statsAreaText= new JPanel();
+	private JPanel statsAreaDice= new JPanel();
 	private JPanel diceArea= new JPanel();
 	
+	
+//Labels
+	private JLabel playerOneStats= new JLabel();
+	private JLabel playerTwoStats= new JLabel();
+	private JLabel playerThreeStats= new JLabel();
+	private JLabel playerFourStats= new JLabel();
+	private JLabel playerOneName= new JLabel();
+	private JLabel playerTwoName= new JLabel();
+	private JLabel playerThreeName= new JLabel();
+	private JLabel playerFourName= new JLabel();
+	
+	JLabel[] playerStats = {playerOneStats, playerOneName, playerTwoStats, playerTwoName, 
+			playerThreeStats, playerThreeName, playerFourStats, playerFourName};
+	
+//Buttons
+	JButton dice = new JButton();
+	
+//Variables
 	private	int heightCurrentWindow = 0;
 	private int widthCurrentWindow = 0;
+	int count = 0; //TEMP Counter for testing coloering
 	
 	private boolean isLandScape = false;
 	private boolean gotTurned = true;
-	
+
 	
 //Has to be Public for now -> CHANGE LATER
 	//Fetch UISettings object
-			UISettings uis = new UISettings();
-			
+	UISettings uis = new UISettings();	
 			//Colors	
-				Color background = uis.background;
-				Color interactionFields = uis.interactionFields;
+		Color background = uis.background;
+		Color interactionFields = uis.interactionFields;
 					
 			//Fonts
-				Font generalFont = uis.generalFont;
-				Font labelFont = uis.labelFont;
+		Font generalFont = uis.generalFont;
+		Font labelFont = uis.labelFont;
 			//FOR NOW these are the Colors/Fonts from the UI
 	
 	
@@ -64,16 +85,7 @@ public class GameWindow extends JFrame{
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setTitle("Human-Dont-Get-Mad");
 		
-		
-//*****************************************************************************************
-		
-//FOR NOW THERES NO CONTENT	
-			
-//*****************************************************************************************
-
-//FOR NOW THERES NO CONTENT			
-		
-		
+				
 //Listener
 //*****************************************************************************************
 
@@ -110,6 +122,83 @@ public class GameWindow extends JFrame{
 	        }
 	        }
 	    });
+	//*****************************************************************************************
+	
+	//FOR NOW THERES NO CONTENT	
+				
+	//*****************************************************************************************
+
+	//FOR NOW THERES NO CONTENT	
+	statsArea.setLayout(new GridLayout(1, 2, 5, 5));
+	
+	statsArea.add(statsAreaText);
+	statsArea.add(statsAreaDice);
+	
+	statsArea.setBackground(background);
+	statsAreaText.setBackground(background);
+	statsAreaDice.setBackground(background);
+	
+	statsArea.setLayout(new GridLayout(1, 2, 5, 5));
+	statsAreaText.setLayout(new GridLayout(4, 2, 5, 5));
+	
+	GameControl gc = new GameControl();
+	
+	//Sets the Text for all Labels
+	playerOneStats.setText("P1: " + "Red");			//for now, the color is a placehold until there is color data
+	playerOneName.setText("Tim");					//for now, the name is a placeholder too
+	playerTwoStats.setText("P2: " + "Green");		//for now, the color is a placehold until there is color data
+	playerTwoName.setText("Konrad");				//for now, the name is a placeholder too
+	playerThreeStats.setText("P3: " + "Blue");		//for now, the color is a placehold until there is color data
+	playerThreeName.setText("Paul");				//for now, the name is a placeholder too
+	playerFourStats.setText("P4: " + "Yellow");		//for now, the color is a placehold until there is color data
+	playerFourName.setText("Bot Yellow");			//for now, the name is a placeholder too
+	
+	for(JLabel playerStat : playerStats ) {
+		playerStat.setBackground(background);
+		playerStat.setOpaque(true);
+		statsAreaText.add(playerStat);
+	}
+	
+	diceArea.add(dice);
+	dice.addActionListener(e -> {
+		System.out.println("count is " + count);
+		if(count == 0) {
+			playerStats[0].setBackground(Color.RED);
+			playerStats[1].setBackground(Color.RED);
+			count++;
+			playerOneStats.setText(gc.setplayeronestats());
+		}
+		else if(count == 1) {
+			playerStats[0].setBackground(background);
+			playerStats[1].setBackground(background);
+			playerStats[2].setBackground(Color.GREEN);
+			playerStats[3].setBackground(Color.GREEN);
+			count++;
+			playerStats[0].setText("P1: " + "Red");
+		}
+		else if(count == 2) {
+			playerStats[2].setBackground(background);
+			playerStats[3].setBackground(background);
+			playerStats[4].setBackground(Color.BLUE);
+			playerStats[5].setBackground(Color.BLUE);
+			count++;
+		}
+		else if(count == 3) {
+			playerStats[4].setBackground(background);
+			playerStats[5].setBackground(background);
+			playerStats[6].setBackground(Color.YELLOW);
+			playerStats[7].setBackground(Color.YELLOW);
+			count++;
+		}
+		else if (count == 4) {
+			playerStats[6].setBackground(background);
+			playerStats[7].setBackground(background);
+			count = 0;
+		}
+	});
+	
+	
+	
 	}
 	
 	//Gets the current window size if needed
@@ -117,8 +206,7 @@ public class GameWindow extends JFrame{
 		widthCurrentWindow = this.getBounds().width;
 		heightCurrentWindow = this.getBounds().height;
 	}
-	
-	//is Responsive for the Layout
+		//is Responsive for the Layout
 	public void alignmentConstruct(boolean SetLandScape) {
 		
 		GridBagConstraints gbcls = new GridBagConstraints();
@@ -179,5 +267,4 @@ public class GameWindow extends JFrame{
 		
 		this.add(mainWindowReplacer);
 	}
-	
 }

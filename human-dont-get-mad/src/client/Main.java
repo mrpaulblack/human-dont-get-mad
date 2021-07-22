@@ -17,6 +17,8 @@ public class Main {
 	
 	public static void main(String[] args) {
 		
+		GameControl gc = new GameControl();
+		
 		boolean isConnected = false;
 		boolean connectionSuccessful = false;
 		
@@ -25,8 +27,8 @@ public class Main {
 		GameWindow gw = new GameWindow();	
 		
 		//DEBUG FOR FASTER WINDOW ENTERING
-		//gw.setVisible(true);
-	
+		gw.setVisible(true);
+	/*
 		//Runns as long as no connection get established
 		while (isConnected == false) {
 			
@@ -62,6 +64,17 @@ public class Main {
 					lui.setVisible(true);
 				}
 			}
+		}*/
+		
+		
+		
+		try {
+			TimeUnit.SECONDS.sleep(5);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
+		System.out.println("WWLLAAKKKSS");
+		gc.gameHandler();
 	}
 }
