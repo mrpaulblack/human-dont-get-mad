@@ -3,7 +3,9 @@ package client;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.Scanner;
-import game.*;
+
+import game.Log;
+import game.LogController;
 
 public class Client {
 	private static int port = 2342;
@@ -24,8 +26,9 @@ public class Client {
 			socket = new Socket(init, port);
 			in = new Scanner(socket.getInputStream());
 			out = new PrintWriter(socket.getOutputStream(), true);
+			ClientController controller = new ClientController(this);
 			while (in.hasNextLine()) {
-				System.out.println(in.nextLine());
+				controller.decipher(in.nextLine());
 			}
 		}
 		catch (Exception e) { LogController.log(Log.error, e.toString()); }

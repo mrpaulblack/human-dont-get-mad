@@ -2,12 +2,15 @@ package server;
 
 // external: https://mvnrepository.com/artifact/org.json/json/20210307
 import org.json.JSONObject;
-import game.*;
 
-public class Controller {
-	private static double protocolVersion = 3.0;
-	private static double serverVersion = 0.1;
-	private static String serverName = "human-dont-get-mad";
+import game.Log;
+import game.LogController;
+import game.MsgType;
+
+public class ServerController {
+	private double protocolVersion = 3.0;
+	private double serverVersion = 0.1;
+	private String serverName = "human-dont-get-mad";
 	private ClientThread[] client = new ClientThread[4];
 	
 	//send welcome message
@@ -24,7 +27,7 @@ public class Controller {
 	}
 	
 	//decrypt client input
-	protected void deciverInput(ClientThread player, String input) {
+	protected void decipher(ClientThread player, String input) {
 		JSONObject json = new JSONObject(input);
 		JSONObject data = new JSONObject();
 

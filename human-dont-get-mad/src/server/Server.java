@@ -1,10 +1,12 @@
 package server;
 
-import java.net.*;
 import java.io.IOException;
+import java.net.ServerSocket;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import game.*;
+
+import game.Log;
+import game.LogController;
 
 public class Server {
 	public static void main(String[] args) throws IOException {
@@ -23,7 +25,7 @@ public class Server {
 			serverSocket = new ServerSocket(port);
 			LogController.log(Log.info, "Running: " + serverSocket);
 			ExecutorService  pool = Executors.newFixedThreadPool(20);
-			Controller controller = new Controller();
+			ServerController controller = new ServerController();
 			while (true) {
 				pool.execute(new ClientThread(serverSocket.accept(), controller));
 			}
