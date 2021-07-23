@@ -1,6 +1,6 @@
-package server;
+package client;
 
-public enum Type {
+public enum MsgType {
 	register,
 	ready,
 	move,

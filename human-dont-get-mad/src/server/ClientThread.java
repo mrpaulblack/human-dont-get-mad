@@ -20,25 +20,25 @@ public class ClientThread implements Runnable {
 	@Override
 	public void run() {
 		//setup
-		System.out.println("Connected: " + socket);
+		Server.log(Log.info, "Client connected: " + socket);
 		try {
 			in = new Scanner(socket.getInputStream());
 			out = new PrintWriter(socket.getOutputStream(), true);
 	        controller.sendWelcome(this);
 			
-			//recieve messages till socket closes
 			while (in.hasNextLine()) {
-				//execute on new input
+				controller.deciverInput(this, in.nextLine());
 			}
 		}
-		catch (Exception e) { System.out.println("Error:" + socket); }
-		//close connection
+		catch (Exception e) { Server.log(Log.error, "Error: " + socket); }
 		finally {
 			try {
+				in.close();
+				out.close();
 				socket.close();
 			}
-			catch (IOException e) { System.out.println(e); }
-			System.out.println("Closed: " + socket);
+			catch (IOException e) { Server.log(Log.error, "Error: " + socket); }
+			Server.log(Log.info, "Client disconnect: " + socket);
 		}
 	}
 	    
