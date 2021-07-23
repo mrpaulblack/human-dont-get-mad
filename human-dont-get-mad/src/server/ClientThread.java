@@ -30,14 +30,14 @@ public class ClientThread implements Runnable {
 				controller.deciverInput(this, in.nextLine());
 			}
 		}
-		catch (Exception e) { Server.log(Log.error, "Error: " + socket); }
+		catch (Exception e) { Server.log(Log.error, e.toString()); }
 		finally {
 			try {
 				in.close();
 				out.close();
 				socket.close();
 			}
-			catch (IOException e) { Server.log(Log.error, "Error: " + socket); }
+			catch (IOException e) { Server.log(Log.error, e.toString()); }
 			Server.log(Log.info, "Client disconnect: " + socket);
 		}
 	}

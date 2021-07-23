@@ -7,6 +7,7 @@ public class Controller {
 	private static double protocolVersion = 3.0;
 	private static double serverVersion = 0.1;
 	private static String serverName = "human-dont-get-mad";
+	private ClientThread[] client = new ClientThread[4];
 	
 	//send welcome message
 	protected void sendWelcome(ClientThread player) {
@@ -25,7 +26,7 @@ public class Controller {
 	protected void deciverInput(ClientThread player, String input) {
 		JSONObject json = new JSONObject(input);
 		JSONObject data = new JSONObject();
-		
+
 		if (json.get("type") == MsgType.register) {
 			//register
 		}
