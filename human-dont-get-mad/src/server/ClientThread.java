@@ -13,6 +13,7 @@ public class ClientThread implements Runnable {
 	private ServerController controller;
 	private Scanner in;
 	private PrintWriter out;
+	private String bufferIn;
 
 	ClientThread(Socket socket, ServerController controller) {
 		this.socket = socket;
@@ -30,7 +31,9 @@ public class ClientThread implements Runnable {
 	        controller.sendWelcome(this);
 			
 			while (in.hasNextLine()) {
-				controller.decipher(this, in.nextLine());
+				bufferIn = in.nextLine();
+				LogController.log(Log.debug, "RX: " + bufferIn);
+				controller.decipher(this, bufferIn);
 			}
 		}
 		catch (Exception e) { LogController.log(Log.error, e.toString()); }
@@ -48,5 +51,6 @@ public class ClientThread implements Runnable {
 	//transmission / output to client
 	public void out(String data) {
 		out.println(data);
+		LogController.log(Log.debug, "TX: " + data);
 	}
 }

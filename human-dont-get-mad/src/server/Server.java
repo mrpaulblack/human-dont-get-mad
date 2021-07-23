@@ -17,15 +17,15 @@ public class Server {
 	
 	//private attributes
 	private ServerSocket serverSocket;
-	private static int port = 2342;
+	private static Integer port = 2342;
 
 	//start server socket
 	private void start() {
 		try {
 			serverSocket = new ServerSocket(port);
 			LogController.log(Log.info, "Running: " + serverSocket);
-			ExecutorService  pool = Executors.newFixedThreadPool(20);
 			ServerController controller = new ServerController();
+			ExecutorService  pool = Executors.newFixedThreadPool(20);
 			while (true) {
 				pool.execute(new ClientThread(serverSocket.accept(), controller));
 			}
