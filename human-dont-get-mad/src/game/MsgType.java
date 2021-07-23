@@ -1,4 +1,4 @@
-package client;
+package game;
 
 public enum MsgType {
 	register,

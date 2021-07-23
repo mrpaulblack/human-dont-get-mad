@@ -2,6 +2,7 @@ package client;
 
 // external: https://mvnrepository.com/artifact/org.json/json/20210307
 import org.json.JSONObject;
+import game.*;
 
 public class Controller {
 	private static double clientVersion = 0.1;

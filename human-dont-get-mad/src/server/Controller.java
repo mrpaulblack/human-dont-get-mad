@@ -2,6 +2,7 @@ package server;
 
 // external: https://mvnrepository.com/artifact/org.json/json/20210307
 import org.json.JSONObject;
+import game.*;
 
 public class Controller {
 	private static double protocolVersion = 3.0;
@@ -19,7 +20,7 @@ public class Controller {
 		data.put("serverVersion", serverVersion);
 		json.put("data", data);
 		player.out(json.toString());
-		Server.log(Log.debug, json.toString());
+		LogController.log(Log.debug, json.toString());
 	}
 	
 	//decrypt client input
