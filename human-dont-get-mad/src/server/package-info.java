@@ -2,7 +2,7 @@
  * 
  */
 /**
- * @author local
+ * @author Paul Braeuning
  *
  */
 package server;

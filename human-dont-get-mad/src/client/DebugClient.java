@@ -5,7 +5,7 @@ import java.net.Socket;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-public class Main {
+public class DebugClient {
 //private attributes
 private static int port = 2342;
 private static String init = "127.0.0.1";
