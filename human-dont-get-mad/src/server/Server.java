@@ -25,7 +25,7 @@ public class Server {
 			serverSocket = new ServerSocket(port);
 			LogController.log(Log.info, "Running: " + serverSocket);
 			ServerController controller = new ServerController();
-			ExecutorService  pool = Executors.newFixedThreadPool(20);
+			ExecutorService  pool = Executors.newFixedThreadPool(10);
 			while (true) {
 				pool.execute(new ClientThread(serverSocket.accept(), controller));
 			}

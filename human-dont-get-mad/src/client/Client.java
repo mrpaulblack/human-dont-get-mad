@@ -9,19 +9,20 @@ import game.Log;
 import game.LogController;
 
 public class Client {
-	private static Integer port = 2342;
-	private static String host = "127.0.0.1";
-	private Socket socket;
-	private Scanner in;
-	private PrintWriter out;
-	private String bufferIn;
-	private ClientController controller;
-
 	public static void main(String[] args) {
 		Client client = new Client();
 		LogController.setGlobalLogLvl(Log.debug);
 		client.start();
 	}
+	
+	private static Integer port = 2342;
+	private static String host = "127.0.0.1";
+
+	private Socket socket;
+	private Scanner in;
+	private PrintWriter out;
+	private String bufferIn;
+	private ClientController controller;
 	
 	//start client socket
 	private void start() {
@@ -34,7 +35,7 @@ public class Client {
 			while (in.hasNextLine()) {
 				bufferIn = in.nextLine();
 				LogController.log(Log.debug, "RX: " + bufferIn);
-				controller.decipher(bufferIn);
+				controller.decoder(bufferIn);
 			}
 		}
 		catch (Exception e) { LogController.log(Log.error, e.toString()); }

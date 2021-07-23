@@ -33,7 +33,7 @@ public class ClientThread implements Runnable {
 			while (in.hasNextLine()) {
 				bufferIn = in.nextLine();
 				LogController.log(Log.debug, "RX: " + bufferIn);
-				controller.decipher(this, bufferIn);
+				controller.decoder(this, bufferIn);
 			}
 		}
 		catch (Exception e) { LogController.log(Log.error, e.toString()); }
