@@ -1,7 +1,7 @@
 package server;
 
 import java.io.*;
-import java.net.*;
+import java.net.*;	
 import java.util.Scanner;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -24,6 +24,8 @@ public static void main(String[] args) throws IOException {
 
 private static class ClientThread implements Runnable {
     private Socket socket;
+    private Scanner in;
+    private PrintWriter out;
 
     ClientThread(Socket socket) {
         this.socket = socket;
@@ -33,10 +35,10 @@ private static class ClientThread implements Runnable {
     public void run() {
         System.out.println("Connected: " + socket);
         try {
-            Scanner in = new Scanner(socket.getInputStream());
-            PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
+            in = new Scanner(socket.getInputStream());
+           out = new PrintWriter(socket.getOutputStream(), true);
             while (in.hasNextLine()) {
-                out.println(in.nextLine() + " recieved sucessfully");
+                //execute on new input
             }
         }
         catch (Exception e) { System.out.println("Error:" + socket); }
@@ -47,6 +49,13 @@ private static class ClientThread implements Runnable {
             catch (IOException e) { System.out.println(e); }
             System.out.println("Closed: " + socket);
         }
+    }
+    
+    //write output
+    public void setOutput(String stringOut) {
+    	out.println(stringOut);
+    	JsonObject test = new JsonObject();
+    	
     }
 }
 
