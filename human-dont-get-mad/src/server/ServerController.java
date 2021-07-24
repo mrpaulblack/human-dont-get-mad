@@ -7,12 +7,28 @@ import game.Log;
 import game.LogController;
 import game.MsgType;
 
+/**
+* <h1>ServerController</h1>
+* <p>The ServerController class is a abstraction that can send json messages
+* that implement the maedn protocol spec and decipher recieved json data
+* it is the layer between every ClientThread and the game logic.</p>
+* <b>Note:</b> The ServerController should only be instaciated once every server
+* and NOT for each ClientThread.
+*
+* @author  Paul Braeuning
+* @version 1.0
+* @since   2021-07-23
+*/
 public class ServerController {
 	private double protocolVersion = 3;
 	private double serverVersion = 0.1;
 	private String serverName = "human-dont-get-mad";
 	
-	//send welcome message
+	/**
+	 *	<h1><i>sendWelcome</i></h1>
+	 * <p>This method is sending a welcome message to the selected player (ClientThread).</p>
+	 * @param player - ClientThread that recieves json
+	 */
 	protected void sendWelcome(ClientThread player) {
 		JSONObject json = new JSONObject();
 		JSONObject data = new JSONObject();
@@ -24,7 +40,11 @@ public class ServerController {
 		player.out(json.toString());
 	}
 	
-	//send assignColor
+	/**
+	 *	<h1><i>sendassignColor</i></h1>
+	 * <p>This method is sending a assingColor message to the selected player (ClientThread).</p>
+	 * @param player - ClientThread that recieves json
+	 */
 	private void sendassignColor(ClientThread player) {
 		JSONObject json = new JSONObject();
 		JSONObject data = new JSONObject();
@@ -35,7 +55,13 @@ public class ServerController {
 		player.out(json.toString());
 	}
 	
-	//decipher client input
+	/**
+	 *	<h1><i>decoder</i></h1>
+	 * <p>This method decodes the recieved data by a client and calls based on the 
+	 * parsed type different methods with the data payload as the parameters.</p>
+	 * @param player - ClientThread that recieves json
+	 * @param imput - String with the recieved data by ClientThread
+	 */
 	protected void decoder(ClientThread player, String input) {
 		JSONObject json = new JSONObject(input);
 		JSONObject data = new JSONObject(json.get("data").toString());
@@ -45,19 +71,19 @@ public class ServerController {
 			sendassignColor(player);
 		}
 		else if (json.get("type").equals(MsgType.ready.toString())) {
-			//update and add client to client array
+			//TODO update and add client to client array
 		}
 		else if (json.get("type").equals(MsgType.move.toString())) {
-			//update or error
+			//TODO update or error
 		}
 		else if (json.get("type").equals(MsgType.message.toString())) {
-			//idk
+			//TODO idk
 		}
 		else if (json.get("type").equals(MsgType.error.toString())) {
-			//depends; maybe client disconnect
+			//TODO depends; maybe client disconnect
 		}
 		else {
-			//wrong data terminate connection
+			//TODO wrong data terminate connection
 		}
 	}
 

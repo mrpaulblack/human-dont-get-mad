@@ -7,6 +7,17 @@ import game.Log;
 import game.LogController;
 import game.MsgType;
 
+/**
+* <h1>ClientController</h1>
+* <p>The ClientController class is a abstraction that can send json messages
+* that implement the maedn protocol spec and decipher recieved json data
+* it is the layer between the client socket and the GUI.</p>
+* <b>Note:</b> The ClientController should only be instaciated with every client socket.
+*
+* @author  Paul Braeuning
+* @version 1.0
+* @since   2021-07-23
+*/
 public class ClientController {
 	private String clientName = "human-dont-get-mad";
 	private double clientVersion = 0.1;
@@ -14,12 +25,20 @@ public class ClientController {
 	private String playerColor = "red";
 	private Client player;
 	
-	//constructor
+	/**
+	 *	<h1><i>ClientController</i></h1>
+	 * <p>This Constructor sets the Client as as the player atribute.
+	 * Each Method is going to ac on this client.</p>
+	 * @param player - Client this controller is assigned to
+	 */
 	public ClientController(Client player) {
 		this.player = player;
 	}
 	
-	//impl. register message
+	/**
+	 *	<h1><i>sendRegister</i></h1>
+	 * <p>This method is sending a register message to the server.</p>
+	 */
 	protected void sendRegister() {
 		JSONObject json = new JSONObject();
 		JSONObject data = new JSONObject();
@@ -34,7 +53,12 @@ public class ClientController {
 		player.out(json.toString());
 	}
 
-	//decrypt client input
+	/**
+	 *	<h1><i>decoder</i></h1>
+	 * <p>This method decodes the recieved data by a server and calls based on the 
+	 * parsed type different methods with the data payload as the parameters.</p>
+	 * @param input - String of the recieved data
+	 */
 	protected void decoder(String input) {
 		JSONObject json = new JSONObject(input);
 		JSONObject data = new JSONObject(json.getJSONObject("data").toString());
@@ -45,25 +69,25 @@ public class ClientController {
 			sendRegister();
 		}
 		else if (json.get("type").equals(MsgType.assignColor.toString())) {
-			//wait for GUI and send ready
+			//TODO wait for GUI and send ready
 		}
 		else if (json.get("type").equals(MsgType.update.toString())) {
-			//update board; asynchron
+			//TODO update board; asynchron
 		}
 		else if (json.get("type").equals(MsgType.turn.toString())) {
-			//send move
+			//TODO send move
 		}
 		else if (json.get("type").equals(MsgType.playerDisconnected.toString())) {
-			//update stats; asynchron
+			//TODO update stats; asynchron
 		}
 		else if (json.get("type").equals(MsgType.message.toString())) {
-			//idk
+			//TODO idk
 		}
 		else if (json.get("type").equals(MsgType.error.toString())) {
-			//depends; maybe disconnect
+			//TODO depends; maybe disconnect
 		}
 		else {
-			//wrong data terminate connection
+			//TODO wrong data terminate connection
 		}
 	}
 

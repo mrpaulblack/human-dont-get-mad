@@ -8,30 +8,40 @@ import java.util.Scanner;
 import game.Log;
 import game.LogController;
 
+/**
+* <h1>Client</h1>
+* <p>This is a demo CLI client for reference when hooking up the GUI.
+* You can use this code mainly for the launcher. (This basically needs to be executed
+* when pressing the connect button)</p>
+* <b>Note:</b> Please delete this class once the code is implemented and
+* do not write test cases for this since it is going to get removed anyway!
+*
+* @author  Paul Braeuning
+* @version 0.1
+* @since   2021-07-23
+*/
 public class Client {
-	public static void main(String[] args) {
-		Client client = new Client();
-		LogController.setGlobalLogLvl(Log.debug);
-		client.start();
-	}
-	
-	private static Integer port = 2342;
-	private static String host = "127.0.0.1";
-
 	private Socket socket;
+	private ClientController controller;
 	private Scanner in;
 	private PrintWriter out;
 	private String bufferIn;
-	private ClientController controller;
 	
-	//start client socket
-	private void start() {
+	public static void main(String[] args) {
+		Client client = new Client();
+		LogController.setGlobalLogLvl(Log.debug);
+		client.start("127.0.0.1", 2342);
+	}
+	
+	//start client socket and listen for new lines which are getting decoded by controller
+	private void start(String host, Integer port) {
 		try {
 			socket = new Socket(host, port);
 			LogController.log(Log.info, "Connected to server: " + socket);
 			in = new Scanner(socket.getInputStream());
 			out = new PrintWriter(socket.getOutputStream(), true);
 			controller = new ClientController(this);
+			
 			while (in.hasNextLine()) {
 				bufferIn = in.nextLine();
 				LogController.log(Log.debug, "RX: " + bufferIn);
