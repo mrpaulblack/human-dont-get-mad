@@ -1,6 +1,6 @@
 package game;
 
-public class LogController {
+public abstract class LogController {
 	private static Log globalLogLvl = Log.info;
 
 	public static void setGlobalLogLvl(Log logLvl) {
