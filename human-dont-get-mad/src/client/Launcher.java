@@ -9,6 +9,9 @@ import javax.swing.*;
 
 public class Launcher extends JFrame{
 	
+	GameControl gc = new GameControl();
+	static String TEMP = "1";
+	
 	//Constructor
 	public Launcher() {
 		Launcher();	
@@ -245,6 +248,13 @@ public class Launcher extends JFrame{
 			System.out.println("Picked Color:" + Main.favColor);
 			
 			Main.tryingConnect = true;
+			
+			
+			//DEBUG
+			TEMP = Main.ip;
+			gc.transmiter();
+			System.out.println("is called 1");
+			//DEBUG
 			
 		});
 	}

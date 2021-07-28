@@ -1,22 +1,24 @@
 package client;
 
 import java.awt.Color;
+import java.awt.GridLayout;
+
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JTextArea;
 
 public class GameControl {
-
 	
-	public void gameHandler() {
+	static String transmit = "test";
+	static GameWindow gw = new GameWindow();
+	
+	public static void transmiter() {
 			
-	}
-	/*
-	public void getplayeronestats() {
-		GameWindow gc = new GameWindow();
-		setplayeronestats();
+			transmit = Main.ip;
+			System.out.println("Text from TA: " + transmit);
+			
+			gw.setText();
 		
-	}
-	*/
-	public String setplayeronestats() {
-		
-		return "penis";
 	}
 }
+

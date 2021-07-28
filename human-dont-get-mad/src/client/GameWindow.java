@@ -3,8 +3,13 @@ package client;
 import java.awt.*;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import java.lang.reflect.Array;
+import java.util.Arrays;
+import java.util.Observable;
 
 import javax.swing.*;
+
+
 
 
 /**
@@ -15,7 +20,11 @@ import javax.swing.*;
 * @param  
 */
 public class GameWindow extends JFrame {
-
+	
+	static GameControl gc = new GameControl();
+	static String temp = "";
+	
+//Frame Init	
 //Panels
 	private JPanel mainWindowReplacer = new JPanel();
 	private JPanel mainGameArea= new JPanel();
@@ -35,11 +44,13 @@ public class GameWindow extends JFrame {
 	private JLabel playerThreeName= new JLabel();
 	private JLabel playerFourName= new JLabel();
 	
+	//String of all labels 
 	JLabel[] playerStats = {playerOneStats, playerOneName, playerTwoStats, playerTwoName, 
 			playerThreeStats, playerThreeName, playerFourStats, playerFourName};
 	
 //Buttons
 	JButton dice = new JButton();
+	static JButton[] buttons = new JButton[41];
 	
 //Variables
 	private	int heightCurrentWindow = 0;
@@ -53,6 +64,7 @@ public class GameWindow extends JFrame {
 //Has to be Public for now -> CHANGE LATER
 	//Fetch UISettings object
 	UISettings uis = new UISettings();	
+	
 			//Colors	
 		Color background = uis.background;
 		Color interactionFields = uis.interactionFields;
@@ -63,12 +75,20 @@ public class GameWindow extends JFrame {
 			//FOR NOW these are the Colors/Fonts from the UI
 	
 	
+		
 	//Constructor
 	public GameWindow() {
+		
 		GameWindow();	
+		
+		
 	}
 	
 	public void GameWindow() {
+		
+		
+		
+		
 		
 		//Create Object
 		GetScreenData gcd = new GetScreenData();
@@ -79,7 +99,7 @@ public class GameWindow extends JFrame {
 		windowSize.setSize(gcd.width, gcd.height);
 		
 		//Set the Windows Parameters
-		this.setSize(windowSize);
+//		this.setSize(windowSize);
 		this.setResizable(true);
 		this.setLocation(0, 0);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -90,6 +110,7 @@ public class GameWindow extends JFrame {
 //*****************************************************************************************
 
 
+		
 //WindowSize Listener			
 	//This block is responsive for the responsive UI		
 	this.addComponentListener(new ComponentAdapter() {
@@ -141,7 +162,7 @@ public class GameWindow extends JFrame {
 	statsArea.setLayout(new GridLayout(1, 2, 5, 5));
 	statsAreaText.setLayout(new GridLayout(4, 2, 5, 5));
 	
-	GameControl gc = new GameControl();
+	
 	
 	//Sets the Text for all Labels
 	playerOneStats.setText("P1: " + "Red");			//for now, the color is a placehold until there is color data
@@ -161,40 +182,24 @@ public class GameWindow extends JFrame {
 	
 	diceArea.add(dice);
 	dice.addActionListener(e -> {
-		System.out.println("count is " + count);
-		if(count == 0) {
-			playerStats[0].setBackground(Color.RED);
-			playerStats[1].setBackground(Color.RED);
-			count++;
-			playerOneStats.setText(gc.setplayeronestats());
-		}
-		else if(count == 1) {
-			playerStats[0].setBackground(background);
-			playerStats[1].setBackground(background);
-			playerStats[2].setBackground(Color.GREEN);
-			playerStats[3].setBackground(Color.GREEN);
-			count++;
-			playerStats[0].setText("P1: " + "Red");
-		}
-		else if(count == 2) {
-			playerStats[2].setBackground(background);
-			playerStats[3].setBackground(background);
-			playerStats[4].setBackground(Color.BLUE);
-			playerStats[5].setBackground(Color.BLUE);
-			count++;
-		}
-		else if(count == 3) {
-			playerStats[4].setBackground(background);
-			playerStats[5].setBackground(background);
-			playerStats[6].setBackground(Color.YELLOW);
-			playerStats[7].setBackground(Color.YELLOW);
-			count++;
-		}
-		else if (count == 4) {
-			playerStats[6].setBackground(background);
-			playerStats[7].setBackground(background);
-			count = 0;
-		}
+//		playerStats[0].setText(gc.setplayeronestats());
+	});
+	
+	
+	
+	
+	
+	for(int i = 0; i < buttons.length; i++) {
+		buttons[i] = new JButton();
+	}
+	gameboard();
+	
+	buttons[0].addActionListener(e -> {
+		
+		System.out.println("is called 3");
+		buttons[0].setText("Penis");
+		
+		buttons[0].doLayout();
 	});
 	
 	
@@ -240,6 +245,7 @@ public class GameWindow extends JFrame {
 			gbcls.gridy = 1;
 			mainWindowReplacer.add(diceArea, gbcls);
 			diceArea.setBackground(background);
+			
 		}
 		else {
 			
@@ -266,5 +272,369 @@ public class GameWindow extends JFrame {
 		}
 		
 		this.add(mainWindowReplacer);
+		
+		//Should open if a connection could been estalbishd
+		
 	}
+	
+//	private JButton[] button = {btn1};
+			
+	
+	JButton redBaseOne = new JButton();
+	JButton redBaseTwo = new JButton();
+	JButton redBaseThree = new JButton();
+	JButton redBaseFour = new JButton();
+	
+	JButton greenBaseOne = new JButton();
+	JButton greenBaseTwo = new JButton();
+	JButton greenBaseThree = new JButton();
+	JButton greenBaseFour = new JButton();
+	
+	JButton blueBaseOne = new JButton();
+	JButton blueBaseTwo = new JButton();
+	JButton blueBaseThree = new JButton();
+	JButton blueBaseFour = new JButton();
+	
+	JButton yellowBaseOne = new JButton();
+	JButton yellowBaseTwo = new JButton();
+	JButton yellowBaseThree = new JButton();
+	JButton yellowBaseFour = new JButton();
+	JButton[] bases = {redBaseOne, redBaseTwo, redBaseThree, redBaseFour,
+			greenBaseOne, greenBaseTwo, greenBaseThree, greenBaseFour,
+			blueBaseOne, blueBaseTwo, blueBaseThree, blueBaseFour,
+			yellowBaseOne, yellowBaseTwo, yellowBaseThree, yellowBaseFour};
+	
+	
+	JButton redHouseOne = new JButton();
+	JButton redHouseTwo = new JButton();
+	JButton redHouseThree = new JButton();
+	JButton redHouseFour = new JButton();
+	
+	JButton greenHouseOne = new JButton();
+	JButton greenHouseTwo = new JButton();
+	JButton greenHouseThree = new JButton();
+	JButton greenHouseFour = new JButton();
+	
+	JButton blueHouseOne = new JButton();
+	JButton blueHouseTwo = new JButton();
+	JButton blueHouseThree = new JButton();
+	JButton blueHouseFour = new JButton();
+	
+	JButton yellowHouseOne = new JButton();
+	JButton yellowHouseTwo = new JButton();
+	JButton yellowHouseThree = new JButton();
+	JButton yellowHouseFour = new JButton();
+	
+	JButton[] houses = {redHouseOne, redHouseTwo, redHouseThree, redHouseFour,
+			greenHouseOne, greenHouseTwo, greenHouseThree, greenHouseFour,
+			blueHouseOne, blueHouseTwo, blueHouseThree, blueHouseFour,
+			yellowHouseOne, yellowHouseTwo, yellowHouseThree, yellowHouseFour};
+	
+	public void gameboard() {
+		
+		JPanel redBase = new JPanel();
+		redBase.setBackground(Color.RED);
+		redBase.setLayout(new GridLayout(2,2,2,2));
+		
+		JPanel greenBase = new JPanel();
+		greenBase.setBackground(Color.GREEN);
+		greenBase.setLayout(new GridLayout(2,2,2,2));
+		
+		JPanel blueBase = new JPanel();
+		blueBase.setBackground(Color.BLUE);
+		blueBase.setLayout(new GridLayout(2,2,2,2));
+		
+		JPanel yellowBase = new JPanel();
+		yellowBase.setBackground(Color.YELLOW);
+		yellowBase.setLayout(new GridLayout(2,2,2,2));
+		
+
+		JPanel redHouse = new JPanel();
+		redHouse.setBackground(Color.RED);
+		redHouse.setLayout(new GridLayout(1,4,2,2));
+		
+		JPanel greenHouse = new JPanel();
+		greenHouse.setBackground(Color.GREEN);
+		greenHouse.setLayout(new GridLayout(4,1,2,2));
+		
+		JPanel blueHouse = new JPanel();
+		blueHouse.setBackground(Color.BLUE);
+		blueHouse.setLayout(new GridLayout(1,4,2,2));
+		
+		JPanel yellowHouse = new JPanel();
+		yellowHouse.setBackground(Color.YELLOW);
+		yellowHouse.setLayout(new GridLayout(4,1,2,2));
+		
+		
+		for(JButton Bases : bases ) 
+			Bases.setBackground(Color.LIGHT_GRAY);
+		
+		for(JButton Houses : houses ) 
+			Houses.setBackground(Color.LIGHT_GRAY);
+		
+		
+		GridBagConstraints gbcgb = new GridBagConstraints();
+		mainGameArea.setLayout(new GridBagLayout());
+		gbcgb.fill = GridBagConstraints.BOTH;
+		gbcgb.insets = new Insets(2, 2, 2, 2);
+		
+		gbcgb.weightx = 1;
+		gbcgb.weighty = 1;
+		
+		gbcgb.gridx = 0;
+		gbcgb.gridy = 0;
+		gbcgb.gridheight = 2;
+		gbcgb.gridwidth = 2;
+		
+		mainGameArea.add(redBase, gbcgb);
+		
+		gbcgb.gridx = 9;
+		gbcgb.gridy = 0;
+		mainGameArea.add(greenBase, gbcgb);
+		
+		
+		gbcgb.gridx = 0;
+		gbcgb.gridy = 9;
+		mainGameArea.add(blueBase, gbcgb);
+		
+		gbcgb.gridx = 9;
+		gbcgb.gridy = 9;
+		mainGameArea.add(yellowBase, gbcgb);
+		
+		redBase.add(redBaseOne);
+		redBase.add(redBaseTwo);
+		redBase.add(redBaseThree);
+		redBase.add(redBaseFour);
+		
+		greenBase.add(greenBaseOne);
+		greenBase.add(greenBaseTwo);
+		greenBase.add(greenBaseThree);
+		greenBase.add(greenBaseFour);
+		
+		blueBase.add(blueBaseOne);
+		blueBase.add(blueBaseTwo);
+		blueBase.add(blueBaseThree);
+		blueBase.add(blueBaseFour);
+		
+		yellowBase.add(yellowBaseOne);
+		yellowBase.add(yellowBaseTwo);
+		yellowBase.add(yellowBaseThree);
+		yellowBase.add(yellowBaseFour);
+		
+			
+		gbcgb.gridx = 1;
+		gbcgb.gridy = 5;
+		gbcgb.gridheight = 1;
+		gbcgb.gridwidth = 4;
+		mainGameArea.add(redHouse, gbcgb);
+		
+		gbcgb.gridx = 6;
+		gbcgb.gridy = 5;
+		mainGameArea.add(blueHouse, gbcgb);
+		
+		gbcgb.gridx = 5;
+		gbcgb.gridy = 1;
+		gbcgb.gridheight = 4;
+		gbcgb.gridwidth = 1;
+		mainGameArea.add(greenHouse, gbcgb);
+		
+		gbcgb.gridx = 5;
+		gbcgb.gridy = 6;
+		mainGameArea.add(yellowHouse, gbcgb);
+	
+		redHouse.add(redHouseOne);
+		redHouse.add(redHouseTwo);
+		redHouse.add(redHouseThree);
+		redHouse.add(redHouseFour);
+		
+		greenHouse.add(greenHouseOne);
+		greenHouse.add(greenHouseTwo);
+		greenHouse.add(greenHouseThree);
+		greenHouse.add(greenHouseFour);
+		
+		blueHouse.add(blueHouseOne);
+		blueHouse.add(blueHouseTwo);
+		blueHouse.add(blueHouseThree);
+		blueHouse.add(blueHouseFour);
+		
+		yellowHouse.add(yellowHouseOne);
+		yellowHouse.add(yellowHouseTwo);
+		yellowHouse.add(yellowHouseThree);
+		yellowHouse.add(yellowHouseFour);
+		
+		gbcgb.gridheight = 1;
+		gbcgb.gridwidth = 1;
+		gbcgb.gridy = 4;
+		gbcgb.gridx = 0;
+		mainGameArea.add(buttons[0], gbcgb);
+		
+		gbcgb.gridy = 4;
+		gbcgb.gridx = 1;
+		mainGameArea.add(buttons[1], gbcgb);
+		
+		gbcgb.gridy = 4;
+		gbcgb.gridx = 2;
+		mainGameArea.add(buttons[2], gbcgb);
+		
+		gbcgb.gridy = 4;
+		gbcgb.gridx = 3;
+		mainGameArea.add(buttons[3], gbcgb);
+		
+		gbcgb.gridy = 4;
+		gbcgb.gridx = 4;
+		mainGameArea.add(buttons[4], gbcgb);
+		
+		gbcgb.gridy = 3;
+		gbcgb.gridx = 4;
+		mainGameArea.add(buttons[5], gbcgb);
+		
+		gbcgb.gridy = 2;
+		gbcgb.gridx = 4;
+		mainGameArea.add(buttons[6], gbcgb);
+		
+		gbcgb.gridy = 1;
+		gbcgb.gridx = 4;
+		mainGameArea.add(buttons[7], gbcgb);
+		
+		gbcgb.gridy = 0;
+		gbcgb.gridx = 4;
+		mainGameArea.add(buttons[8], gbcgb);
+		
+		gbcgb.gridy = 0;
+		gbcgb.gridx = 5;
+		mainGameArea.add(buttons[9], gbcgb);
+		
+		gbcgb.gridy = 0;
+		gbcgb.gridx = 6;
+		mainGameArea.add(buttons[10], gbcgb);
+		
+		gbcgb.gridy = 1;
+		gbcgb.gridx = 6;
+		mainGameArea.add(buttons[11], gbcgb);
+		
+		gbcgb.gridy = 2;
+		gbcgb.gridx = 6;
+		mainGameArea.add(buttons[12], gbcgb);
+		
+		gbcgb.gridy = 3;
+		gbcgb.gridx = 6;
+		mainGameArea.add(buttons[13], gbcgb);
+		
+		gbcgb.gridy = 4;
+		gbcgb.gridx = 6;
+		mainGameArea.add(buttons[14], gbcgb);
+		
+		gbcgb.gridy = 4;
+		gbcgb.gridx = 7;
+		mainGameArea.add(buttons[15], gbcgb);
+		
+		gbcgb.gridy = 4;
+		gbcgb.gridx = 8;
+		mainGameArea.add(buttons[16], gbcgb);
+		
+		gbcgb.gridy = 4;
+		gbcgb.gridx = 9;
+		mainGameArea.add(buttons[17], gbcgb);
+		
+		gbcgb.gridy = 4;
+		gbcgb.gridx = 10;
+		mainGameArea.add(buttons[18], gbcgb);
+		
+		gbcgb.gridy = 5;
+		gbcgb.gridx = 10;
+		mainGameArea.add(buttons[19], gbcgb);
+		
+		gbcgb.gridy = 6;
+		gbcgb.gridx = 10;
+		mainGameArea.add(buttons[20], gbcgb);
+		
+		gbcgb.gridy = 6;
+		gbcgb.gridx = 9;
+		mainGameArea.add(buttons[21], gbcgb);
+		
+		gbcgb.gridy = 6;
+		gbcgb.gridx = 8;
+		mainGameArea.add(buttons[22], gbcgb);
+		
+		gbcgb.gridy = 6;
+		gbcgb.gridx = 7;
+		mainGameArea.add(buttons[23], gbcgb);
+		
+		gbcgb.gridy = 6;
+		gbcgb.gridx = 6;
+		mainGameArea.add(buttons[24], gbcgb);
+		
+		gbcgb.gridy = 7;
+		gbcgb.gridx = 6;
+		mainGameArea.add(buttons[25], gbcgb);
+		
+		gbcgb.gridy = 8;
+		gbcgb.gridx = 6;
+		mainGameArea.add(buttons[26], gbcgb);
+		
+		gbcgb.gridy = 9;
+		gbcgb.gridx = 6;
+		mainGameArea.add(buttons[27], gbcgb);
+		
+		gbcgb.gridy = 10;
+		gbcgb.gridx = 6;
+		mainGameArea.add(buttons[28], gbcgb);
+		
+		gbcgb.gridy = 10;
+		gbcgb.gridx = 5;
+		mainGameArea.add(buttons[29], gbcgb);
+		
+		gbcgb.gridy = 10;
+		gbcgb.gridx = 4;
+		mainGameArea.add(buttons[30], gbcgb);
+		
+		gbcgb.gridy = 9;
+		gbcgb.gridx = 4;
+		mainGameArea.add(buttons[31], gbcgb);
+		
+		gbcgb.gridy = 8;
+		gbcgb.gridx = 4;
+		mainGameArea.add(buttons[32], gbcgb);
+		
+		gbcgb.gridy = 7;
+		gbcgb.gridx = 4;
+		mainGameArea.add(buttons[33], gbcgb);
+		
+		gbcgb.gridy = 6;
+		gbcgb.gridx = 4;
+		mainGameArea.add(buttons[34], gbcgb);
+		
+		gbcgb.gridy = 6;
+		gbcgb.gridx = 3;
+		mainGameArea.add(buttons[35], gbcgb);
+		
+		gbcgb.gridy = 6;
+		gbcgb.gridx = 2;
+		mainGameArea.add(buttons[36], gbcgb);
+		
+		gbcgb.gridy = 6;
+		gbcgb.gridx = 1;
+		mainGameArea.add(buttons[37], gbcgb);
+		
+		gbcgb.gridy = 6;
+		gbcgb.gridx = 0;
+		mainGameArea.add(buttons[38], gbcgb);
+		
+		gbcgb.gridy = 5;
+		gbcgb.gridx = 0;
+		mainGameArea.add(buttons[39], gbcgb);
+		
+	    
+	}
+	
+	
+	
+	public void setText() {
+		System.out.println("Text recived: " + gc.transmit);
+		buttons[1].setText(gc.transmit);
+	}
+	
+	
+	
+
 }

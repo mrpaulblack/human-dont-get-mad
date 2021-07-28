@@ -9,9 +9,9 @@ import java.util.concurrent.TimeUnit;
  */
 public class Main {
 	
-	public String ip = null;		// Transmit the Server Address
-	String port = null;			// Transmit the Port
-	String uname = null;		// Transmit the Username 
+	public static String ip = null;		// Transmit the Server Address
+	public static String port = null;			// Transmit the Port
+	public static String uname = null;		// Transmit the Username 
 	Integer favColor = -1;			// Transmit the Preferred Color (if not chosen, set to -1 -> random Coloe)
 	static boolean tryingConnect = false;
 	
@@ -28,6 +28,7 @@ public class Main {
 		
 		//DEBUG FOR FASTER WINDOW ENTERING
 		gw.setVisible(true);
+		lui.setVisible(true);
 	/*
 		//Runns as long as no connection get established
 		while (isConnected == false) {
@@ -66,15 +67,16 @@ public class Main {
 			}
 		}*/
 		
-		
-		
-		try {
-			TimeUnit.SECONDS.sleep(5);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		System.out.println("WWLLAAKKKSS");
-		gc.gameHandler();
+		/*
+		while (true) {
+			try {
+				TimeUnit.SECONDS.sleep(1);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			System.out.println("update: ");
+			System.out.println("Port: " + port);
+		}*/
 	}
 }
