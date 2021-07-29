@@ -15,7 +15,7 @@ package game;
 * @since   2021-07-23
 */
 public abstract class LogController {
-	private static Log globalLogLvl = Log.info;
+	private static Log globalLogLvl = Log.INFO;
 
 	/**
 	 *	<h1><i>setGlobalLogLvl</i></h1>
@@ -37,15 +37,15 @@ public abstract class LogController {
 	 */
 	public static void log(Log logLvl, String logLine) {
 		//error lvl
-		if (globalLogLvl == Log.error && logLvl == Log.error) {
+		if (globalLogLvl == Log.ERROR && logLvl == Log.ERROR) {
 			System.out.println("[" + logLvl + "] " + logLine);
 		}
 		//info lvl
-		else if (globalLogLvl == Log.info && (logLvl == Log.error || logLvl == Log.info)) {
+		else if (globalLogLvl == Log.INFO && (logLvl == Log.ERROR || logLvl == Log.INFO)) {
 			System.out.println("[" + logLvl + "] " + logLine);
 		}
 		//debug lvl
-		else if (globalLogLvl == Log.debug && (logLvl == Log.error || logLvl == Log.info || logLvl == Log.debug)) {
+		else if (globalLogLvl == Log.DEBUG && (logLvl == Log.ERROR || logLvl == Log.INFO || logLvl == Log.DEBUG)) {
 			System.out.println("[" + logLvl + "] " + logLine);
 		}
 	}

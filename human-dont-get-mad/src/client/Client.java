@@ -29,7 +29,7 @@ public class Client {
 	
 	public static void main(String[] args) {
 		Client client = new Client();
-		LogController.setGlobalLogLvl(Log.debug);
+		LogController.setGlobalLogLvl(Log.DEBUG);
 		client.start("127.0.0.1", 2342);
 	}
 	
@@ -37,33 +37,33 @@ public class Client {
 	private void start(String host, Integer port) {
 		try {
 			socket = new Socket(host, port);
-			LogController.log(Log.info, "Connected to server: " + socket);
+			LogController.log(Log.INFO, "Connected to server: " + socket);
 			in = new Scanner(socket.getInputStream());
 			out = new PrintWriter(socket.getOutputStream(), true);
 			controller = new ClientController(this);
 			
 			while (in.hasNextLine()) {
 				bufferIn = in.nextLine();
-				LogController.log(Log.debug, "RX: " + bufferIn);
+				LogController.log(Log.DEBUG, "RX: " + bufferIn);
 				controller.decoder(bufferIn);
 			}
 		}
-		catch (Exception e) { LogController.log(Log.error, e.toString()); }
+		catch (Exception e) { LogController.log(Log.ERROR, e.toString()); }
 		finally {
 			try {
 				in.close();
 				out.close();
 				socket.close();
 			}
-			catch (IOException e) { LogController.log(Log.error, e.toString()); }
-			LogController.log(Log.info, "Disconnected from server: " + socket);
+			catch (IOException e) { LogController.log(Log.ERROR, e.toString()); }
+			LogController.log(Log.INFO, "Disconnected from server: " + socket);
 		}
 	}
 	
 	//transmission / output to server
 	public void out(String data) {
 		out.println(data);
-		LogController.log(Log.debug, "TX: " + data);
+		LogController.log(Log.DEBUG, "TX: " + data);
 	}
 
 }

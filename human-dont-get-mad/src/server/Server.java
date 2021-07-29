@@ -30,7 +30,7 @@ public class Server {
 	 */
 	public static void main(String[] args) {
 		Server server = new Server();
-		LogController.setGlobalLogLvl(Log.debug);
+		LogController.setGlobalLogLvl(Log.DEBUG);
 		server.start(2342);
 	}
 
@@ -45,14 +45,14 @@ public class Server {
 	private void start(Integer port) {
 		try {
 			serverSocket = new ServerSocket(port);
-			LogController.log(Log.info, "Running: " + serverSocket);
+			LogController.log(Log.INFO, "Running: " + serverSocket);
 			ServerController controller = new ServerController();
 			ExecutorService  pool = Executors.newFixedThreadPool(8);
 			while (true) {
 				pool.execute(new ClientThread(serverSocket.accept(), controller));
 			}
 		}
-		catch (Exception e) { LogController.log(Log.error, e.toString()); }
+		catch (Exception e) { LogController.log(Log.ERROR, e.toString()); }
 	}
 
 }

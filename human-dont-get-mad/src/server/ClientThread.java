@@ -49,7 +49,7 @@ public class ClientThread implements Runnable {
 	 */
 	@Override
 	public void run() {
-		LogController.log(Log.info, "Client connected: " + socket);
+		LogController.log(Log.INFO, "Client connected: " + socket);
 		try {
 			in = new Scanner(socket.getInputStream());
 			out = new PrintWriter(socket.getOutputStream(), true);
@@ -57,19 +57,19 @@ public class ClientThread implements Runnable {
 			
 			while (in.hasNextLine()) {
 				bufferIn = in.nextLine();
-				LogController.log(Log.debug, "RX: " + bufferIn);
+				LogController.log(Log.DEBUG, "RX: " + bufferIn);
 				controller.decoder(this, bufferIn);
 			}
 		}
-		catch (Exception e) { LogController.log(Log.error, e.toString()); }
+		catch (Exception e) { LogController.log(Log.ERROR, e.toString()); }
 		finally {
 			try {
 				in.close();
 				out.close();
 				socket.close();
 			}
-			catch (IOException e) { LogController.log(Log.error, e.toString()); }
-			LogController.log(Log.info, "Client disconnect: " + socket);
+			catch (IOException e) { LogController.log(Log.ERROR, e.toString()); }
+			LogController.log(Log.INFO, "Client disconnect: " + socket);
 		}
 	}
 	    
@@ -80,6 +80,6 @@ public class ClientThread implements Runnable {
 	 */
 	public void out(String data) {
 		out.println(data);
-		LogController.log(Log.debug, "TX: " + data);
+		LogController.log(Log.DEBUG, "TX: " + data);
 	}
 }

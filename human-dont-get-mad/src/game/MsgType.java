@@ -10,14 +10,14 @@ package game;
 * @since   2021-07-23
 */
 public enum MsgType {
-	register,
-	ready,
-	move,
-	welcome,
-	assignColor,
-	update,
-	turn,
-	playerDisconnected,
-	message,
-	error
+	REGISTER,
+	READY,
+	MOVE,
+	WELCOME,
+	ASSIGNCOLOR,
+	UPDATE,
+	TURN,
+	PLAYERDISCONNECTED,
+	MESSAGE,
+	ERROR
 }

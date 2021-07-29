@@ -32,7 +32,7 @@ public class ServerController {
 	protected void sendWelcome(ClientThread player) {
 		JSONObject json = new JSONObject();
 		JSONObject data = new JSONObject();
-		json.put("type", MsgType.welcome);
+		json.put("type", MsgType.WELCOME);
 		data.put("protocolVersion", protocolVersion);
 		data.put("serverName", serverName);
 		data.put("serverVersion", serverVersion);
@@ -48,7 +48,7 @@ public class ServerController {
 	private void sendassignColor(ClientThread player) {
 		JSONObject json = new JSONObject();
 		JSONObject data = new JSONObject();
-		json.put("type", MsgType.assignColor);
+		json.put("type", MsgType.ASSIGNCOLOR);
 		//TODO assign avail color and honor client request
 		data.put("color", "red");
 		json.put("data", data);
@@ -65,21 +65,21 @@ public class ServerController {
 	protected void decoder(ClientThread player, String input) {
 		JSONObject json = new JSONObject(input);
 		JSONObject data = new JSONObject(json.get("data").toString());
-		LogController.log(Log.debug, json.get("type") + ": " + data);
+		LogController.log(Log.DEBUG, json.get("type") + ": " + data);
 
-		if (json.get("type").equals(MsgType.register.toString())) {
+		if (json.get("type").equals(MsgType.REGISTER.toString())) {
 			sendassignColor(player);
 		}
-		else if (json.get("type").equals(MsgType.ready.toString())) {
+		else if (json.get("type").equals(MsgType.READY.toString())) {
 			//TODO update and add client to client array
 		}
-		else if (json.get("type").equals(MsgType.move.toString())) {
+		else if (json.get("type").equals(MsgType.MOVE.toString())) {
 			//TODO update or error
 		}
-		else if (json.get("type").equals(MsgType.message.toString())) {
+		else if (json.get("type").equals(MsgType.MESSAGE.toString())) {
 			//TODO idk
 		}
-		else if (json.get("type").equals(MsgType.error.toString())) {
+		else if (json.get("type").equals(MsgType.ERROR.toString())) {
 			//TODO depends; maybe client disconnect
 		}
 		else {

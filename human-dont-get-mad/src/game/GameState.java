@@ -10,7 +10,7 @@ package game;
 * @since   2021-07-23
 */
 public enum GameState {
-	waitingForPlayers,
-	running,
-	finished
+	WAITINGFORPLAYER,
+	RUNNING,
+	FINISHED
 }

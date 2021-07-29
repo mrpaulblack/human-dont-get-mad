@@ -10,10 +10,10 @@ package game;
 * @since   2021-07-23
 */
 public enum MsgError {
-	unsupportedMessageType,
-	unsupportedProtocolVersion,
-	serverFull,
-	illegalMove,
-	notYourTurn,
-	unknown
+	UNSUPPORTEDMESSAGETYPE,
+	UNSUPPORTEDPROTOCOLVERSION,
+	SERVERFULL,
+	ILLEGALMOVE,
+	NOTYOURTURN,
+	UNKNOWN
 }

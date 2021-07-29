@@ -11,7 +11,7 @@ package game;
 * @since   2021-07-23
 */
 public enum GamePosition {
-	start,
-	home,
-	field
+	START,
+	HOME,
+	FIELD
 }

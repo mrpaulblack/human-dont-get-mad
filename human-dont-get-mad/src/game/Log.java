@@ -11,7 +11,7 @@ package game;
 * @since   2021-07-23
 */
 public enum Log {
-error,
-info,
-debug
+ERROR,
+INFO,
+DEBUG
 }
