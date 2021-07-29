@@ -27,7 +27,7 @@ public class ClientController {
 	
 	/**
 	 *	<h1><i>ClientController</i></h1>
-	 * <p>This Constructor sets the Client as as the player atribute.
+	 * <p>This Constructor sets the Client as as the player attribute.
 	 * Each Method is going to ac on this client.</p>
 	 * @param player - Client this controller is assigned to
 	 */
