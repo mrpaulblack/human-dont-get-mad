@@ -18,5 +18,4 @@ public class GetScreenData {
 	Integer width = (int) screensize.getWidth();
 	Integer height = (int) screensize.getHeight();
 	
-	//Add Geter
 }
