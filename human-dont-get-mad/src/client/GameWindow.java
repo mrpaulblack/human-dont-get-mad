@@ -21,10 +21,11 @@ import javax.swing.*;
 */
 public class GameWindow extends JFrame {
 	
-	static GameControl gc = new GameControl();
+	static UISettings uis = new UISettings();	
+	static GetScreenData gcd = new GetScreenData();
+	static Main Main = new Main();
 	static String temp = "";
 	
-//Frame Init	
 //Panels
 	private JPanel mainWindowReplacer = new JPanel();
 	private JPanel mainGameArea= new JPanel();
@@ -44,75 +45,108 @@ public class GameWindow extends JFrame {
 	private JLabel playerThreeName= new JLabel();
 	private JLabel playerFourName= new JLabel();
 	
-	//String of all labels 
+//String of all labels 
 	JLabel[] playerStats = {playerOneStats, playerOneName, playerTwoStats, playerTwoName, 
-			playerThreeStats, playerThreeName, playerFourStats, playerFourName};
+							playerThreeStats, playerThreeName, playerFourStats, playerFourName};
 	
 //Buttons
 	JButton dice = new JButton();
-	static JButton[] buttons = new JButton[41];
+	//generate 40 Buttons for the gameboard
+	static JButton[] buttons = new JButton[40];
+	
+	//these buttons are generated with a specific name for better readability of the code
+	JButton redBaseOne = new JButton();
+	JButton redBaseTwo = new JButton();
+	JButton redBaseThree = new JButton();
+	JButton redBaseFour = new JButton();
+	
+	JButton greenBaseOne = new JButton();
+	JButton greenBaseTwo = new JButton();
+	JButton greenBaseThree = new JButton();
+	JButton greenBaseFour = new JButton();
+	
+	JButton blueBaseOne = new JButton();
+	JButton blueBaseTwo = new JButton();
+	JButton blueBaseThree = new JButton();
+	JButton blueBaseFour = new JButton();
+	
+	JButton yellowBaseOne = new JButton();
+	JButton yellowBaseTwo = new JButton();
+	JButton yellowBaseThree = new JButton();
+	JButton yellowBaseFour = new JButton();
+	JButton[] bases =  {redBaseOne, redBaseTwo, redBaseThree, redBaseFour,
+						greenBaseOne, greenBaseTwo, greenBaseThree, greenBaseFour,
+						blueBaseOne, blueBaseTwo, blueBaseThree, blueBaseFour,
+						yellowBaseOne, yellowBaseTwo, yellowBaseThree, yellowBaseFour};
+	
+	
+	JButton redHouseOne = new JButton();
+	JButton redHouseTwo = new JButton();
+	JButton redHouseThree = new JButton();
+	JButton redHouseFour = new JButton();
+	
+	JButton greenHouseOne = new JButton();
+	JButton greenHouseTwo = new JButton();
+	JButton greenHouseThree = new JButton();
+	JButton greenHouseFour = new JButton();
+	
+	JButton blueHouseOne = new JButton();
+	JButton blueHouseTwo = new JButton();
+	JButton blueHouseThree = new JButton();
+	JButton blueHouseFour = new JButton();
+	
+	JButton yellowHouseOne = new JButton();
+	JButton yellowHouseTwo = new JButton();
+	JButton yellowHouseThree = new JButton();
+	JButton yellowHouseFour = new JButton();
+	
+	JButton[] houses = {redHouseOne, redHouseTwo, redHouseThree, redHouseFour,
+						greenHouseOne, greenHouseTwo, greenHouseThree, greenHouseFour,
+						blueHouseOne, blueHouseTwo, blueHouseThree, blueHouseFour,
+						yellowHouseOne, yellowHouseTwo, yellowHouseThree, yellowHouseFour};
+	
 	
 //Variables
 	private	int heightCurrentWindow = 0;
 	private int widthCurrentWindow = 0;
-	int count = 0; //TEMP Counter for testing coloering
-	
 	private boolean isLandScape = false;
 	private boolean gotTurned = true;
-
 	
-//Has to be Public for now -> CHANGE LATER
-	//Fetch UISettings object
-	UISettings uis = new UISettings();	
-	
-			//Colors	
-		Color background = uis.background;
-		Color interactionFields = uis.interactionFields;
+//Colors	
+	Color background = uis.background;
+	Color interactionFields = uis.interactionFields;
 					
-			//Fonts
-		Font generalFont = uis.generalFont;
-		Font labelFont = uis.labelFont;
-			//FOR NOW these are the Colors/Fonts from the UI
+//Fonts
+	Font generalFont = uis.generalFont;
+	Font labelFont = uis.labelFont;
 	
-	
-		
-	//Constructor
+//Constructor
 	public GameWindow() {
-		
-		GameWindow();	
-		
-		
+		GameWindow();		
 	}
 	
+	//Gets the current window size if needed
+	public void getCurrentWindowSize() {
+		widthCurrentWindow = this.getBounds().width;
+		heightCurrentWindow = this.getBounds().height;
+	}
+		
+		
 	public void GameWindow() {
-		
-		
-		
-		
-		
-		//Create Object
-		GetScreenData gcd = new GetScreenData();
-		Main Main = new Main();
-		
-		Dimension windowSize = new Dimension();
 
-		windowSize.setSize(gcd.width, gcd.height);
+		Dimension windowSize = new Dimension();
+		windowSize.setSize(gcd.width/2, gcd.height/2);
 		
-		//Set the Windows Parameters
-//		this.setSize(windowSize);
-		this.setResizable(true);
 		this.setLocation(0, 0);
+		this.setSize(windowSize);	//Set de default size to half the screensize for better UX
+		this.setExtendedState(JFrame.MAXIMIZED_BOTH); 
+		this.setResizable(true);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setTitle("Human-Dont-Get-Mad");
-		
 				
-//Listener
-//*****************************************************************************************
-
-
-		
 //WindowSize Listener			
-	//This block is responsive for the responsive UI		
+	//This block is responsive for the responsive UI
+	//It will change the layout depending on the aspect ratio
 	this.addComponentListener(new ComponentAdapter() {
 	    public void componentResized(ComponentEvent componentEvent) {
 	    	getCurrentWindowSize();
@@ -143,74 +177,50 @@ public class GameWindow extends JFrame {
 	        }
 	        }
 	    });
-	//*****************************************************************************************
 	
-	//FOR NOW THERES NO CONTENT	
-				
-	//*****************************************************************************************
-
-	//FOR NOW THERES NO CONTENT	
-	statsArea.setLayout(new GridLayout(1, 2, 5, 5));
-	
-	statsArea.add(statsAreaText);
-	statsArea.add(statsAreaDice);
-	
-	statsArea.setBackground(background);
-	statsAreaText.setBackground(background);
-	statsAreaDice.setBackground(background);
-	
-	statsArea.setLayout(new GridLayout(1, 2, 5, 5));
-	statsAreaText.setLayout(new GridLayout(4, 2, 5, 5));
-	
-	
-	
-	//Sets the Text for all Labels
-	playerOneStats.setText("P1: " + "Red");			//for now, the color is a placehold until there is color data
-	playerOneName.setText("Tim");					//for now, the name is a placeholder too
-	playerTwoStats.setText("P2: " + "Green");		//for now, the color is a placehold until there is color data
-	playerTwoName.setText("Konrad");				//for now, the name is a placeholder too
-	playerThreeStats.setText("P3: " + "Blue");		//for now, the color is a placehold until there is color data
-	playerThreeName.setText("Paul");				//for now, the name is a placeholder too
-	playerFourStats.setText("P4: " + "Yellow");		//for now, the color is a placehold until there is color data
-	playerFourName.setText("Bot Yellow");			//for now, the name is a placeholder too
-	
-	for(JLabel playerStat : playerStats ) {
-		playerStat.setBackground(background);
-		playerStat.setOpaque(true);
-		statsAreaText.add(playerStat);
-	}
-	
-	diceArea.add(dice);
-	dice.addActionListener(e -> {
-//		playerStats[0].setText(gc.setplayeronestats());
-	});
-	
-	
-	
-	
-	
-	for(int i = 0; i < buttons.length; i++) {
-		buttons[i] = new JButton();
-	}
-	gameboard();
-	
-	buttons[0].addActionListener(e -> {
+		statsArea.setLayout(new GridLayout(1, 2, 5, 5));
 		
-		System.out.println("is called 3");
-		buttons[0].setText("Penis");
+		statsArea.add(statsAreaText);
+		statsArea.add(statsAreaDice);
 		
-		buttons[0].doLayout();
-	});
-	
-	
-	
+		statsArea.setBackground(background);
+		statsAreaText.setBackground(background);
+		statsAreaDice.setBackground(background);
+		
+		statsArea.setLayout(new GridLayout(1, 2, 5, 5));
+		statsAreaText.setLayout(new GridLayout(4, 2, 5, 5));
+		
+		
+		
+		//Sets the Text for all Labels
+		playerOneStats.setText("P1: " + "Red");			//for now, the color is a placehold until there is color data
+		playerOneName.setText("Tim");					//for now, the name is a placeholder too
+		playerTwoStats.setText("P2: " + "Green");		//for now, the color is a placehold until there is color data
+		playerTwoName.setText("Konrad");				//for now, the name is a placeholder too
+		playerThreeStats.setText("P3: " + "Blue");		//for now, the color is a placehold until there is color data
+		playerThreeName.setText("Paul");				//for now, the name is a placeholder too
+		playerFourStats.setText("P4: " + "Yellow");		//for now, the color is a placehold until there is color data
+		playerFourName.setText("Bot Yellow");			//for now, the name is a placeholder too
+		
+		for(JLabel playerStat : playerStats ) {
+			playerStat.setBackground(background);
+			playerStat.setOpaque(true);
+			statsAreaText.add(playerStat);
+		}
+		
+		diceArea.add(dice);
+		dice.addActionListener(e -> {
+			buttons[0].setBackground(Color.pink);
+		});
+		
+		
+		for(int i = 0; i < buttons.length; i++) {
+			buttons[i] = new JButton();
+		}
+		gameboard();
 	}
 	
-	//Gets the current window size if needed
-	public void getCurrentWindowSize() {
-		widthCurrentWindow = this.getBounds().width;
-		heightCurrentWindow = this.getBounds().height;
-	}
+	
 		//is Responsive for the Layout
 	public void alignmentConstruct(boolean SetLandScape) {
 		
@@ -272,98 +282,42 @@ public class GameWindow extends JFrame {
 		}
 		
 		this.add(mainWindowReplacer);
-		
-		//Should open if a connection could been estalbishd
-		
 	}
-	
-//	private JButton[] button = {btn1};
-			
-	
-	JButton redBaseOne = new JButton();
-	JButton redBaseTwo = new JButton();
-	JButton redBaseThree = new JButton();
-	JButton redBaseFour = new JButton();
-	
-	JButton greenBaseOne = new JButton();
-	JButton greenBaseTwo = new JButton();
-	JButton greenBaseThree = new JButton();
-	JButton greenBaseFour = new JButton();
-	
-	JButton blueBaseOne = new JButton();
-	JButton blueBaseTwo = new JButton();
-	JButton blueBaseThree = new JButton();
-	JButton blueBaseFour = new JButton();
-	
-	JButton yellowBaseOne = new JButton();
-	JButton yellowBaseTwo = new JButton();
-	JButton yellowBaseThree = new JButton();
-	JButton yellowBaseFour = new JButton();
-	JButton[] bases = {redBaseOne, redBaseTwo, redBaseThree, redBaseFour,
-			greenBaseOne, greenBaseTwo, greenBaseThree, greenBaseFour,
-			blueBaseOne, blueBaseTwo, blueBaseThree, blueBaseFour,
-			yellowBaseOne, yellowBaseTwo, yellowBaseThree, yellowBaseFour};
-	
-	
-	JButton redHouseOne = new JButton();
-	JButton redHouseTwo = new JButton();
-	JButton redHouseThree = new JButton();
-	JButton redHouseFour = new JButton();
-	
-	JButton greenHouseOne = new JButton();
-	JButton greenHouseTwo = new JButton();
-	JButton greenHouseThree = new JButton();
-	JButton greenHouseFour = new JButton();
-	
-	JButton blueHouseOne = new JButton();
-	JButton blueHouseTwo = new JButton();
-	JButton blueHouseThree = new JButton();
-	JButton blueHouseFour = new JButton();
-	
-	JButton yellowHouseOne = new JButton();
-	JButton yellowHouseTwo = new JButton();
-	JButton yellowHouseThree = new JButton();
-	JButton yellowHouseFour = new JButton();
-	
-	JButton[] houses = {redHouseOne, redHouseTwo, redHouseThree, redHouseFour,
-			greenHouseOne, greenHouseTwo, greenHouseThree, greenHouseFour,
-			blueHouseOne, blueHouseTwo, blueHouseThree, blueHouseFour,
-			yellowHouseOne, yellowHouseTwo, yellowHouseThree, yellowHouseFour};
 	
 	public void gameboard() {
 		
 		JPanel redBase = new JPanel();
 		redBase.setBackground(Color.RED);
-		redBase.setLayout(new GridLayout(2,2,2,2));
+		redBase.setLayout(new GridLayout(2,2,15,15));
 		
 		JPanel greenBase = new JPanel();
 		greenBase.setBackground(Color.GREEN);
-		greenBase.setLayout(new GridLayout(2,2,2,2));
+		greenBase.setLayout(new GridLayout(2,2,15,15));
 		
 		JPanel blueBase = new JPanel();
 		blueBase.setBackground(Color.BLUE);
-		blueBase.setLayout(new GridLayout(2,2,2,2));
+		blueBase.setLayout(new GridLayout(2,2,15,15));
 		
 		JPanel yellowBase = new JPanel();
 		yellowBase.setBackground(Color.YELLOW);
-		yellowBase.setLayout(new GridLayout(2,2,2,2));
+		yellowBase.setLayout(new GridLayout(2,2,15,15));
 		
 
 		JPanel redHouse = new JPanel();
 		redHouse.setBackground(Color.RED);
-		redHouse.setLayout(new GridLayout(1,4,2,2));
+		redHouse.setLayout(new GridLayout(1,4,30,30));
 		
 		JPanel greenHouse = new JPanel();
 		greenHouse.setBackground(Color.GREEN);
-		greenHouse.setLayout(new GridLayout(4,1,2,2));
+		greenHouse.setLayout(new GridLayout(4,1,30,30));
 		
 		JPanel blueHouse = new JPanel();
 		blueHouse.setBackground(Color.BLUE);
-		blueHouse.setLayout(new GridLayout(1,4,2,2));
+		blueHouse.setLayout(new GridLayout(1,4,30,30));
 		
 		JPanel yellowHouse = new JPanel();
 		yellowHouse.setBackground(Color.YELLOW);
-		yellowHouse.setLayout(new GridLayout(4,1,2,2));
+		yellowHouse.setLayout(new GridLayout(4,1,30,30));
 		
 		
 		for(JButton Bases : bases ) 
@@ -372,11 +326,14 @@ public class GameWindow extends JFrame {
 		for(JButton Houses : houses ) 
 			Houses.setBackground(Color.LIGHT_GRAY);
 		
+		for(JButton btn : buttons ) 
+			btn.setBackground(Color.WHITE);
+		
 		
 		GridBagConstraints gbcgb = new GridBagConstraints();
 		mainGameArea.setLayout(new GridBagLayout());
 		gbcgb.fill = GridBagConstraints.BOTH;
-		gbcgb.insets = new Insets(2, 2, 2, 2);
+		gbcgb.insets = new Insets(2, 2, 15, 15);
 		
 		gbcgb.weightx = 1;
 		gbcgb.weighty = 1;
@@ -615,7 +572,6 @@ public class GameWindow extends JFrame {
 		gbcgb.gridy = 6;
 		gbcgb.gridx = 1;
 		mainGameArea.add(buttons[37], gbcgb);
-		
 		gbcgb.gridy = 6;
 		gbcgb.gridx = 0;
 		mainGameArea.add(buttons[38], gbcgb);
@@ -623,18 +579,5 @@ public class GameWindow extends JFrame {
 		gbcgb.gridy = 5;
 		gbcgb.gridx = 0;
 		mainGameArea.add(buttons[39], gbcgb);
-		
-	    
 	}
-	
-	
-	
-	public void setText() {
-		System.out.println("Text recived: " + gc.transmit);
-		buttons[1].setText(gc.transmit);
-	}
-	
-	
-	
-
-}
+}   
