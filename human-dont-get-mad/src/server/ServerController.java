@@ -6,6 +6,8 @@ import org.json.JSONObject;
 import game.Log;
 import game.LogController;
 import game.MsgType;
+import game.Game;
+import game.GameState;
 
 /**
 * <h1>ServerController</h1>
@@ -23,6 +25,7 @@ public class ServerController {
 	private double protocolVersion = 3;
 	private double serverVersion = 0.1;
 	private String serverName = "human-dont-get-mad";
+	private Game game = new Game();
 	
 	/**
 	 *	<h1><i>sendWelcome</i></h1>
@@ -45,12 +48,12 @@ public class ServerController {
 	 * <p>This method is sending a assingColor message to the selected player (ClientThread).</p>
 	 * @param player - ClientThread that recieves json
 	 */
-	private void sendassignColor(ClientThread player) {
+	private void sendassignColor(ClientThread player, String color) {
 		JSONObject json = new JSONObject();
 		JSONObject data = new JSONObject();
 		json.put("type", MsgType.ASSIGNCOLOR);
 		//TODO assign avail color and honor client request
-		data.put("color", "red");
+		data.put("color", color);
 		json.put("data", data);
 		player.out(json.toString());
 	}
@@ -62,28 +65,45 @@ public class ServerController {
 	 * @param player - ClientThread that recieves json
 	 * @param imput - String with the recieved data by ClientThread
 	 */
-	protected void decoder(ClientThread player, String input) {
+	protected void decoder(ClientThread player, String input) throws Exception {
 		JSONObject json = new JSONObject(input);
 		JSONObject data = new JSONObject(json.get("data").toString());
 		LogController.log(Log.DEBUG, json.get("type") + ": " + data);
 
+		//register
 		if (json.get("type").equals(MsgType.REGISTER.toString())) {
-			sendassignColor(player);
+			//TODO check if there are still people missing in the queue
+			if (player.getState() == MsgType.WELCOME && game.getGameState() == GameState.WAITINGFORPLAYER) {
+				player.setState(MsgType.REGISTER);
+				sendassignColor(player, game.setPlayer(data.getString("requestedColor"), data.getString("playerName"), data.getString("clientName"), data.getFloat("clientVersion")));
+			}
+			else { throw new IllegalArgumentException(); }
 		}
+		
+		//ready
 		else if (json.get("type").equals(MsgType.READY.toString())) {
-			//TODO update and add client to client array
+			if (player.getState() == MsgType.REGISTER) {
+				//TODO update and add client to client array
+			}
+			else { throw new IllegalArgumentException(); }
 		}
+		
+		//move
 		else if (json.get("type").equals(MsgType.MOVE.toString())) {
 			//TODO update or error
 		}
+		
+		//message (optional)
 		else if (json.get("type").equals(MsgType.MESSAGE.toString())) {
 			//TODO idk
 		}
+		
+		//error
 		else if (json.get("type").equals(MsgType.ERROR.toString())) {
 			//TODO depends; maybe client disconnect
 		}
 		else {
-			//TODO wrong data terminate connection
+			throw new IllegalArgumentException();
 		}
 	}
 

@@ -7,6 +7,7 @@ import java.util.Scanner;
 
 import game.Log;
 import game.LogController;
+import game.MsgType;
 
 /**
 * <h1>ClientThread</h1>
@@ -26,6 +27,7 @@ public class ClientThread implements Runnable {
 	private Scanner in;
 	private PrintWriter out;
 	private String bufferIn;
+	private MsgType state = MsgType.WELCOME;
 
 	/**
 	 *	<h1><i>ClientThread</i></h1>
@@ -81,5 +83,15 @@ public class ClientThread implements Runnable {
 	public void out(String data) {
 		out.println(data);
 		LogController.log(Log.DEBUG, "TX: " + data);
+	}
+	
+	//TODO doc
+	public void setState(MsgType newState) {
+		state = newState;
+	}
+	
+	//TODO doc
+	public MsgType getState() {
+		return state;
 	}
 }
