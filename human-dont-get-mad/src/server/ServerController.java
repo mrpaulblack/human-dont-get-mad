@@ -1,6 +1,7 @@
 package server;
 
-import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map.Entry;
 
 // external: https://mvnrepository.com/artifact/org.json/json/20210307
 import org.json.JSONObject;
@@ -28,7 +29,7 @@ public class ServerController {
 	private double protocolVersion = 3.0;
 	private double serverVersion = 0.1;
 	private String serverName = "human-dont-get-mad";
-	private ArrayList<ClientThread> clients = new ArrayList<ClientThread>();
+	private HashMap<ClientThread, PlayerColor> clients = new HashMap<ClientThread, PlayerColor>();
 	private GameController game = new Game();
 	
 	/**
@@ -65,17 +66,10 @@ public class ServerController {
 	// Broadcast update to all player
 	private void broadcastUpdate() {
 		JSONObject json = new JSONObject();
-		JSONObject data = new JSONObject();
 		json.put("type", MsgType.UPDATE.toString().toLowerCase());
-		data.put("state", game.getGameState().toString().toLowerCase());
-		//TODO add current player (null if game is not running)
-		data.put("currentPlayer", "");
-		//TODO add winner (null if game state is NOT finished)
-		data.put("winner", "");
-		data.put("players", game.toJSON());
-		json.put("data", data);
-		for (ClientThread client : clients) {
-			client.out(json.toString());
+		json.put("data", game.toJSON());
+		for (Entry<ClientThread, PlayerColor> client : clients.entrySet()) {
+			client.getKey().out(json.toString());
 		}
 	}
 	
@@ -107,6 +101,7 @@ public class ServerController {
 	 * parsed type different methods with the data payload as the parameters.</p>
 	 * @param player - ClientThread that receives JSON
 	 * @param imput - String with the received data by ClientThread
+	 * @throws Exception if message cannot be decoded
 	 */
 	protected void decoder(ClientThread client, String input) throws Exception {
 		JSONObject json = new JSONObject(input);
@@ -122,7 +117,7 @@ public class ServerController {
 				tempColor = game.register(null, data.getString("playerName"), data.getString("clientName"), data.getFloat("clientVersion"));
 			}
 			if (tempColor != null) {
-				clients.add(client);
+				clients.put(client, tempColor);
 				client.setState(MsgType.REGISTER);
 				sendassignColor(client, tempColor);
 				broadcastUpdate();
@@ -135,13 +130,16 @@ public class ServerController {
 		
 		//ready
 		else if (json.getString("type").equals(MsgType.READY.toString().toLowerCase()) && client.getState() == MsgType.REGISTER && game.getGameState() == GameState.WAITINGFORPLAYER) {
-			//TODO set player to ready; if all registered  clients ready -> start game and fill lobby with bots
 			client.setState(MsgType.READY);
+			if (game.ready(clients.get(client))) {
+				broadcastUpdate();
+				//TODO handshake finished; game started and sendTurn() to first player
+			}
 		}
 		
 		//move
-		else if (json.getString("type").equals(MsgType.MOVE.toString().toLowerCase())) {
-			//TODO update or error
+		else if (json.getString("type").equals(MsgType.MOVE.toString().toLowerCase()) && client.getState() == MsgType.READY && game.getGameState() == GameState.RUNNING) {
+			//TODO execute move or error when illegal argument
 		}
 		
 		//message (optional)

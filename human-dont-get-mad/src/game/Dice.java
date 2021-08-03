@@ -24,4 +24,11 @@ public class Dice {
 	protected Integer getDice() {
 		return currentDice;
 	}
+	
+	//reset dice after turn
+	protected void resetDice() {
+		currentDice = 0;
+	}
+	
+	//TODO generate start dice (6 tries for six an than the throw after that)
 }

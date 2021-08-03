@@ -6,15 +6,15 @@ import org.json.JSONObject;
 //since August 2nd 2021
 public class Player {
 	private Figure[] figures = {new Figure(0), new Figure(1), new Figure(2), new Figure(3)};
-	private Dice dice = new Dice();
 	private PlayerColor color;
 	private String name;
 	private String clientName;
-	//TODO use clientVersion for something
 	@SuppressWarnings("unused")
 	private Float clientVersion;
 	private Boolean ready = false;
 	private Boolean isBot = false;
+	
+	protected Dice dice = new Dice();
 	
 	//constructor set client attributes
 	public Player(PlayerColor color, String name, String clientName, Float clientVersion, Boolean isBot) {
@@ -28,6 +28,16 @@ public class Player {
 	//get color from player
 	protected PlayerColor getColor() {
 		return color;
+	}
+	
+	//set player to ready
+	protected void setReady() {
+		ready = true;
+	}
+	
+	//get ready state
+	protected Boolean getReady() {
+		return ready;
 	}
 	
 	//returns player stats as json in maedn spec
