@@ -6,19 +6,24 @@ import java.util.Map;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-//since August 2nd 2021
+/**
+* <h1>Game</h1>
+* <p>This is the main class for the actual game logic. The class creates player objects
+* for each player and is running the actual game.</p>
+* <b>Note:</b> You should only instantiate this class through the GameController interface.
+* The Documentation for these is in the GameController interface.
+*
+* @author  Paul Braeuning
+* @version 1.0
+* @since   2021-08-02
+* @apiNote MAEDN 3.0
+*/
 public class Game implements GameController{
 	private HashMap<PlayerColor, Player> players = new HashMap<PlayerColor, Player>();
 	private GameState state = GameState.WAITINGFORPLAYER;
 	private PlayerColor currentPlayer = null;
 	private PlayerColor winner = null;
-	
-	//get the current game state
-	public GameState getGameState() {
-		return state;
-	}
-	
-	//add a new player to the game and also the socket
+
 	public PlayerColor register(PlayerColor requestedColor, String name, String clientName, Float clientVersion) {
 		if (players.size() < 4) {
 			PlayerColor assignedColor = null;
@@ -29,10 +34,9 @@ public class Game implements GameController{
 		}
 		else { return null; }
 	}
-	
-	//set player to ready
+
 	public Boolean ready(PlayerColor color) {
-		//TODO if game starts with <4 player; fill the rest with bots
+		//TODO if game starts with <4 player; fill the rest with BOTS
 		Integer counter = 0;
 		players.get(color).setReady();
 		for (Map.Entry<PlayerColor, Player> player : players.entrySet()) {
@@ -43,7 +47,7 @@ public class Game implements GameController{
 		if (counter >= players.size()) {
 			state = GameState.RUNNING;
 			currentPlayer = PlayerColor.RED;
-			//TODO gen dice for first (red player)
+			//TODO generate dice for first (red player)
 			LogController.log(Log.INFO, "Game started: " + players);
 			return true;
 		}
@@ -53,8 +57,11 @@ public class Game implements GameController{
 		}
 		
 	}
-	
-	//get JSON of current game for all player
+
+	public GameState getGameState() {
+		return state;
+	}
+
 	public JSONObject toJSON() {
 		JSONObject json = new JSONObject();
 		JSONArray data = new JSONArray();

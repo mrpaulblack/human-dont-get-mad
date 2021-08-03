@@ -16,14 +16,15 @@ import game.GameState;
 /**
 * <h1>ServerController</h1>
 * <p>The ServerController class is a abstraction that can send JSON messages
-* that implement the maedn protocol spec and decipher received JSON data
-* it is the layer between every ClientThread and the game logic.</p>
+* that implements the MAEDN protocol specification and decipher received JSON data;
+* It is the layer between every ClientThread and the game logic.</p>
 * <b>Note:</b> The ServerController should only be instantiated once every server
 * and NOT for each ClientThread.
 *
 * @author  Paul Braeuning
 * @version 1.0
 * @since   2021-07-23
+* @apiNote MAEDN 3.0
 */
 public class ServerController {
 	private double protocolVersion = 3.0;
@@ -33,9 +34,9 @@ public class ServerController {
 	private GameController game = new Game();
 	
 	/**
-	 *	<h1><i>sendWelcome</i></h1>
+	 * <h1><i>sendWelcome</i></h1>
 	 * <p>This method is sending a welcome message to the selected player (ClientThread).</p>
-	 * @param player - ClientThread that receives JSON
+	 * @param client - ClientThread that receives JSON
 	 */
 	protected void sendWelcome(ClientThread client) {
 		JSONObject json = new JSONObject();
@@ -49,9 +50,10 @@ public class ServerController {
 	}
 	
 	/**
-	 *	<h1><i>sendassignColor</i></h1>
+	 * <h1><i>sendassignColor</i></h1>
 	 * <p>This method is sending a assingColor message to the selected player (ClientThread).</p>
-	 * @param player - ClientThread that receives JSON
+	 * @param client - ClientThread that receives JSON
+	 * @param color - PlayerColor that the client gets assigned to
 	 */
 	private void sendassignColor(ClientThread client, PlayerColor color) {
 		JSONObject json = new JSONObject();
@@ -62,8 +64,12 @@ public class ServerController {
 		client.out(json.toString());
 	}
 	
-	// TODO needs doc
-	// Broadcast update to all player
+	/**
+	 * <h1><i>broadcastUpdate</i></h1>
+	 * <p>This method is broadcasting the current game state,
+	 * with all player info and all figure positions to all clients that are
+	 * registered.</p>
+	 */
 	private void broadcastUpdate() {
 		JSONObject json = new JSONObject();
 		json.put("type", MsgType.UPDATE.toString().toLowerCase());
@@ -73,7 +79,13 @@ public class ServerController {
 		}
 	}
 	
-	//send error to client without message; overload method
+	/**
+	 * <h1><i>sendError</i></h1>
+	 * <p>This method returns a selected error without a message to the
+	 * defined client.</p>
+	 * @param client - ClientThread with the socket
+	 * @param error - MsgError is the error type that is send to the client
+	 */
 	private void sendError(ClientThread client, MsgError error) {
 		JSONObject json = new JSONObject();
 		JSONObject data = new JSONObject();
@@ -83,23 +95,11 @@ public class ServerController {
 		client.out(json.toString());
 	}
 	
-	//send error to client with message
-	@SuppressWarnings("unused")
-	private void sendError(ClientThread client, MsgError error, String message) {
-		JSONObject json = new JSONObject();
-		JSONObject data = new JSONObject();
-		json.put("type", MsgType.ERROR.toString().toLowerCase());
-		json.put("message", message);
-		data.put("error", error.toString().toLowerCase());
-		json.put("data", data);
-		client.out(json.toString());
-	}
-	
 	/**
-	 *	<h1><i>decoder</i></h1>
+	 * <h1><i>decoder</i></h1>
 	 * <p>This method decodes the received data by a client and calls based on the 
 	 * parsed type different methods with the data payload as the parameters.</p>
-	 * @param player - ClientThread that receives JSON
+	 * @param client - ClientThread that receives JSON
 	 * @param imput - String with the received data by ClientThread
 	 * @throws Exception if message cannot be decoded
 	 */
@@ -107,7 +107,7 @@ public class ServerController {
 		JSONObject json = new JSONObject(input);
 		JSONObject data = new JSONObject(json.get("data").toString());
 
-		//register
+		// register
 		if (json.getString("type").equals(MsgType.REGISTER.toString().toLowerCase()) && client.getState() == MsgType.WELCOME && game.getGameState() == GameState.WAITINGFORPLAYER) {
 			PlayerColor tempColor;
 			if (data.has("requestedColor")) {
@@ -128,36 +128,44 @@ public class ServerController {
 			}
 		}
 		
-		//ready
+		// ready
 		else if (json.getString("type").equals(MsgType.READY.toString().toLowerCase()) && client.getState() == MsgType.REGISTER && game.getGameState() == GameState.WAITINGFORPLAYER) {
 			client.setState(MsgType.READY);
 			if (game.ready(clients.get(client))) {
-				broadcastUpdate();
 				//TODO handshake finished; game started and sendTurn() to first player
 			}
+			broadcastUpdate();
 		}
 		
-		//move
+		// move
 		else if (json.getString("type").equals(MsgType.MOVE.toString().toLowerCase()) && client.getState() == MsgType.READY && game.getGameState() == GameState.RUNNING) {
 			//TODO execute move or error when illegal argument
 		}
 		
-		//message (optional)
+		// message (optional)
 		else if (json.getString("type").equals(MsgType.MESSAGE.toString())) {
 			//TODO (optional) chat message support
 		}
 		
-		//error
+		// error
 		else if (json.get("type").equals(MsgType.ERROR.toString())) {
 			//TODO depends; maybe client disconnect
 		}
+		
+		// unsupported
 		else {
 			sendError(client, MsgError.UNSUPPORTEDMESSAGETYPE);
 			throw new IllegalArgumentException();
 		}
 	}
-	
-	//decode a String color
+
+	/**
+	 * <h1><i>decodeColor</i></h1>
+	 * <p>This method takes the string name of a color and returns
+	 * the corresponding PlayerColor type.</p>
+	 * @param color - String of the color
+	 * @return PlayerColor - returns the decoded PlayerColor
+	 */
 	private PlayerColor decodeColor(String color) {
 		switch(color) {
 		case "red": return PlayerColor.RED;

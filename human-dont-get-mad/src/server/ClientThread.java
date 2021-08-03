@@ -30,7 +30,7 @@ public class ClientThread implements Runnable {
 	private MsgType state = MsgType.WELCOME;
 
 	/**
-	 *	<h1><i>ClientThread</i></h1>
+	 * <h1><i>ClientThread</i></h1>
 	 * <p>This Constructor saves the socket object of the client the
 	 * thread is getting created for and the ServerController object for 
 	 * interaction with game logic.</p>
@@ -43,7 +43,7 @@ public class ClientThread implements Runnable {
 	}
 
 	/**
-	 *	<h1><i>run</i></h1>
+	 * <h1><i>run</i></h1>
 	 * <p>This method gets called after the object gets created on a separate
 	 * thread. It setups the connection to the client and starts the handshake
 	 * by sending a welcome message. After that it just listen for data from the client and
@@ -76,7 +76,7 @@ public class ClientThread implements Runnable {
 	}
 	    
 	/**
-	 *	<h1><i>out</i></h1>
+	 * <h1><i>out</i></h1>
 	 * <p>This method just sends a string to the client.</p>
 	 * @param data - String with the payload
 	 */
@@ -85,12 +85,22 @@ public class ClientThread implements Runnable {
 		LogController.log(Log.DEBUG, "TX: " + data);
 	}
 	
-	//TODO doc
+	/**
+	 * <h1><i>setState</i></h1>
+	 * <p>This methods sets the state the client is currently in, so that the client
+	 * needs to go through the handshake properly before being part of the game.</p>
+	 * @param newState - MsgType of the new state for this client
+	 */
 	protected void setState(MsgType newState) {
 		state = newState;
 	}
 	
-	//TODO doc
+	/**
+	 * <h1><i>getState</i></h1>
+	 * <p>this method returns the current game so that the ServerController
+	 * can verify the order of the received data.</p>
+	 * @return state - MsgType returns the handshake state of the client.
+	 */
 	protected MsgType getState() {
 		return state;
 	}

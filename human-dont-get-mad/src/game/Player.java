@@ -4,6 +4,17 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 //since August 2nd 2021
+/**
+* <h1>Player</h1>
+* <p>Player class for each player of the game. Each player has their own dice and 4
+* figures in their start region. This class also saves all the attributes provided by the client,
+* like name, client name and the version of the client used to connect to the server.</p>
+*
+* @author  Paul Braeuning
+* @version 1.0
+* @since   2021-08-02
+* @apiNote MAEDN 3.0
+*/
 public class Player {
 	private Figure[] figures = {new Figure(0), new Figure(1), new Figure(2), new Figure(3)};
 	private PlayerColor color;
@@ -16,7 +27,15 @@ public class Player {
 	
 	protected Dice dice = new Dice();
 	
-	//constructor set client attributes
+	/**
+	 * <h1><i>Player</i></h1>
+	 * <p>Player constructor that writes parameters to attributes.</p>
+	 * @param color - PlayerColor of that player
+	 * @param name - String with the name of the player
+	 * @param clientName - String with the name of the client
+	 * @param clientVersion - Float with the version of the client
+	 * @param isBot - set to true if the player is a BOT
+	 */
 	public Player(PlayerColor color, String name, String clientName, Float clientVersion, Boolean isBot) {
 		this.color = color;
 		this.name = name;
@@ -25,22 +44,38 @@ public class Player {
 		this.isBot = isBot;
 	}
 	
-	//get color from player
+	/**
+	 * <h1><i>getColor</i></h1>
+	 * <p>Player constructor that writes parameters to attributes.</p>
+	 * @return PlayerColor - returns the color of the player
+	 */
 	protected PlayerColor getColor() {
 		return color;
 	}
 	
-	//set player to ready
+	/**
+	 * <h1><i>setReady</i></h1>
+	 * <p>Sets player to ready.</p>
+	 */
 	protected void setReady() {
 		ready = true;
 	}
 	
-	//get ready state
+	/**
+	 * <h1><i>getReady</i></h1>
+	 * <p>This method returns if the player is ready or not.</p>
+	 * @return Boolean - true if the player is ready; false if not
+	 */
 	protected Boolean getReady() {
 		return ready;
 	}
 	
-	//returns player stats as json in maedn spec
+	/**
+	 * <h1><i>toJSON</i></h1>
+	 * <p>This method returns all positions of all player figures and the attributes
+	 * of the player as JSON in MAEDN specifications.</p>
+	 * @return JSONObject - returns JSON about the player
+	 */
 	protected JSONObject toJSON() {
 		JSONObject json = new JSONObject();
 		JSONArray data = new JSONArray();

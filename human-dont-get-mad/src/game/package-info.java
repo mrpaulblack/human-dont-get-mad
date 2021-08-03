@@ -1,8 +1,8 @@
 /**
 * <h1>game</h1>
-* <p>game package that contains all the enums for the maedn protocol and
+* <p>game package that contains all the ENUMS for the MAEDN protocol and
 * game logic, as well as the logger. It also contains the actual classes needed to run
-* ludo and the ruleset.</p>
+* LUDO and the rule set.</p>
 *
 * @author  Paul braeuning
 * @author Tim Menzel
