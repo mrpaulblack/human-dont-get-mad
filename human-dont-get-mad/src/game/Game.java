@@ -25,18 +25,14 @@ public class Game {
 	
 	//add a new player to the game
 	//TODO check if there is still a player needed
-	public String register(PlayerColor requestedColor, String name, String clientName, Float clientVersion) {
-		PlayerColor assignedColor = null;
-
-		if (requestedColor == null) {
-			assignedColor = PlayerColor.getAvail();
-		}
-		else {
+	public PlayerColor register(PlayerColor requestedColor, String name, String clientName, Float clientVersion) {
+		if (player.size() < 4) {
+			PlayerColor assignedColor = null;
 			assignedColor = PlayerColor.getAvail(requestedColor);
+			player.add(new Player(assignedColor, name, clientName, clientVersion, false));
+			return assignedColor;
 		}
-
-		player.add(new Player(assignedColor, name, clientName, clientVersion));
-		return assignedColor.toString().toLowerCase();
+		else { return null; }
 	}
 
 }

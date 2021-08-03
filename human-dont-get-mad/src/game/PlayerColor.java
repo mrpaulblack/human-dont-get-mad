@@ -19,7 +19,7 @@ public enum PlayerColor {
         this.value = value;
     }
 
-    //setup haspmap for player color on startup
+    //setup hashmap for player color on startup
     static {
         for (PlayerColor PlayerColor : PlayerColor.values()) {
             map.put(PlayerColor.value, PlayerColor);
@@ -36,23 +36,20 @@ public enum PlayerColor {
         return value;
     }
     
-    //returns first avail color
-    public static PlayerColor getAvail() {
-    	for (Integer i = 0; i < availColor.length; i++) {
-			if (availColor[i]) {
-				availColor[i] = false;
-				return PlayerColor.valueOf(i);
-			}
-		}
-    	return null;
-    }
-    
     //returns requested color or avail.
     public static PlayerColor getAvail(PlayerColor requestedColor) {
-    	if (availColor[requestedColor.getValue()]) {
+    	if (requestedColor != null && availColor[requestedColor.getValue()]) {
     		availColor[requestedColor.getValue()] = false;
     		return requestedColor;
     	}
-    	else { return PlayerColor.getAvail(); }
+    	else {
+    		for (Integer i = 0; i < availColor.length; i++) {
+    			if (availColor[i]) {
+    				availColor[i] = false;
+    				return PlayerColor.valueOf(i);
+    			}
+    		}
+        	return null;
+    	}
     }
 }

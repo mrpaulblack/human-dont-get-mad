@@ -12,7 +12,7 @@ import game.MsgType;
 /**
 * <h1>ClientThread</h1>
 * <p>The ClientThread class implements the interface Runnable and
-* is therefore meant to be run on a extra thread. After the object is instaciated
+* is therefore meant to be run on a extra thread. After the object is instantiated
 * the run method is called.</p>
 * <b>Note:</b> This gets called every time a client joins and every ClientThread
 * uses the same ServerController object
@@ -44,10 +44,10 @@ public class ClientThread implements Runnable {
 
 	/**
 	 *	<h1><i>run</i></h1>
-	 * <p>This method gets called after the object gets created on a seperate
+	 * <p>This method gets called after the object gets created on a separate
 	 * thread. It setups the connection to the client and starts the handshake
 	 * by sending a welcome message. After that it just listen for data from the client and
-	 * sends it to the controller. It runs until the tcp connection gets killed.</p>
+	 * sends it to the controller. It runs until the TCP connection gets killed.</p>
 	 */
 	@Override
 	public void run() {
