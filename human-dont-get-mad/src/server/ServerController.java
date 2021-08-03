@@ -9,6 +9,7 @@ import game.MsgError;
 import game.MsgType;
 import game.PlayerColor;
 import game.Game;
+import game.GameController;
 import game.GameState;
 
 /**
@@ -28,7 +29,7 @@ public class ServerController {
 	private double serverVersion = 0.1;
 	private String serverName = "human-dont-get-mad";
 	private ArrayList<ClientThread> clients = new ArrayList<ClientThread>();
-	private Game game = new Game();
+	private GameController game = new Game();
 	
 	/**
 	 *	<h1><i>sendWelcome</i></h1>
@@ -89,7 +90,6 @@ public class ServerController {
 	}
 	
 	//send error to client with message
-	//TODO use for something?
 	@SuppressWarnings("unused")
 	private void sendError(ClientThread client, MsgError error, String message) {
 		JSONObject json = new JSONObject();
@@ -135,7 +135,7 @@ public class ServerController {
 		
 		//ready
 		else if (json.getString("type").equals(MsgType.READY.toString().toLowerCase()) && client.getState() == MsgType.REGISTER && game.getGameState() == GameState.WAITINGFORPLAYER) {
-			//TODO update and add client to client array
+			//TODO set player to ready; if all registered  clients ready -> start game and fill lobby with bots
 			client.setState(MsgType.READY);
 		}
 		
@@ -146,14 +146,17 @@ public class ServerController {
 		
 		//message (optional)
 		else if (json.getString("type").equals(MsgType.MESSAGE.toString())) {
-			//TODO idk
+			//TODO (optional) chat message support
 		}
 		
 		//error
 		else if (json.get("type").equals(MsgType.ERROR.toString())) {
 			//TODO depends; maybe client disconnect
 		}
-		else { throw new IllegalArgumentException(); }
+		else {
+			sendError(client, MsgError.UNSUPPORTEDMESSAGETYPE);
+			throw new IllegalArgumentException();
+		}
 	}
 	
 	//decode a String color

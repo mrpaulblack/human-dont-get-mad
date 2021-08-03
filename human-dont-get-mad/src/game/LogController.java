@@ -1,5 +1,7 @@
 package game;
 
+import java.time.LocalDateTime;
+
 /**
 * <h1>LogController</h1>
 * <p>This method is the global logging facility and is abstract so it cannot be instaciated, since
@@ -38,15 +40,15 @@ public abstract class LogController {
 	public static void log(Log logLvl, String logLine) {
 		//error lvl
 		if (globalLogLvl == Log.ERROR && logLvl == Log.ERROR) {
-			System.out.println("[" + logLvl + "] " + logLine);
+			System.out.println(LocalDateTime.now() + " [" + logLvl + "] " + logLine);
 		}
 		//info lvl
 		else if (globalLogLvl == Log.INFO && (logLvl == Log.ERROR || logLvl == Log.INFO)) {
-			System.out.println("[" + logLvl + "] " + logLine);
+			System.out.println(LocalDateTime.now() + " [" + logLvl + "] " + logLine);
 		}
 		//debug lvl
 		else if (globalLogLvl == Log.DEBUG && (logLvl == Log.ERROR || logLvl == Log.INFO || logLvl == Log.DEBUG)) {
-			System.out.println("[" + logLvl + "] " + logLine);
+			System.out.println(LocalDateTime.now() + " [" + logLvl + "] " + logLine);
 		}
 	}
 }
