@@ -1,33 +1,33 @@
 package client;
 
 import java.util.concurrent.TimeUnit;
+import game.Log;
+import game.LogController;
 
-
-/* IMPORTANT NOTES
- * In this version the launcher doesn't connect to anything it just do a "simulation"
- * -> it will wait for a second to emulate a loading time 
- */
+/**
+* <h1>Main</h1>
+* <p>Will controll the behaving of the Windows </p>
+* <b>Note:</b> 
+*
+* @author  Tim Menzel
+* @version 1.0
+* @since   2021-08-2
+*/
 public class Main {
 	
-	public static String ip = null;		// Transmit the Server Address
-	public static String port = null;			// Transmit the Port
-	public static String uname = null;		// Transmit the Username 
-	Integer favColor = -1;			// Transmit the Preferred Color (if not chosen, set to -1 -> random Coloe)
 	static boolean tryingConnect = false;
+	static boolean connectionSuccessful = false;
 	
 	public static void main(String[] args) {
 		
+		LogController.setGlobalLogLvl(Log.DEBUG);
+		
 		boolean isConnected = false;
-		boolean connectionSuccessful = false;
+		
 		
 		Launcher lui = new Launcher();
-		lui.setVisible(false);
 		GameWindow gw = new GameWindow();	
 		
-		//DEBUG FOR FASTER WINDOW ENTERING
-		//gw.setVisible(true);
-		//lui.setVisible(true);
-	
 		//Runns as long as no connection get established
 		while (isConnected == false) {
 			
@@ -38,28 +38,25 @@ public class Main {
 				
 				lui.setVisible(false);
 				
-				//Connection Simulation
+				//Waits for connection
 				try {
-					TimeUnit.SECONDS.sleep(1);
+					TimeUnit.SECONDS.sleep(2);
 				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 				
-				//if a Connection should been successful -> set true
-				//if a Connection should been failed -> set false
-				//JUST A CONNECTION DUMMY
-				connectionSuccessful = true;//PLACEHOLDER check if connection get established
-				
-				//if it is successful it will let the launcher closed and open the game window
 				if (connectionSuccessful) {
 					
 					isConnected = true;
 					tryingConnect = false; //is connect so it can be set false
 					gw.setVisible(true);
 					
+					
 				}
 				//if failed it will be reopend
 				else {
+					tryingConnect = false;
 					lui.setVisible(true);
 				}
 			}

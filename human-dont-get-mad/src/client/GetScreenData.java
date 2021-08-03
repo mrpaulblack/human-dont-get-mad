@@ -2,15 +2,19 @@ package client;
 
 import java.awt.Dimension;
 import java.awt.Toolkit;
+import game.Log;
+import game.LogController;
 
 /**
-* Get the Monitors screensize and set 2 global variables
-* <p>
-* This Method will be executed when a new window is in its init Phase
+* <h1>GetScreenData</h1>
+* <p>Gets with the help of a Toolkit the Screensize 
+* Just get called if the app first starts</p>
+* <b>Note:</b> Dont Support changing screensizes, if the window got on a new screen 
+* while it is running it wont adjust it self automatically
 *
-* @param  
-* @return	width	(int)	The width of the Screen 
-* @return	height	(int)	The height of the Screen 
+* @author  Tim Menzel
+* @version 1.0
+* @since   2021-08-2
 */
 public class GetScreenData {
 	

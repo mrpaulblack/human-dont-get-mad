@@ -1,15 +1,29 @@
 package client;
 
 import java.awt.*;
-import java.awt.event.ComponentEvent;
-import java.util.concurrent.TimeUnit;
-
+import game.Log;
+import game.LogController;
 import javax.swing.*;
 
-
+/**
+* <h1>Launcher</h1>
+* <p>Will display the Launcher</p>
+*
+* @author  Tim Menzel
+* @version 1.0
+* @since   2021-08-2
+*/
 public class Launcher extends JFrame{
 	
 	static String TEMP = "1";
+	
+	static String lUserName = "123";
+	static String lFavColor = "";
+	
+	//Create Object
+	
+	Main Main = new Main();
+	GetScreenData gcd = new GetScreenData();
 	
 	//Constructor
 	public Launcher() {
@@ -17,29 +31,17 @@ public class Launcher extends JFrame{
 	}
 	
 	/**
-	* Open the Launcher
-	* It will be always centered on the screen center
-	* It asks the user for the Server Address, Port, Username and the prefferd Color
-	* <p>
-	* This window is shows to establish a connection with a server
-	* if the connection failed it should reopen
-	*
-	* @param  
-	* It don't return anything, it will set the variables of another function
-	* @return	ip			(String)	Sets the ip from the "Serveraddress" field
-	* @return	port		(String)	Sets the port from the "port" field 
-	* @return	username	(String)	Sets the Username from the "username" field 
-	* @return	favColor	(String)	Sets the favcoler from the getcolor combobox
-	*/
+	 *	<h1><i>Launcher</i></h1>
+	 * <p>This is the screen you will see while you want to establish a connection</p>
+	 */
 	public void Launcher() {
 
-		//Create Object
-		Main Main = new Main();
-		GetScreenData gcd = new GetScreenData();
+
 		
 		Dimension size = new Dimension();
 		Dimension findMidPoint = new Dimension();
 
+		
 		//Set Screen Size to this //So Parts are Hardcoded -> Changes may lead to errors
 		size.setSize(400, 450);
 		
@@ -147,13 +149,13 @@ public class Launcher extends JFrame{
 		
 		serverAddress.setBounds(new Rectangle(10, 32, 220, 35));
 		serverAddress.setBackground(interactionFields);	
-		serverAddress.setText("Server Adresse");
+		serverAddress.setText("127.0.0.1");
 		serverAddress.setFont(generalFont);
 		serverAddress.setForeground(Color.LIGHT_GRAY);
 	
 		//this kind of if-statement set a low-visible Text as default
 		serverAddress.addActionListener(e -> {
-			if (serverAddress.getText() != "Server Adresse") {
+			if (serverAddress.getText() != "127.0.0.1") {
 				serverAddress.setFont(generalFont);
 				serverAddress.setForeground(Color.BLACK);
 			}
@@ -235,18 +237,21 @@ public class Launcher extends JFrame{
 		connectButton.setText("Connect");
 		connectButton.setFont(generalFont);
 		connectButton.addActionListener(e -> {
+			Client client = new Client();
+			
+			client.serverAdress = serverAddress.getText();
+			client.port = Integer.parseInt(port.getText());
+			lUserName = userName.getText();
+			lFavColor = colorSelect.getSelectedItem().toString(); //for now it is yellow because there isent a function to handle this feature
+			
+			LogController.log(Log.DEBUG, "Server Adress:" + client.serverAdress);
+			LogController.log(Log.DEBUG, "Port:" + client.port);
+			LogController.log(Log.DEBUG, "Username: " + lUserName);
+			LogController.log(Log.DEBUG, "Picked Color:" + lFavColor) ;
 
-			Main.ip = serverAddress.getText();
-			Main.port = port.getText();
-			Main.uname = userName.getText();
-			Main.favColor = colorSelect.getSelectedIndex();
+			Main.tryingConnect = true;
 			
-			System.out.println("Server Adress:" + Main.ip);
-			System.out.println("Port:" + Main.port);
-			System.out.println("username:" + Main.uname);
-			System.out.println("Picked Color:" + Main.favColor);
-			
-			Main.tryingConnect = true;	
-		});
+			client.start();
+		});	
 	}
 }

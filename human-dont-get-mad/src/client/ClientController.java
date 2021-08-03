@@ -19,10 +19,10 @@ import game.MsgType;
 * @since   2021-07-23
 */
 public class ClientController {
+	Launcher l = new Launcher();
+	
 	private String clientName = "human-dont-get-mad";
 	private double clientVersion = 0.1;
-	private String playerName = "Anna";
-	private String playerColor = "red";
 	private Client player;
 	
 	/**
@@ -40,15 +40,16 @@ public class ClientController {
 	 * <p>This method is sending a register message to the server.</p>
 	 */
 	protected void sendRegister() {
+		
 		JSONObject json = new JSONObject();
 		JSONObject data = new JSONObject();
 		json.put("type", MsgType.REGISTER);
 		data.put("clientName", clientName);
 		data.put("clientVersion", clientVersion);
 		//TODO hook up player name to actual GUI
-		data.put("playerName", playerName);
+		data.put("playerName", l.lUserName);
 		//TODO hook up color to actual GUI
-		data.put("requestedColor", playerColor);
+		data.put("requestedColor", l.lFavColor);
 		json.put("data", data);
 		player.out(json.toString());
 	}

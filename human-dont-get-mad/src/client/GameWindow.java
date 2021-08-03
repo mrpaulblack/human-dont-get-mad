@@ -3,21 +3,20 @@ package client;
 import java.awt.*;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
-import java.lang.reflect.Array;
-import java.util.Arrays;
-import java.util.Observable;
+import game.Log;
+import game.LogController;
 
 import javax.swing.*;
 
 
-
-
 /**
-* is the main game window
-* <p>
-* after a successful login this window gets displayed
+* <h1>GameWindow</h1>
+* <p>This is the Main Game Window, it will show things</p>
+* <b>Note:</b> The ClientController should only be instaciated with every client socket.
 *
-* @param  
+* @author  Tim Menzel
+* @version 1.0
+* @since   2021-08-2
 */
 public class GameWindow extends JFrame {
 	
@@ -33,6 +32,15 @@ public class GameWindow extends JFrame {
 	private JPanel statsAreaText= new JPanel();
 	private JPanel statsAreaDice= new JPanel();
 	private JPanel diceArea= new JPanel();
+	
+	private JPanel redBase = new JPanel();
+	private JPanel greenBase = new JPanel();
+	private JPanel blueBase = new JPanel();
+	private JPanel yellowBase = new JPanel();
+	private JPanel redHouse = new JPanel();
+	private JPanel greenHouse = new JPanel();
+	private JPanel blueHouse = new JPanel();
+	private JPanel yellowHouse = new JPanel();
 	
 	
 //Labels
@@ -125,13 +133,21 @@ public class GameWindow extends JFrame {
 		GameWindow();		
 	}
 	
-	//Gets the current window size if needed
+	/**
+	 *	<h1><i>getCurrentWindowSize</i></h1>
+	 * <p>This Method will set the variables for the width and hight</p>
+	 */
 	public void getCurrentWindowSize() {
 		widthCurrentWindow = this.getBounds().width;
 		heightCurrentWindow = this.getBounds().height;
-	}
-		
-		
+		LogController.log(Log.DEBUG, "Current Screen Width: " + widthCurrentWindow);
+		LogController.log(Log.DEBUG, "Current Screeen Hight: " + heightCurrentWindow);
+		}
+	
+	/**
+	 *	<h1><i>GameWinodw</i></h1>
+	 * <p>This function will proceed and display the current window</p>
+	 */
 	public void GameWindow() {
 
 		Dimension windowSize = new Dimension();
@@ -150,9 +166,8 @@ public class GameWindow extends JFrame {
 	this.addComponentListener(new ComponentAdapter() {
 	    public void componentResized(ComponentEvent componentEvent) {
 	    	getCurrentWindowSize();
-	    	
-	        System.out.println("WIDTH: " + widthCurrentWindow);		
-	        System.out.println("HEIGHT: " + heightCurrentWindow);	
+	    	LogController.log(Log.DEBUG, "Current Window Width: " + widthCurrentWindow);
+	    	LogController.log(Log.DEBUG, "Current Window Hight: " + heightCurrentWindow);
 	        
 	        //Logic to turn the layout as resources friendly as possible
 	        if(widthCurrentWindow >= heightCurrentWindow) {
@@ -161,9 +176,8 @@ public class GameWindow extends JFrame {
 	        	if (isLandScape && gotTurned) {
 	        		gotTurned = false;
 	        		alignmentConstruct(true);
-	        		System.out.println("Ausrichtung zu Land geaendert");
+	        		LogController.log(Log.DEBUG, "The Window Layout is set to Landscape");
 	        	}
-	        	System.out.println("Ausrichtung ist Land");
 	        }
 	        else {
 	        	isLandScape = false;
@@ -171,9 +185,8 @@ public class GameWindow extends JFrame {
 	        	if(!isLandScape && !gotTurned) {
 	        		gotTurned = true;
 	        		alignmentConstruct(false);
-	        		System.out.println("Ausrichtung zu Port geaendert");
+	        		LogController.log(Log.DEBUG, "The Window Layout is set to Portrait");
 	        	}
-	        	System.out.println("Ausrichtung ist Port");
 	        }
 	        }
 	    });
@@ -208,9 +221,12 @@ public class GameWindow extends JFrame {
 			statsAreaText.add(playerStat);
 		}
 		
+		dice.setLocation(5, 5);
+		dice.setSize(150, 150);
 		diceArea.add(dice);
+		diceArea.setLayout(null);
 		dice.addActionListener(e -> {
-			buttons[0].setBackground(Color.pink);
+			//TODO 
 		});
 		
 		
@@ -220,8 +236,12 @@ public class GameWindow extends JFrame {
 		gameboard();
 	}
 	
-	
-		//is Responsive for the Layout
+	/**
+	 *	<h1><i>alignmentConstruct</i></h1>
+	 * <p>This function will build the window depending on its current state 
+	 * it will set it in Landscape or Portrait mode</p>
+	 * @param SetLandScape is the result from the calculation of the window size 
+	 */
 	public void alignmentConstruct(boolean SetLandScape) {
 		
 		GridBagConstraints gbcls = new GridBagConstraints();
@@ -284,41 +304,30 @@ public class GameWindow extends JFrame {
 		this.add(mainWindowReplacer);
 	}
 	
-	public void gameboard() {
+	Dimension dim = mainWindowReplacer.getSize();
+	int setWidthInsets = dim.width;
+	int setHeigthInsets = dim.height;
+	
+	
+	GridBagConstraints gbcgb = new GridBagConstraints();
+	
+	/**
+	 *	<h1><i>gameBoard</i></h1>
+	 * <p>Will build the gameboard</p>
+	 */
+	public void gameboard() {		
+		mainGameArea.setLayout(new GridBagLayout());
 		
-		JPanel redBase = new JPanel();
+		gbcgb.fill = GridBagConstraints.BOTH;
+		
 		redBase.setBackground(Color.RED);
-		redBase.setLayout(new GridLayout(2,2,15,15));
-		
-		JPanel greenBase = new JPanel();
 		greenBase.setBackground(Color.GREEN);
-		greenBase.setLayout(new GridLayout(2,2,15,15));
-		
-		JPanel blueBase = new JPanel();
 		blueBase.setBackground(Color.BLUE);
-		blueBase.setLayout(new GridLayout(2,2,15,15));
-		
-		JPanel yellowBase = new JPanel();
 		yellowBase.setBackground(Color.YELLOW);
-		yellowBase.setLayout(new GridLayout(2,2,15,15));
-		
-
-		JPanel redHouse = new JPanel();
 		redHouse.setBackground(Color.RED);
-		redHouse.setLayout(new GridLayout(1,4,30,30));
-		
-		JPanel greenHouse = new JPanel();
 		greenHouse.setBackground(Color.GREEN);
-		greenHouse.setLayout(new GridLayout(4,1,30,30));
-		
-		JPanel blueHouse = new JPanel();
 		blueHouse.setBackground(Color.BLUE);
-		blueHouse.setLayout(new GridLayout(1,4,30,30));
-		
-		JPanel yellowHouse = new JPanel();
 		yellowHouse.setBackground(Color.YELLOW);
-		yellowHouse.setLayout(new GridLayout(4,1,30,30));
-		
 		
 		for(JButton Bases : bases ) 
 			Bases.setBackground(Color.LIGHT_GRAY);
@@ -329,12 +338,46 @@ public class GameWindow extends JFrame {
 		for(JButton btn : buttons ) 
 			btn.setBackground(Color.WHITE);
 		
+		rePrintGameBoard();
 		
-		GridBagConstraints gbcgb = new GridBagConstraints();
-		mainGameArea.setLayout(new GridBagLayout());
-		gbcgb.fill = GridBagConstraints.BOTH;
-		gbcgb.insets = new Insets(2, 2, 15, 15);
+		mainGameArea.addComponentListener(new ComponentAdapter() {
+		    public void componentResized(ComponentEvent componentEvent) {
+
+		    	rePrintGameBoard();
+		    }
+	    });
+	}
+	
+	public void rePrintGameBoard() {
+    	//FOR SOME FCK REASON I CANT TAK THE GAMEWINDOW
+    	//dim = mainWindowReplacer.getSize();
+		dim = mainWindowReplacer.getSize();
+
+    	setWidthInsets = dim.width/100;
+		setHeigthInsets = dim.height/100;
+    	
+		LogController.log(Log.DEBUG, "Insetes x: " + setWidthInsets);
+		LogController.log(Log.DEBUG, "Insetes y: " + setHeigthInsets);
 		
+		redBase.setLayout(new GridLayout(2,2,setWidthInsets, setHeigthInsets));
+		
+		greenBase.setLayout(new GridLayout(2,2,setWidthInsets, setHeigthInsets));
+		
+		blueBase.setLayout(new GridLayout(2,2,setWidthInsets, setHeigthInsets));
+			
+		yellowBase.setLayout(new GridLayout(2,2,setWidthInsets, setHeigthInsets));
+		
+		redHouse.setLayout(new GridLayout(1,4,setWidthInsets, setHeigthInsets));
+		
+		greenHouse.setLayout(new GridLayout(4,1, setWidthInsets, setHeigthInsets));
+				
+		blueHouse.setLayout(new GridLayout(1,4,setWidthInsets, setHeigthInsets));
+
+		yellowHouse.setLayout(new GridLayout(4,1, setWidthInsets, setHeigthInsets));
+		
+		gbcgb.insets = new Insets(2, 2, setWidthInsets, setHeigthInsets);
+		  
+		    
 		gbcgb.weightx = 1;
 		gbcgb.weighty = 1;
 		
@@ -398,7 +441,7 @@ public class GameWindow extends JFrame {
 		gbcgb.gridx = 5;
 		gbcgb.gridy = 6;
 		mainGameArea.add(yellowHouse, gbcgb);
-	
+		
 		redHouse.add(redHouseOne);
 		redHouse.add(redHouseTwo);
 		redHouse.add(redHouseThree);

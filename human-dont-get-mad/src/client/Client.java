@@ -8,6 +8,7 @@ import java.util.Scanner;
 import game.Log;
 import game.LogController;
 
+
 /**
 * <h1>Client</h1>
 * <p>This is a demo CLI client for reference when hooking up the GUI.
@@ -20,19 +21,35 @@ import game.LogController;
 * @version 0.1
 * @since   2021-07-23
 */
-public class Client {
+
+
+public class Client extends Thread{
 	private Socket socket;
 	private ClientController controller;
 	private Scanner in;
 	private PrintWriter out;
 	private String bufferIn;
 	
-	public static void main(String[] args) {
-		Client client = new Client();
-		LogController.setGlobalLogLvl(Log.DEBUG);
-		client.start("127.0.0.1", 2342);
+	public static String serverAdress = "";
+	public static Integer port = 0;
+	
+	@Override
+	public void run() {
+		requestConnection();
 	}
 	
+//public static void main(String[] args)
+//public static void requestConnection()
+	
+	
+	
+	public static void requestConnection() {
+		Client client = new Client();
+		
+		
+		client.start(serverAdress, port);
+	}
+	Main main = new Main();
 	//start client socket and listen for new lines which are getting decoded by controller
 	private void start(String host, Integer port) {
 		try {
@@ -42,13 +59,19 @@ public class Client {
 			out = new PrintWriter(socket.getOutputStream(), true);
 			controller = new ClientController(this);
 			
+			main.connectionSuccessful = true;
+			
 			while (in.hasNextLine()) {
 				bufferIn = in.nextLine();
 				LogController.log(Log.DEBUG, "RX: " + bufferIn);
 				controller.decoder(bufferIn);
 			}
 		}
-		catch (Exception e) { LogController.log(Log.ERROR, e.toString()); }
+		catch (Exception e) { 
+			main.connectionSuccessful = false;
+			LogController.log(Log.ERROR, e.toString());
+			}
+		
 		finally {
 			try {
 				in.close();
