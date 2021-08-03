@@ -20,7 +20,7 @@ import org.json.JSONObject;
 */
 public class Game implements GameController{
 	private HashMap<PlayerColor, Player> players = new HashMap<PlayerColor, Player>();
-	private GameState state = GameState.WAITINGFORPLAYER;
+	private GameState state = GameState.WAITINGFORPLAYERS;
 	private PlayerColor currentPlayer = null;
 	private PlayerColor winner = null;
 

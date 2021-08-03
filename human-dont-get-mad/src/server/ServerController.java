@@ -108,7 +108,7 @@ public class ServerController {
 		JSONObject data = new JSONObject(json.get("data").toString());
 
 		// register
-		if (json.getString("type").equals(MsgType.REGISTER.toString().toLowerCase()) && client.getState() == MsgType.WELCOME && game.getGameState() == GameState.WAITINGFORPLAYER) {
+		if (json.getString("type").equals(MsgType.REGISTER.toString().toLowerCase()) && client.getState() == MsgType.WELCOME && game.getGameState() == GameState.WAITINGFORPLAYERS) {
 			PlayerColor tempColor;
 			if (data.has("requestedColor")) {
 				tempColor = game.register(decodeColor(data.getString("requestedColor")), data.getString("playerName"), data.getString("clientName"), data.getFloat("clientVersion"));
@@ -129,7 +129,7 @@ public class ServerController {
 		}
 		
 		// ready
-		else if (json.getString("type").equals(MsgType.READY.toString().toLowerCase()) && client.getState() == MsgType.REGISTER && game.getGameState() == GameState.WAITINGFORPLAYER) {
+		else if (json.getString("type").equals(MsgType.READY.toString().toLowerCase()) && client.getState() == MsgType.REGISTER && game.getGameState() == GameState.WAITINGFORPLAYERS) {
 			client.setState(MsgType.READY);
 			if (game.ready(clients.get(client))) {
 				//TODO handshake finished; game started and sendTurn() to first player
