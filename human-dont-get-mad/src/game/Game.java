@@ -2,10 +2,11 @@ package game;
 
 import java.util.ArrayList;
 
-
+//since August 2nd 2021
 public class Game {
 	private GameState state = GameState.WAITINGFORPLAYER;
-	private ArrayList<Player> player = new ArrayList<Player>();
+	private ArrayList<Player> players = new ArrayList<Player>();
+	private Dice dice = new Dice();
 	
 	//constructor
 	public Game() {
@@ -23,13 +24,14 @@ public class Game {
 		return state;
 	}
 	
-	//add a new player to the game
+	//add a new player to the game and also the socket
 	//TODO check if there is still a player needed
 	public PlayerColor register(PlayerColor requestedColor, String name, String clientName, Float clientVersion) {
-		if (player.size() < 4) {
+		if (players.size() < 4) {
 			PlayerColor assignedColor = null;
 			assignedColor = PlayerColor.getAvail(requestedColor);
-			player.add(new Player(assignedColor, name, clientName, clientVersion, false));
+			players.add(new Player(assignedColor, name, clientName, clientVersion, false));
+			LogController.log(Log.INFO, "New Player registered: " + players.get(players.size() -1));
 			return assignedColor;
 		}
 		else { return null; }

@@ -1,10 +1,10 @@
 package server;
 
+import java.util.ArrayList;
+
 // external: https://mvnrepository.com/artifact/org.json/json/20210307
 import org.json.JSONObject;
 
-import game.Log;
-import game.LogController;
 import game.MsgError;
 import game.MsgType;
 import game.PlayerColor;
@@ -27,6 +27,7 @@ public class ServerController {
 	private double protocolVersion = 3.0;
 	private double serverVersion = 0.1;
 	private String serverName = "human-dont-get-mad";
+	private ArrayList<ClientThread> clients = new ArrayList<ClientThread>();
 	private Game game = new Game();
 	
 	/**
@@ -34,7 +35,7 @@ public class ServerController {
 	 * <p>This method is sending a welcome message to the selected player (ClientThread).</p>
 	 * @param player - ClientThread that receives JSON
 	 */
-	protected void sendWelcome(ClientThread player) {
+	protected void sendWelcome(ClientThread client) {
 		JSONObject json = new JSONObject();
 		JSONObject data = new JSONObject();
 		json.put("type", MsgType.WELCOME.toString().toLowerCase());
@@ -42,7 +43,7 @@ public class ServerController {
 		data.put("serverName", serverName);
 		data.put("serverVersion", serverVersion);
 		json.put("data", data);
-		player.out(json.toString());
+		client.out(json.toString());
 	}
 	
 	/**
@@ -50,47 +51,53 @@ public class ServerController {
 	 * <p>This method is sending a assingColor message to the selected player (ClientThread).</p>
 	 * @param player - ClientThread that receives JSON
 	 */
-	private void sendassignColor(ClientThread player, PlayerColor color) {
+	private void sendassignColor(ClientThread client, PlayerColor color) {
 		JSONObject json = new JSONObject();
 		JSONObject data = new JSONObject();
 		json.put("type", MsgType.ASSIGNCOLOR.toString().toLowerCase());
 		data.put("color", color.toString().toLowerCase());
 		json.put("data", data);
-		player.out(json.toString());
+		client.out(json.toString());
 	}
 	
 	// TODO needs doc
 	// Broadcast update to all player
-	private void sendUpdate(ClientThread[] broadcast) {
+	private void broadcastUpdate() {
 		JSONObject json = new JSONObject();
 		JSONObject data = new JSONObject();
 		json.put("type", MsgType.UPDATE.toString().toLowerCase());
-		//TODO add missing data
+		data.put("state", game.getGameState().toString().toLowerCase());
+		//TODO add current player (null if game is not running)
+		data.put("currentPlayer", "");
+		//TODO add winner (null if game state is NOT finished)
+		data.put("winner", "");
+		//TODO add player array
 		json.put("data", data);
-		for (ClientThread player : broadcast) {
-			player.out(json.toString());
+		for (ClientThread client : clients) {
+			client.out(json.toString());
 		}
 	}
 	
 	//send error to client without message; overload method
-	private void sendError(ClientThread player, MsgError error) {
+	private void sendError(ClientThread client, MsgError error) {
 		JSONObject json = new JSONObject();
 		JSONObject data = new JSONObject();
 		json.put("type", MsgType.ERROR.toString().toLowerCase());
 		data.put("error", error.toString().toLowerCase());
 		json.put("data", data);
-		player.out(json.toString());
+		client.out(json.toString());
 	}
 	
 	//send error to client with message
-	private void sendError(ClientThread player, MsgError error, String message) {
+	@SuppressWarnings("unused")
+	private void sendError(ClientThread client, MsgError error, String message) {
 		JSONObject json = new JSONObject();
 		JSONObject data = new JSONObject();
 		json.put("type", MsgType.ERROR.toString().toLowerCase());
 		json.put("message", message);
 		data.put("error", error.toString().toLowerCase());
 		json.put("data", data);
-		player.out(json.toString());
+		client.out(json.toString());
 	}
 	
 	/**
@@ -100,13 +107,12 @@ public class ServerController {
 	 * @param player - ClientThread that receives JSON
 	 * @param imput - String with the received data by ClientThread
 	 */
-	protected void decoder(ClientThread player, String input) throws Exception {
+	protected void decoder(ClientThread client, String input) throws Exception {
 		JSONObject json = new JSONObject(input);
 		JSONObject data = new JSONObject(json.get("data").toString());
-		LogController.log(Log.DEBUG, json.get("type") + ": " + data);
 
 		//register
-		if (json.getString("type").equals(MsgType.REGISTER.toString().toLowerCase()) && player.getState() == MsgType.WELCOME && game.getGameState() == GameState.WAITINGFORPLAYER) {
+		if (json.getString("type").equals(MsgType.REGISTER.toString().toLowerCase()) && client.getState() == MsgType.WELCOME && game.getGameState() == GameState.WAITINGFORPLAYER) {
 			PlayerColor tempColor;
 			if (data.has("requestedColor")) {
 				tempColor = game.register(decodeColor(data.getString("requestedColor")), data.getString("playerName"), data.getString("clientName"), data.getFloat("clientVersion"));
@@ -115,19 +121,21 @@ public class ServerController {
 				tempColor = game.register(null, data.getString("playerName"), data.getString("clientName"), data.getFloat("clientVersion"));
 			}
 			if (tempColor != null) {
-				player.setState(MsgType.REGISTER);
-				sendassignColor(player, tempColor);
+				clients.add(client);
+				client.setState(MsgType.REGISTER);
+				sendassignColor(client, tempColor);
+				broadcastUpdate();
 			}
 			else {
-				sendError(player, MsgError.SERVERFULL);
+				sendError(client, MsgError.SERVERFULL);
 				throw new IllegalArgumentException();
 			}
 		}
 		
 		//ready
-		else if (json.getString("type").equals(MsgType.READY.toString().toLowerCase()) && player.getState() == MsgType.REGISTER && game.getGameState() == GameState.WAITINGFORPLAYER) {
+		else if (json.getString("type").equals(MsgType.READY.toString().toLowerCase()) && client.getState() == MsgType.REGISTER && game.getGameState() == GameState.WAITINGFORPLAYER) {
 			//TODO update and add client to client array
-			player.setState(MsgType.READY);
+			client.setState(MsgType.READY);
 		}
 		
 		//move

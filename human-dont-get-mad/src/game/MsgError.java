@@ -15,5 +15,5 @@ public enum MsgError {
 	SERVERFULL,
 	ILLEGALMOVE,
 	NOTYOURTURN,
-	UNKNOWN
+	UNKNOWN;
 }

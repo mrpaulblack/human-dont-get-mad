@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 //TODO needs doc
+//since August 03rd 2021
 public enum PlayerColor {
 	RED(0),
 	BLUE(1),

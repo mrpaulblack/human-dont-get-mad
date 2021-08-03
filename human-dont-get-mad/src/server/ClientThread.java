@@ -80,18 +80,18 @@ public class ClientThread implements Runnable {
 	 * <p>This method just sends a string to the client.</p>
 	 * @param data - String with the payload
 	 */
-	public void out(String data) {
+	protected void out(String data) {
 		out.println(data);
 		LogController.log(Log.DEBUG, "TX: " + data);
 	}
 	
 	//TODO doc
-	public void setState(MsgType newState) {
+	protected void setState(MsgType newState) {
 		state = newState;
 	}
 	
 	//TODO doc
-	public MsgType getState() {
+	protected MsgType getState() {
 		return state;
 	}
 }
