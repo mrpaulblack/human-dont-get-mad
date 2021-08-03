@@ -24,7 +24,6 @@ public class Main {
 		
 		boolean isConnected = false;
 		
-		
 		Launcher lui = new Launcher();
 		GameWindow gw = new GameWindow();	
 		
@@ -51,8 +50,6 @@ public class Main {
 					isConnected = true;
 					tryingConnect = false; //is connect so it can be set false
 					gw.setVisible(true);
-					
-					
 				}
 				//if failed it will be reopend
 				else {

@@ -21,5 +21,4 @@ public class GetScreenData {
 	Dimension screensize = Toolkit.getDefaultToolkit().getScreenSize();
 	Integer width = (int) screensize.getWidth();
 	Integer height = (int) screensize.getHeight();
-	
 }

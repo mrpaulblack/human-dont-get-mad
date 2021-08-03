@@ -15,10 +15,12 @@ import game.MsgType;
 * <b>Note:</b> The ClientController should only be instaciated with every client socket.
 *
 * @author  Paul Braeuning
+* @author Tim Menzel
 * @version 1.0
 * @since   2021-07-23
 */
 public class ClientController {
+	
 	Launcher l = new Launcher();
 	
 	private String clientName = "human-dont-get-mad";
@@ -35,6 +37,7 @@ public class ClientController {
 		this.player = player;
 	}
 	
+	
 	/**
 	 *	<h1><i>sendRegister</i></h1>
 	 * <p>This method is sending a register message to the server.</p>
@@ -46,14 +49,13 @@ public class ClientController {
 		json.put("type", MsgType.REGISTER);
 		data.put("clientName", clientName);
 		data.put("clientVersion", clientVersion);
-		//TODO hook up player name to actual GUI
 		data.put("playerName", l.lUserName);
-		//TODO hook up color to actual GUI
 		data.put("requestedColor", l.lFavColor);
 		json.put("data", data);
 		player.out(json.toString());
 	}
 
+	
 	/**
 	 *	<h1><i>decoder</i></h1>
 	 * <p>This method decodes the recieved data by a server and calls based on the 
@@ -91,5 +93,4 @@ public class ClientController {
 			//TODO wrong data terminate connection
 		}
 	}
-
 }

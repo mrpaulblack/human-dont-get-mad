@@ -100,7 +100,7 @@ public class Launcher extends JFrame{
 		JLabel portLbl = new JLabel();
 		
 	//ComboBox
-		String[] colorStrings = { "Red", "Blue", "Green", "Yellow"};
+		String[] colorStrings = {"Red", "Blue", "Green", "Yellow"};
 		JComboBox colorSelect = new JComboBox(colorStrings);
 		colorSelect.setSelectedIndex(3);
 		
@@ -242,7 +242,7 @@ public class Launcher extends JFrame{
 			client.serverAdress = serverAddress.getText();
 			client.port = Integer.parseInt(port.getText());
 			lUserName = userName.getText();
-			lFavColor = colorSelect.getSelectedItem().toString(); //for now it is yellow because there isent a function to handle this feature
+			lFavColor = colorSelect.getSelectedItem().toString().toLowerCase(); //for now it is yellow because there isent a function to handle this feature
 			
 			LogController.log(Log.DEBUG, "Server Adress:" + client.serverAdress);
 			LogController.log(Log.DEBUG, "Port:" + client.port);

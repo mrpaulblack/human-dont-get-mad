@@ -3,6 +3,8 @@ package client;
 import java.awt.*;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import java.util.concurrent.TimeUnit;
+
 import game.Log;
 import game.LogController;
 
@@ -41,7 +43,6 @@ public class GameWindow extends JFrame {
 	private JPanel greenHouse = new JPanel();
 	private JPanel blueHouse = new JPanel();
 	private JPanel yellowHouse = new JPanel();
-	
 	
 //Labels
 	private JLabel playerOneStats= new JLabel();
@@ -133,6 +134,7 @@ public class GameWindow extends JFrame {
 		GameWindow();		
 	}
 	
+	
 	/**
 	 *	<h1><i>getCurrentWindowSize</i></h1>
 	 * <p>This Method will set the variables for the width and hight</p>
@@ -143,6 +145,7 @@ public class GameWindow extends JFrame {
 		LogController.log(Log.DEBUG, "Current Screen Width: " + widthCurrentWindow);
 		LogController.log(Log.DEBUG, "Current Screeen Hight: " + heightCurrentWindow);
 		}
+	
 	
 	/**
 	 *	<h1><i>GameWinodw</i></h1>
@@ -160,9 +163,9 @@ public class GameWindow extends JFrame {
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setTitle("Human-Dont-Get-Mad");
 				
-//WindowSize Listener			
-	//This block is responsive for the responsive UI
-	//It will change the layout depending on the aspect ratio
+	//WindowSize Listener			
+		//This block is responsive for the responsive UI
+		//It will change the layout depending on the aspect ratio
 	this.addComponentListener(new ComponentAdapter() {
 	    public void componentResized(ComponentEvent componentEvent) {
 	    	getCurrentWindowSize();
@@ -202,8 +205,6 @@ public class GameWindow extends JFrame {
 		
 		statsArea.setLayout(new GridLayout(1, 2, 5, 5));
 		statsAreaText.setLayout(new GridLayout(4, 2, 5, 5));
-		
-		
 		
 		//Sets the Text for all Labels
 		playerOneStats.setText("P1: " + "Red");			//for now, the color is a placehold until there is color data
@@ -298,7 +299,6 @@ public class GameWindow extends JFrame {
 			gbcp.gridy = 1;
 			mainWindowReplacer.add(diceArea, gbcp);
 			diceArea.setBackground(background);
-			
 		}
 		
 		this.add(mainWindowReplacer);
@@ -308,8 +308,8 @@ public class GameWindow extends JFrame {
 	int setWidthInsets = dim.width;
 	int setHeigthInsets = dim.height;
 	
-	
 	GridBagConstraints gbcgb = new GridBagConstraints();
+	
 	
 	/**
 	 *	<h1><i>gameBoard</i></h1>
@@ -338,23 +338,34 @@ public class GameWindow extends JFrame {
 		for(JButton btn : buttons ) 
 			btn.setBackground(Color.WHITE);
 		
+		//need to be called first to construct the window
+		
+		//Wait 2 seconds is
+		//This is for stability reasons
+    	setWidthInsets = gcd.width/80;
+		setHeigthInsets = gcd.height/80;
+		System.out.println("Penis: " + gcd.width);
+		
 		rePrintGameBoard();
 		
 		mainGameArea.addComponentListener(new ComponentAdapter() {
 		    public void componentResized(ComponentEvent componentEvent) {
+		    	
+		    	dim = mainWindowReplacer.getSize();
 
+		    	setWidthInsets = dim.width/80;
+				setHeigthInsets = dim.height/80;
+				
 		    	rePrintGameBoard();
 		    }
 	    });
 	}
 	
+	
 	public void rePrintGameBoard() {
     	//FOR SOME FCK REASON I CANT TAK THE GAMEWINDOW
     	//dim = mainWindowReplacer.getSize();
-		dim = mainWindowReplacer.getSize();
-
-    	setWidthInsets = dim.width/100;
-		setHeigthInsets = dim.height/100;
+		
     	
 		LogController.log(Log.DEBUG, "Insetes x: " + setWidthInsets);
 		LogController.log(Log.DEBUG, "Insetes y: " + setHeigthInsets);

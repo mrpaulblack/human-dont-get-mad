@@ -18,11 +18,10 @@ import game.LogController;
 * do not write test cases for this since it is going to get removed anyway!
 *
 * @author  Paul Braeuning
+* @author Tim Menzel
 * @version 0.1
 * @since   2021-07-23
 */
-
-
 public class Client extends Thread{
 	private Socket socket;
 	private ClientController controller;
@@ -38,17 +37,13 @@ public class Client extends Thread{
 		requestConnection();
 	}
 	
-//public static void main(String[] args)
-//public static void requestConnection()
-	
-	
 	
 	public static void requestConnection() {
 		Client client = new Client();
 		
-		
 		client.start(serverAdress, port);
 	}
+	
 	Main main = new Main();
 	//start client socket and listen for new lines which are getting decoded by controller
 	private void start(String host, Integer port) {
@@ -88,5 +83,4 @@ public class Client extends Thread{
 		out.println(data);
 		LogController.log(Log.DEBUG, "TX: " + data);
 	}
-
 }
