@@ -15,7 +15,7 @@ import org.json.JSONObject;
 */
 public class Figure {
 	//TODO implement position and position change
-	private GamePosition positionType = GamePosition.HOME;
+	private GamePosition positionType = GamePosition.START;
 	private Integer positionIndex;
 	
 	/**
