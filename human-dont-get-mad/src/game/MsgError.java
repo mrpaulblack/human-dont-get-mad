@@ -2,7 +2,7 @@ package game;
 
 /**
 * <h1>MsgType</h1>
-* <p>Enum that contains the different error types supported by
+* <p>ENUM that contains the different error types supported by
 * server and client.</p>
 *
 * @author  Paul Braeuning
@@ -15,5 +15,5 @@ public enum MsgError {
 	SERVERFULL,
 	ILLEGALMOVE,
 	NOTYOURTURN,
-	UNKNOWN
+	UNKNOWN;
 }

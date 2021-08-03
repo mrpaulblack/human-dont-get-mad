@@ -2,8 +2,8 @@ package game;
 
 /**
 * <h1>MsgType</h1>
-* <p>Enum that contains the valid types of messages defined in
-* update in the maedn protocol.</p>
+* <p>ENUM that contains the valid types of messages defined in
+* update in the MAEDN protocol.</p>
 *
 * @author  Paul Braeuning
 * @version 1.0
@@ -19,5 +19,5 @@ public enum MsgType {
 	TURN,
 	PLAYERDISCONNECTED,
 	MESSAGE,
-	ERROR
+	ERROR;
 }

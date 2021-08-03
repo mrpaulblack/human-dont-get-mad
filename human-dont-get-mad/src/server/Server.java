@@ -10,8 +10,8 @@ import game.LogController;
 /**
 * <h1>Server</h1>
 * <p>Main Class that has the static main that gets invoked when starting the server.
-* It basically starts the server socket and listen for connections indef. Each time a client
-* connects to the server in creats a new thread for that client through a executer pool.</p>
+* It basically starts the server socket and listen for connections indefinitely. Each time a client
+* connects to the server in creates a new thread for that client through a executer pool.</p>
 * <b>Note:</b> You cannot run multiple server objects on the same port, but it should be possible
 * to run two or more servers at the same time on different ports.
 *
@@ -23,7 +23,7 @@ public class Server {
 	private ServerSocket serverSocket;
 	
 	/**
-	 *	<h1><i>main</i></h1>
+	 * <h1><i>main</i></h1>
 	 * <p>Static void main methods that gets called when starting the server.
 	 * It creates a server object, sets the global log level and starts the server.</p>
 	 * @param args - String[] with the called arguments (ignored for now)
@@ -35,7 +35,7 @@ public class Server {
 	}
 
 	/**
-	 *	<h1><i>start</i></h1>
+	 * <h1><i>start</i></h1>
 	 * <p>This method starts a server that listens on a given port. It then
 	 * creates a executer pool and initiates a ClientThread for each connecting client
 	 * in that executer pool. If more clients connected that get FIFO until there is a availible
