@@ -20,4 +20,27 @@ public enum MsgType {
 	PLAYERDISCONNECTED,
 	MESSAGE,
 	ERROR;
+	
+	/**
+	 * <h1><i>toString</i></h1>
+	 * <p>This method is converting the ENUM to strings that are supported
+	 * by the MAEDN specification.</p>
+	 * @return String - return string supported by MAEDN specification
+	 */
+	@Override
+	public String toString() {
+		switch(this) {
+		case REGISTER: return "register";
+		case READY: return "ready";
+		case MOVE: return "move";
+		case WELCOME: return "welcome";
+		case ASSIGNCOLOR: return "assignColor";
+		case UPDATE: return "update";
+		case TURN: return "turn";
+		case PLAYERDISCONNECTED: return "playerDisconnected";
+		case MESSAGE: return "message";
+		case ERROR: return "error";
+		default: return "";
+		}
+	}
 }

@@ -20,6 +20,23 @@ public enum PlayerColor {
 	GREEN(2),
 	YELLOW(3);
 	
+	/**
+	 * <h1><i>toString</i></h1>
+	 * <p>This method is converting the ENUM to strings that are supported
+	 * by the MAEDN specification.</p>
+	 * @return String - return string supported by MAEDN specification
+	 */
+	@Override
+	public String toString() {
+		switch(this) {
+		case RED: return "red";
+		case BLUE: return "blue";
+		case GREEN: return "green";
+		case YELLOW: return "yellow";
+		default: return "";
+		}
+	}
+	
 	private int value;
     private static Map<Integer, PlayerColor> map = new HashMap<Integer, PlayerColor>();
     private static Boolean[] availColor = {true, true, true, true};

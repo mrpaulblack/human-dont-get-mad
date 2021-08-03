@@ -35,7 +35,7 @@ public class Figure {
 	 */
 	protected JSONObject getJSON() {
 		JSONObject json = new JSONObject();
-		json.put("type", positionType.toString().toLowerCase());
+		json.put("type", positionType.toString());
 		json.put("index", positionIndex);
 		return json;
 	}

@@ -46,7 +46,7 @@ public class ClientController {
 		
 		JSONObject json = new JSONObject();
 		JSONObject data = new JSONObject();
-		json.put("type", MsgType.REGISTER.toString().toLowerCase());
+		json.put("type", MsgType.REGISTER.toString());
 		data.put("clientName", clientName);
 		data.put("clientVersion", clientVersion);
 		data.put("playerName", l.lUserName);
@@ -71,22 +71,22 @@ public class ClientController {
 			//TODO check if protocol and servr software is supported
 			sendRegister();
 		}
-		else if (json.get("type").equals(MsgType.ASSIGNCOLOR.toString().toLowerCase())) {
+		else if (json.get("type").equals(MsgType.ASSIGNCOLOR.toString())) {
 			//TODO wait for GUI and send ready
 		}
-		else if (json.get("type").equals(MsgType.UPDATE.toString().toLowerCase())) {
+		else if (json.get("type").equals(MsgType.UPDATE.toString())) {
 			//TODO update board; asynchron
 		}
-		else if (json.get("type").equals(MsgType.TURN.toString().toLowerCase())) {
+		else if (json.get("type").equals(MsgType.TURN.toString())) {
 			//TODO send move
 		}
-		else if (json.get("type").equals(MsgType.PLAYERDISCONNECTED.toString().toLowerCase())) {
+		else if (json.get("type").equals(MsgType.PLAYERDISCONNECTED.toString())) {
 			//TODO update stats; asynchron
 		}
-		else if (json.get("type").equals(MsgType.MESSAGE.toString().toLowerCase())) {
+		else if (json.get("type").equals(MsgType.MESSAGE.toString())) {
 			//TODO idk
 		}
-		else if (json.get("type").equals(MsgType.ERROR.toString().toLowerCase())) {
+		else if (json.get("type").equals(MsgType.ERROR.toString())) {
 			//TODO depends; maybe disconnect
 		}
 		else {

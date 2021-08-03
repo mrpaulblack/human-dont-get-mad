@@ -79,7 +79,7 @@ public class Player {
 	protected JSONObject toJSON() {
 		JSONObject json = new JSONObject();
 		JSONArray data = new JSONArray();
-		json.put("color", color.toString().toLowerCase());
+		json.put("color", color.toString());
 		json.put("name", name);
 		json.put("client", clientName);
 		json.put("ready", ready);

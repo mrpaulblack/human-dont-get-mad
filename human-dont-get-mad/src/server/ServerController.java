@@ -41,7 +41,7 @@ public class ServerController {
 	protected void sendWelcome(ClientThread client) {
 		JSONObject json = new JSONObject();
 		JSONObject data = new JSONObject();
-		json.put("type", MsgType.WELCOME.toString().toLowerCase());
+		json.put("type", MsgType.WELCOME.toString());
 		data.put("protocolVersion", protocolVersion);
 		data.put("serverName", serverName);
 		data.put("serverVersion", serverVersion);
@@ -58,8 +58,8 @@ public class ServerController {
 	private void sendassignColor(ClientThread client, PlayerColor color) {
 		JSONObject json = new JSONObject();
 		JSONObject data = new JSONObject();
-		json.put("type", MsgType.ASSIGNCOLOR.toString().toLowerCase());
-		data.put("color", color.toString().toLowerCase());
+		json.put("type", MsgType.ASSIGNCOLOR.toString());
+		data.put("color", color.toString());
 		json.put("data", data);
 		client.out(json.toString());
 	}
@@ -72,7 +72,7 @@ public class ServerController {
 	 */
 	private void broadcastUpdate() {
 		JSONObject json = new JSONObject();
-		json.put("type", MsgType.UPDATE.toString().toLowerCase());
+		json.put("type", MsgType.UPDATE.toString());
 		json.put("data", game.toJSON());
 		for (Entry<ClientThread, PlayerColor> client : clients.entrySet()) {
 			client.getKey().out(json.toString());
@@ -89,8 +89,8 @@ public class ServerController {
 	private void sendError(ClientThread client, MsgError error) {
 		JSONObject json = new JSONObject();
 		JSONObject data = new JSONObject();
-		json.put("type", MsgType.ERROR.toString().toLowerCase());
-		data.put("error", error.toString().toLowerCase());
+		json.put("type", MsgType.ERROR.toString());
+		data.put("error", error.toString());
 		json.put("data", data);
 		client.out(json.toString());
 	}
@@ -108,7 +108,7 @@ public class ServerController {
 		JSONObject data = new JSONObject(json.get("data").toString());
 
 		// register
-		if (json.getString("type").equals(MsgType.REGISTER.toString().toLowerCase()) && client.getState() == MsgType.WELCOME && game.getGameState() == GameState.WAITINGFORPLAYERS) {
+		if (json.getString("type").equals(MsgType.REGISTER.toString()) && client.getState() == MsgType.WELCOME && game.getGameState() == GameState.WAITINGFORPLAYERS) {
 			PlayerColor tempColor;
 			if (data.has("requestedColor")) {
 				tempColor = game.register(decodeColor(data.getString("requestedColor")), data.getString("playerName"), data.getString("clientName"), data.getFloat("clientVersion"));
@@ -129,7 +129,7 @@ public class ServerController {
 		}
 		
 		// ready
-		else if (json.getString("type").equals(MsgType.READY.toString().toLowerCase()) && client.getState() == MsgType.REGISTER && game.getGameState() == GameState.WAITINGFORPLAYERS) {
+		else if (json.getString("type").equals(MsgType.READY.toString()) && client.getState() == MsgType.REGISTER && game.getGameState() == GameState.WAITINGFORPLAYERS) {
 			client.setState(MsgType.READY);
 			if (game.ready(clients.get(client))) {
 				//TODO handshake finished; game started and sendTurn() to first player
@@ -138,7 +138,7 @@ public class ServerController {
 		}
 		
 		// move
-		else if (json.getString("type").equals(MsgType.MOVE.toString().toLowerCase()) && client.getState() == MsgType.READY && game.getGameState() == GameState.RUNNING) {
+		else if (json.getString("type").equals(MsgType.MOVE.toString()) && client.getState() == MsgType.READY && game.getGameState() == GameState.RUNNING) {
 			//TODO execute move or error when illegal argument
 		}
 		

@@ -52,7 +52,7 @@ public class Game implements GameController{
 			return true;
 		}
 		else {
-			LogController.log(Log.DEBUG, "Player ready: " + players.get(color).getColor().toString().toLowerCase());
+			LogController.log(Log.DEBUG, "Player ready: " + players.get(color).getColor().toString());
 			return false;
 		}
 		
@@ -65,15 +65,15 @@ public class Game implements GameController{
 	public JSONObject toJSON() {
 		JSONObject json = new JSONObject();
 		JSONArray data = new JSONArray();
-		json.put("state", state.toString().toLowerCase());
+		json.put("state", state.toString());
 		if (currentPlayer == null) {
 			json.put("currentPlayer", "null");
 		}
-		else { json.put("currentPlayer", currentPlayer.toString().toLowerCase()); }
+		else { json.put("currentPlayer", currentPlayer.toString()); }
 		if (winner == null) {
 			json.put("winner", "null");
 		}
-		else { json.put("winner", winner.toString().toLowerCase()); }
+		else { json.put("winner", winner.toString()); }
 		for (Map.Entry<PlayerColor, Player> player : players.entrySet()) {
 			data.put(player.getValue().toJSON());
 		}
