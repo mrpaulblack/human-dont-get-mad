@@ -124,7 +124,7 @@ public class ServerController {
 			}
 			else {
 				sendError(client, MsgError.SERVERFULL);
-				throw new IllegalArgumentException();
+				throw new IllegalArgumentException("server full or game already running");
 			}
 		}
 		
@@ -155,7 +155,7 @@ public class ServerController {
 		// unsupported
 		else {
 			sendError(client, MsgError.UNSUPPORTEDMESSAGETYPE);
-			throw new IllegalArgumentException();
+			throw new IllegalArgumentException("Message Type not supported or out of order");
 		}
 	}
 
