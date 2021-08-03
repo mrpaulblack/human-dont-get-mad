@@ -1,11 +1,17 @@
 package game;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 //since August 2nd 2021
 public class Player {
 	private Figure[] figures = {new Figure(0), new Figure(1), new Figure(2), new Figure(3)};
+	private Dice dice = new Dice();
 	private PlayerColor color;
 	private String name;
 	private String clientName;
+	//TODO use clientVersion for something
+	@SuppressWarnings("unused")
 	private Float clientVersion;
 	private Boolean ready = false;
 	private Boolean isBot = false;
@@ -22,5 +28,22 @@ public class Player {
 	//get color from player
 	protected PlayerColor getColor() {
 		return color;
+	}
+	
+	//returns player stats as json in maedn spec
+	protected JSONObject toJSON() {
+		JSONObject json = new JSONObject();
+		JSONArray data = new JSONArray();
+		json.put("color", color.toString().toLowerCase());
+		json.put("name", name);
+		json.put("client", clientName);
+		json.put("ready", ready);
+		json.put("isBot", isBot);
+		json.put("dice", dice.getDice());
+		for (Figure figure : figures) {
+			data.put(figure.getJSON());
+		}
+		json.put("figures", data);
+		return json;
 	}
 }

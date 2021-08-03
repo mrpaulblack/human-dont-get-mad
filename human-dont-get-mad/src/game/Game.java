@@ -2,11 +2,12 @@ package game;
 
 import java.util.ArrayList;
 
+import org.json.JSONArray;
+
 //since August 2nd 2021
 public class Game {
 	private GameState state = GameState.WAITINGFORPLAYER;
 	private ArrayList<Player> players = new ArrayList<Player>();
-	private Dice dice = new Dice();
 	
 	//constructor
 	public Game() {
@@ -35,6 +36,15 @@ public class Game {
 			return assignedColor;
 		}
 		else { return null; }
+	}
+	
+	//get json of current game for all player
+	public JSONArray toJSON() {
+		JSONArray json = new JSONArray();
+		for (Player player : players) {
+			json.put(player.toJSON());
+		}
+		return json;
 	}
 
 }

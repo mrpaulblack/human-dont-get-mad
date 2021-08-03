@@ -71,7 +71,7 @@ public class ServerController {
 		data.put("currentPlayer", "");
 		//TODO add winner (null if game state is NOT finished)
 		data.put("winner", "");
-		//TODO add player array
+		data.put("players", game.toJSON());
 		json.put("data", data);
 		for (ClientThread client : clients) {
 			client.out(json.toString());
@@ -89,6 +89,7 @@ public class ServerController {
 	}
 	
 	//send error to client with message
+	//TODO use for something?
 	@SuppressWarnings("unused")
 	private void sendError(ClientThread client, MsgError error, String message) {
 		JSONObject json = new JSONObject();

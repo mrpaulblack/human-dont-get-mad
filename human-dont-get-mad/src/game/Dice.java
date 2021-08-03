@@ -5,6 +5,7 @@ import java.util.Random;
 //since August 03rd 2021
 public class Dice {
 	private Random random = new Random();
+	private Integer currentDice = 0;
 	
 	//return an init between min and max
 	protected Integer getRandomInt(Integer min, Integer max) {
@@ -14,8 +15,13 @@ public class Dice {
 		else { return random.nextInt(max - min) + min; }
 	}
 	
-	//return a dice throw
+	//throw the dice once
+	protected void setDice() {
+		currentDice = random.nextInt(6) +1;
+	}
+	
+	//return currentDice
 	protected Integer getDice() {
-		return random.nextInt(6) +1;
+		return currentDice;
 	}
 }
