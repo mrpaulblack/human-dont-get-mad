@@ -6,6 +6,7 @@ import org.json.JSONObject;
 import game.Log;
 import game.LogController;
 import game.MsgType;
+import game.PlayerColor;
 import game.Game;
 import game.GameState;
 
@@ -22,7 +23,7 @@ import game.GameState;
 * @since   2021-07-23
 */
 public class ServerController {
-	private double protocolVersion = 3;
+	private double protocolVersion = 3.0;
 	private double serverVersion = 0.1;
 	private String serverName = "human-dont-get-mad";
 	private Game game = new Game();
@@ -35,7 +36,7 @@ public class ServerController {
 	protected void sendWelcome(ClientThread player) {
 		JSONObject json = new JSONObject();
 		JSONObject data = new JSONObject();
-		json.put("type", MsgType.WELCOME);
+		json.put("type", MsgType.WELCOME.toString().toLowerCase());
 		data.put("protocolVersion", protocolVersion);
 		data.put("serverName", serverName);
 		data.put("serverVersion", serverVersion);
@@ -51,7 +52,7 @@ public class ServerController {
 	private void sendassignColor(ClientThread player, String color) {
 		JSONObject json = new JSONObject();
 		JSONObject data = new JSONObject();
-		json.put("type", MsgType.ASSIGNCOLOR);
+		json.put("type", MsgType.ASSIGNCOLOR.toString().toLowerCase());
 		//TODO assign avail color and honor client request
 		data.put("color", color);
 		json.put("data", data);
@@ -67,34 +68,27 @@ public class ServerController {
 	 */
 	protected void decoder(ClientThread player, String input) throws Exception {
 		JSONObject json = new JSONObject(input);
-		JSONObject data = new JSONObject(json.get("data").toString());
+		JSONObject data = new JSONObject(json.getJSONObject("data"));
 		LogController.log(Log.DEBUG, json.get("type") + ": " + data);
 
 		//register
-		if (json.get("type").equals(MsgType.REGISTER.toString())) {
-			//TODO check if there are still people missing in the queue
-			if (player.getState() == MsgType.WELCOME && game.getGameState() == GameState.WAITINGFORPLAYER) {
-				player.setState(MsgType.REGISTER);
-				sendassignColor(player, game.setPlayer(data.getString("requestedColor"), data.getString("playerName"), data.getString("clientName"), data.getFloat("clientVersion")));
-			}
-			else { throw new IllegalArgumentException(); }
+		if (json.getString("type").equals(MsgType.REGISTER.toString().toLowerCase()) && player.getState() == MsgType.WELCOME && game.getGameState() == GameState.WAITINGFORPLAYER) {
+			player.setState(MsgType.REGISTER);
+			sendassignColor(player, game.register(decodeColor(data.getString("requestedColor")), data.getString("playerName"), data.getString("clientName"), data.getFloat("clientVersion")));
 		}
 		
 		//ready
-		else if (json.get("type").equals(MsgType.READY.toString())) {
-			if (player.getState() == MsgType.REGISTER) {
-				//TODO update and add client to client array
-			}
-			else { throw new IllegalArgumentException(); }
+		else if (json.getString("type").equals(MsgType.READY.toString().toLowerCase()) && player.getState() == MsgType.REGISTER) {
+			//TODO update and add client to client array
 		}
 		
 		//move
-		else if (json.get("type").equals(MsgType.MOVE.toString())) {
+		else if (json.getString("type").equals(MsgType.MOVE.toString().toLowerCase())) {
 			//TODO update or error
 		}
 		
 		//message (optional)
-		else if (json.get("type").equals(MsgType.MESSAGE.toString())) {
+		else if (json.getString("type").equals(MsgType.MESSAGE.toString())) {
 			//TODO idk
 		}
 		
@@ -104,6 +98,17 @@ public class ServerController {
 		}
 		else {
 			throw new IllegalArgumentException();
+		}
+	}
+	
+	//decode a String color
+	private PlayerColor decodeColor(String color) {
+		switch(color) {
+		case "red": return PlayerColor.RED;
+		case "blue": return PlayerColor.BLUE;
+		case "green": return PlayerColor.GREEN;
+		case "yellow": return PlayerColor.YELLOW;
+		default: return null;
 		}
 	}
 

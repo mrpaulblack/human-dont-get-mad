@@ -7,6 +7,11 @@ public class Game {
 	private GameState state = GameState.WAITINGFORPLAYER;
 	private ArrayList<Player> player = new ArrayList<Player>();
 	
+	//constructor
+	public Game() {
+		//start
+	}
+	
 	//set game state
 	//TODO without param and just set it auto
 	public void setGameState(GameState newState) {
@@ -20,9 +25,18 @@ public class Game {
 	
 	//add a new player to the game
 	//TODO check if there is still a player needed
-	public String setPlayer(String requestedColor, String name, String clientName, Float clientVersion) {
-		player.add(new Player("red", name, clientName, clientVersion));
-		return "red";
+	public String register(PlayerColor requestedColor, String name, String clientName, Float clientVersion) {
+		PlayerColor assignedColor = null;
+
+		if (requestedColor == null) {
+			assignedColor = PlayerColor.getAvail();
+		}
+		else {
+			assignedColor = PlayerColor.getAvail(requestedColor);
+		}
+
+		player.add(new Player(assignedColor, name, clientName, clientVersion));
+		return assignedColor.toString().toLowerCase();
 	}
 
 }

@@ -19,5 +19,5 @@ public enum MsgType {
 	TURN,
 	PLAYERDISCONNECTED,
 	MESSAGE,
-	ERROR
+	ERROR;
 }

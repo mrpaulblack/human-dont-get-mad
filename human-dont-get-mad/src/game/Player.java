@@ -2,7 +2,7 @@ package game;
 
 
 public class Player {
-	private String color;
+	private PlayerColor color;
 	private String name;
 	private String clientName;
 	private Float clientVersion;
@@ -11,10 +11,19 @@ public class Player {
 	private Figure[] figures = new Figure[4];
 	
 	//constructor set client attributes
-	public Player(String color, String name, String clientName, Float clientVersion) {
+	public Player(PlayerColor color, String name, String clientName, Float clientVersion) {
 		this.color = color;
 		this.name = name;
 		this.clientName = clientName;
 		this.clientVersion = clientVersion;
+
+		for (Integer i = 0; i < figures.length; i++) {
+			figures[i] = new Figure();
+		}
+	}
+	
+	//get color from player
+	public PlayerColor getColor() {
+		return color;
 	}
 }
