@@ -27,8 +27,8 @@ import game.GameState;
 * @apiNote MAEDN 3.0
 */
 public class ServerController {
-	private double protocolVersion = 3.0;
-	private double serverVersion = 0.1;
+	private float protocolVersion = 3.0f;
+	private float serverVersion = 0.1f;
 	private String serverName = "human-dont-get-mad";
 	private HashMap<ClientThread, PlayerColor> clients = new HashMap<ClientThread, PlayerColor>();
 	private GameController game = new Game();
