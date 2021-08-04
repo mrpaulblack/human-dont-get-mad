@@ -1,7 +1,9 @@
 package server;
 
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Objects;
 
 // external: https://mvnrepository.com/artifact/org.json/json/20210307
 import org.json.JSONObject;
@@ -61,6 +63,19 @@ public class ServerController {
 		json.put("type", MsgType.ASSIGNCOLOR.toString());
 		data.put("color", color.toString());
 		json.put("data", data);
+		client.out(json.toString());
+	}
+	
+	//TODO add doc
+	private void sendTurn() {
+		JSONObject json = new JSONObject();
+		ClientThread client = null;
+		for (Map.Entry<ClientThread, PlayerColor> entry : clients.entrySet()) {
+			if (entry.getValue() == game.currentPlayer()) {
+				client = entry.getKey();
+			}
+		}
+		json.put("data", game.turn(-1));
 		client.out(json.toString());
 	}
 
@@ -144,16 +159,17 @@ public class ServerController {
 		
 		// ready
 		else if (json.getString("type").equals(MsgType.READY.toString()) && (client.getState() == MsgType.REGISTER || client.getState() == MsgType.READY) && game.getState() == GameState.WAITINGFORPLAYERS) {
-			if (game.ready(clients.get(client), data.getBoolean("ready"))) {
-				//TODO handshake finished; game started and sendTurn() to first player
-			}
 			client.setState(MsgType.READY);
-			broadcastUpdate();
+			if (game.ready(clients.get(client), data.getBoolean("ready"))) {
+				broadcastUpdate();
+				sendTurn();
+			}
+			else { broadcastUpdate(); }
 		}
 		
 		// move
 		else if (json.getString("type").equals(MsgType.MOVE.toString()) && client.getState() == MsgType.READY && game.getState() == GameState.RUNNING) {
-			//TODO execute move or error when illegal argument
+			//TODO execute move or error when illegal argument and after that send turn to next player
 		}
 		
 		// message (optional)

@@ -64,4 +64,10 @@ public interface GameController {
 	 * @return JSONObject - returns the game as JSON
 	 */
 	public JSONObject toJSON();
+	
+	//TODO add doc
+	public PlayerColor currentPlayer();
+	
+	//TODO add doc
+	public JSONObject turn(Integer selected);
 }

@@ -59,7 +59,7 @@ public class Game implements GameController {
 		if (counter >= players.size()) {
 			state = GameState.RUNNING;
 			currentPlayer = PlayerColor.RED;
-			//TODO generate dice for first (red player)
+			players.get(currentPlayer).dice.setStartDice();
 			LogController.log(Log.INFO, "Game started: " + players);
 			return true;
 		}
@@ -94,5 +94,25 @@ public class Game implements GameController {
 		json.put("players", data);
 		return json;
 	}
-
+	
+	// returns currentPlayer so the controller knows who gets the next turn
+	public PlayerColor currentPlayer() {
+		return currentPlayer;
+	}
+	
+	//returns true if executed move or when called with -1 returns turn options as array
+	public JSONObject turn(Integer selected) {
+		JSONObject json = new JSONObject();
+		JSONArray data = new JSONArray();
+		if (selected <= -1) {
+			//execute turn
+			json.put("successful", true);
+			return json;
+		}
+		else {
+			//TODO add turn options to data Array
+			json.put("options", data);
+			return json;
+		}
+	}
 }
