@@ -3,10 +3,10 @@ package client;
 import java.awt.*;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
-import java.util.concurrent.TimeUnit;
-
 import game.Log;
 import game.LogController;
+
+import client.ClientController;
 
 import javax.swing.*;
 
@@ -24,16 +24,19 @@ public class GameWindow extends JFrame {
 	
 	static UISettings uis = new UISettings();	
 	static GetScreenData gcd = new GetScreenData();
+	static Launcher launcher = new Launcher();
 	static Main Main = new Main();
+	
 	static String temp = "";
+	boolean isPressed = false;
 	
 //Panels
 	private JPanel mainWindowReplacer = new JPanel();
-	private JPanel mainGameArea= new JPanel();
-	private JPanel statsArea= new JPanel();
-	private JPanel statsAreaText= new JPanel();
-	private JPanel statsAreaDice= new JPanel();
-	private JPanel diceArea= new JPanel();
+	public static JPanel mainGameArea = new JPanel();
+	private JPanel statsArea = new JPanel();
+	private JPanel statsAreaText = new JPanel();
+	private JPanel statsAreaDice = new JPanel();
+	private JPanel diceArea = new JPanel();
 	
 	private JPanel redBase = new JPanel();
 	private JPanel greenBase = new JPanel();
@@ -147,6 +150,8 @@ public class GameWindow extends JFrame {
 		}
 	
 	
+	
+	
 	/**
 	 *	<h1><i>GameWinodw</i></h1>
 	 * <p>This function will proceed and display the current window</p>
@@ -208,7 +213,7 @@ public class GameWindow extends JFrame {
 		
 		//Sets the Text for all Labels
 		playerOneStats.setText("P1: " + "Red");			//for now, the color is a placehold until there is color data
-		playerOneName.setText("Tim");					//for now, the name is a placeholder too
+		playerOneName.setText("");					//for now, the name is a placeholder too
 		playerTwoStats.setText("P2: " + "Green");		//for now, the color is a placehold until there is color data
 		playerTwoName.setText("Konrad");				//for now, the name is a placeholder too
 		playerThreeStats.setText("P3: " + "Blue");		//for now, the color is a placehold until there is color data
@@ -222,20 +227,43 @@ public class GameWindow extends JFrame {
 			statsAreaText.add(playerStat);
 		}
 		
+		
+		
 		dice.setLocation(5, 5);
 		dice.setSize(150, 150);
+		dice.setText("Are Your Ready "
+				+ "For Fun!");
 		diceArea.add(dice);
 		diceArea.setLayout(null);
 		dice.addActionListener(e -> {
-			//TODO 
+			if (ClientController.gameIsStarted) {
+				
+			}
+			else {
+				if (isPressed) {
+					playerOneStats.setBackground(background);
+					playerOneStats.setText("P1: Red");
+					playerOneName.setBackground(background);
+					playerOneName.setText("");
+					isPressed = false;
+				}
+				else {
+					playerOneStats.setBackground(Color.green);
+					playerOneStats.setText("P1: Ready!");
+					playerOneName.setBackground(Color.green);
+					playerOneName.setText(launcher.lUserName);
+					isPressed = true;
+				}
+			}
 		});
 		
 		
-		for(int i = 0; i < buttons.length; i++) {
+		for(int i = 0; i < buttons.length; i++)
 			buttons[i] = new JButton();
-		}
+			
 		gameboard();
 	}
+	
 	
 	/**
 	 *	<h1><i>alignmentConstruct</i></h1>
@@ -310,6 +338,11 @@ public class GameWindow extends JFrame {
 	
 	GridBagConstraints gbcgb = new GridBagConstraints();
 	
+	public void constructGameWindow() {
+		
+	}
+	
+
 	
 	/**
 	 *	<h1><i>gameBoard</i></h1>
@@ -320,23 +353,53 @@ public class GameWindow extends JFrame {
 		
 		gbcgb.fill = GridBagConstraints.BOTH;
 		
-		redBase.setBackground(Color.RED);
-		greenBase.setBackground(Color.GREEN);
-		blueBase.setBackground(Color.BLUE);
-		yellowBase.setBackground(Color.YELLOW);
-		redHouse.setBackground(Color.RED);
-		greenHouse.setBackground(Color.GREEN);
-		blueHouse.setBackground(Color.BLUE);
-		yellowHouse.setBackground(Color.YELLOW);
+		redBase.setBackground(background);
+		greenBase.setBackground(background);
+		blueBase.setBackground(background);
+		yellowBase.setBackground(background);
+		redHouse.setBackground(background);
+		greenHouse.setBackground(background);
+		blueHouse.setBackground(background);
+		yellowHouse.setBackground(background);
 		
-		for(JButton Bases : bases ) 
-			Bases.setBackground(Color.LIGHT_GRAY);
 		
 		for(JButton Houses : houses ) 
 			Houses.setBackground(Color.LIGHT_GRAY);
 		
 		for(JButton btn : buttons ) 
 			btn.setBackground(Color.WHITE);
+		
+		for (int i = 0; i < bases.length; i++) {
+			if (0 <= i && i <= 3)
+				bases [i].setBackground(Color.red);
+			if (4 <= i && i <= 7)
+				bases [i].setBackground(Color.green);
+			if (8 <= i && i <= 11)
+				bases [i].setBackground(Color.blue);
+			if (12 <= i && i <= 15)
+				bases [i].setBackground(Color.yellow);
+		}
+		
+		for (JButton Bases : bases) {
+			Bases.addActionListener(e -> {
+				if (isPressed) {
+					Bases.setBackground(Color.black);
+				}
+				else {
+					for (int i = 0; i < bases.length; i++) {
+						if (0 <= i && i <= 3)
+							bases [i].setBackground(Color.red);
+						if (4 <= i && i <= 7)
+							bases [i].setBackground(Color.green);
+						if (8 <= i && i <= 11)
+							bases [i].setBackground(Color.blue);
+						if (12 <= i && i <= 15)
+							bases [i].setBackground(Color.yellow);
+					}
+				}
+			});
+		}
+		
 		
 		//need to be called first to construct the window
 		
@@ -347,16 +410,15 @@ public class GameWindow extends JFrame {
 		System.out.println("Penis: " + gcd.width);
 		
 		rePrintGameBoard();
-		
 		mainGameArea.addComponentListener(new ComponentAdapter() {
 		    public void componentResized(ComponentEvent componentEvent) {
-		    	
-		    	dim = mainWindowReplacer.getSize();
-
-		    	setWidthInsets = dim.width/80;
+			    	
+			   	dim = mainWindowReplacer.getSize();
+	
+			   	setWidthInsets = dim.width/80;
 				setHeigthInsets = dim.height/80;
-				
-		    	rePrintGameBoard();
+					
+			   	rePrintGameBoard();
 		    }
 	    });
 	}
