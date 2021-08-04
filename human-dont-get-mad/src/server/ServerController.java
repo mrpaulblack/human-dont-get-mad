@@ -122,7 +122,7 @@ public class ServerController {
 		JSONObject data = new JSONObject(json.get("data").toString());
 
 		// register
-		if (json.getString("type").equals(MsgType.REGISTER.toString()) && client.getState() == MsgType.WELCOME && game.getGameState() == GameState.WAITINGFORPLAYERS) {
+		if (json.getString("type").equals(MsgType.REGISTER.toString()) && client.getState() == MsgType.WELCOME && game.getState() == GameState.WAITINGFORPLAYERS) {
 			PlayerColor tempColor;
 			if (data.has("requestedColor")) {
 				tempColor = game.register(decodeColor(data.getString("requestedColor")), data.getString("playerName"), data.getString("clientName"), data.getFloat("clientVersion"));
@@ -143,7 +143,7 @@ public class ServerController {
 		}
 		
 		// ready
-		else if (json.getString("type").equals(MsgType.READY.toString()) && (client.getState() == MsgType.REGISTER || client.getState() == MsgType.READY) && game.getGameState() == GameState.WAITINGFORPLAYERS) {
+		else if (json.getString("type").equals(MsgType.READY.toString()) && (client.getState() == MsgType.REGISTER || client.getState() == MsgType.READY) && game.getState() == GameState.WAITINGFORPLAYERS) {
 			if (game.ready(clients.get(client), data.getBoolean("ready"))) {
 				//TODO handshake finished; game started and sendTurn() to first player
 			}
@@ -152,7 +152,7 @@ public class ServerController {
 		}
 		
 		// move
-		else if (json.getString("type").equals(MsgType.MOVE.toString()) && client.getState() == MsgType.READY && game.getGameState() == GameState.RUNNING) {
+		else if (json.getString("type").equals(MsgType.MOVE.toString()) && client.getState() == MsgType.READY && game.getState() == GameState.RUNNING) {
 			//TODO execute move or error when illegal argument
 		}
 		

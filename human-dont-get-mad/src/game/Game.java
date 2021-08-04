@@ -70,7 +70,7 @@ public class Game implements GameController {
 		
 	}
 
-	public GameState getGameState() {
+	public GameState getState() {
 		return state;
 	}
 

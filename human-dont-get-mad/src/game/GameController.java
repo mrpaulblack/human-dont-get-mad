@@ -50,11 +50,11 @@ public interface GameController {
 	public Boolean ready(PlayerColor color, Boolean isReady);
 	
 	/**
-	 *	<h1><i>getGameState</i></h1>
+	 *	<h1><i>getState</i></h1>
 	 * <p>This method returns the current game state.</p>
 	 * @return gameState - returns the current game state
 	 */
-	public GameState getGameState();
+	public GameState getState();
 	
 	/**
 	 * <h1><i>toJSON</i></h1>
