@@ -129,10 +129,9 @@ public class ServerController {
 		}
 		
 		// ready
-		else if (json.getString("type").equals(MsgType.READY.toString()) && client.getState() == MsgType.REGISTER && game.getGameState() == GameState.WAITINGFORPLAYERS) {
+		else if (json.getString("type").equals(MsgType.READY.toString()) && (client.getState() == MsgType.REGISTER || client.getState() == MsgType.READY) && game.getGameState() == GameState.WAITINGFORPLAYERS) {
 			client.setState(MsgType.READY);
-			//TODO set ready to false or true and check payload
-			if (game.ready(clients.get(client))) {
+			if (data.has("ready") && game.ready(clients.get(client), data.getBoolean("ready"))) {
 				//TODO handshake finished; game started and sendTurn() to first player
 			}
 			broadcastUpdate();

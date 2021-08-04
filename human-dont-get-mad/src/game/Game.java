@@ -35,10 +35,10 @@ public class Game implements GameController{
 		else { return null; }
 	}
 
-	public Boolean ready(PlayerColor color) {
+	public Boolean ready(PlayerColor color, Boolean isReady) {
 		//TODO if game starts with <4 player; fill the rest with BOTS
 		Integer counter = 0;
-		players.get(color).setReady();
+		players.get(color).setReady(isReady);
 		for (Map.Entry<PlayerColor, Player> player : players.entrySet()) {
 			if (player.getValue().getReady()) {
 				counter++;

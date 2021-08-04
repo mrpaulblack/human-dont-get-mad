@@ -34,9 +34,10 @@ public interface GameController {
 	 * thread is getting created for and the ServerController object for 
 	 * interaction with game logic.</p>
 	 * @param color - PlayerColor of the client that is ready
+	 * @param isReady - Boolean if player is ready or not
 	 * @return Boolean - returns true if all players are ready; false otherwise
 	 */
-	public Boolean ready(PlayerColor color);
+	public Boolean ready(PlayerColor color, Boolean isReady);
 	
 	/**
 	 *	<h1><i>getGameState</i></h1>

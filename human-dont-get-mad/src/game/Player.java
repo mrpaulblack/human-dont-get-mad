@@ -56,9 +56,10 @@ public class Player {
 	/**
 	 * <h1><i>setReady</i></h1>
 	 * <p>Sets player to ready.</p>
+	 * @param state - Boolean of is the player ready or not
 	 */
-	protected void setReady() {
-		ready = true;
+	protected void setReady(Boolean state) {
+		ready = state;
 	}
 	
 	/**
