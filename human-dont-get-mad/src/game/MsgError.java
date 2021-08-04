@@ -2,7 +2,7 @@ package game;
 
 /**
 * <h1>MsgType</h1>
-* <p>Enum that contains the different error types supported by
+* <p>ENUM that contains the different error types supported by
 * server and client.</p>
 *
 * @author  Paul Braeuning
@@ -15,5 +15,24 @@ public enum MsgError {
 	SERVERFULL,
 	ILLEGALMOVE,
 	NOTYOURTURN,
-	UNKNOWN
+	UNKNOWN;
+	
+	/**
+	 * <h1><i>toString</i></h1>
+	 * <p>This method is converting the ENUM to strings that are supported
+	 * by the MAEDN specification.</p>
+	 * @return String - return string supported by MAEDN specification
+	 */
+	@Override
+	public String toString() {
+		switch(this) {
+		case UNSUPPORTEDMESSAGETYPE: return "unsupportedMessageType";
+		case UNSUPPORTEDPROTOCOLVERSION: return "unsupportedProtocolVersion";
+		case SERVERFULL: return "serverFull";
+		case ILLEGALMOVE: return "illegalMove";
+		case NOTYOURTURN: return "notYourTurn";
+		case UNKNOWN: return "unknown";
+		default: return "";
+		}
+	}
 }

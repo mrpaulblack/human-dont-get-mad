@@ -7,11 +7,12 @@ import java.util.Scanner;
 
 import game.Log;
 import game.LogController;
+import game.MsgType;
 
 /**
 * <h1>ClientThread</h1>
 * <p>The ClientThread class implements the interface Runnable and
-* is therefore meant to be run on a extra thread. After the object is instaciated
+* is therefore meant to be run on a extra thread. After the object is instantiated
 * the run method is called.</p>
 * <b>Note:</b> This gets called every time a client joins and every ClientThread
 * uses the same ServerController object
@@ -26,9 +27,10 @@ public class ClientThread implements Runnable {
 	private Scanner in;
 	private PrintWriter out;
 	private String bufferIn;
+	private MsgType state = MsgType.WELCOME;
 
 	/**
-	 *	<h1><i>ClientThread</i></h1>
+	 * <h1><i>ClientThread</i></h1>
 	 * <p>This Constructor saves the socket object of the client the
 	 * thread is getting created for and the ServerController object for 
 	 * interaction with game logic.</p>
@@ -41,11 +43,11 @@ public class ClientThread implements Runnable {
 	}
 
 	/**
-	 *	<h1><i>run</i></h1>
-	 * <p>This method gets called after the object gets created on a seperate
+	 * <h1><i>run</i></h1>
+	 * <p>This method gets called after the object gets created on a separate
 	 * thread. It setups the connection to the client and starts the handshake
 	 * by sending a welcome message. After that it just listen for data from the client and
-	 * sends it to the controller. It runs until the tcp connection gets killed.</p>
+	 * sends it to the controller. It runs until the TCP connection gets killed.</p>
 	 */
 	@Override
 	public void run() {
@@ -74,12 +76,32 @@ public class ClientThread implements Runnable {
 	}
 	    
 	/**
-	 *	<h1><i>out</i></h1>
+	 * <h1><i>out</i></h1>
 	 * <p>This method just sends a string to the client.</p>
 	 * @param data - String with the payload
 	 */
-	public void out(String data) {
+	protected void out(String data) {
 		out.println(data);
 		LogController.log(Log.DEBUG, "TX: " + data);
+	}
+	
+	/**
+	 * <h1><i>setState</i></h1>
+	 * <p>This methods sets the state the client is currently in, so that the client
+	 * needs to go through the handshake properly before being part of the game.</p>
+	 * @param newState - MsgType of the new state for this client
+	 */
+	protected void setState(MsgType newState) {
+		state = newState;
+	}
+	
+	/**
+	 * <h1><i>getState</i></h1>
+	 * <p>this method returns the current game so that the ServerController
+	 * can verify the order of the received data.</p>
+	 * @return state - MsgType returns the handshake state of the client.
+	 */
+	protected MsgType getState() {
+		return state;
 	}
 }

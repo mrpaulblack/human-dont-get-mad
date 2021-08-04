@@ -52,7 +52,7 @@ public class ClientController {
 		
 		JSONObject json = new JSONObject();
 		JSONObject data = new JSONObject();
-		json.put("type", MsgType.REGISTER);
+		json.put("type", MsgType.REGISTER.toString());
 		data.put("clientName", clientName);
 		data.put("clientVersion", clientVersion);
 		data.put("playerName", l.lUserName);
@@ -74,7 +74,6 @@ public class ClientController {
 		LogController.log(Log.DEBUG, json.get("type") + ": " + data);
 
 		if (json.get("type").equals(MsgType.WELCOME.toString())) {
-			System.out.println("OUT1");
 			//TODO check if protocol and servr software is supported
 			sendRegister();
 		}
