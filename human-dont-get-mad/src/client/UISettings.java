@@ -15,6 +15,7 @@ public class UISettings {
 
 	Color background = Color.LIGHT_GRAY;
 	Color interactionFields = new Color(255, 255, 255);
+	Color isReadyColor = new Color(94, 195, 105);
 	
 //Fonts
 	Font generalFont = new Font("Serif",Font.PLAIN,15);

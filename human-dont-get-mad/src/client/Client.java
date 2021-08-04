@@ -29,8 +29,12 @@ public class Client extends Thread{
 	private PrintWriter out;
 	private String bufferIn;
 	
-	public static String serverAdress = "";
-	public static Integer port = 0;
+	public String serverAdress = "";
+	public Integer port = 0;
+	
+	public Client(ClientController controller) {
+		this.controller = controller;
+	}
 	
 	@Override
 	public void run() {
@@ -38,10 +42,9 @@ public class Client extends Thread{
 	}
 	
 	
-	public static void requestConnection() {
-		Client client = new Client();
-		
-		client.start(serverAdress, port);
+	public void requestConnection() {
+		//Client client = new Client(controller);
+		start(serverAdress, port);
 	}
 	
 	Main main = new Main();
@@ -52,7 +55,6 @@ public class Client extends Thread{
 			LogController.log(Log.INFO, "Connected to server: " + socket);
 			in = new Scanner(socket.getInputStream());
 			out = new PrintWriter(socket.getOutputStream(), true);
-			controller = new ClientController(this);
 			
 			main.connectionSuccessful = true;
 			

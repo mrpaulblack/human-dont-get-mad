@@ -22,20 +22,23 @@ import javax.swing.*;
 */
 public class GameWindow extends JFrame {
 	
-	static UISettings uis = new UISettings();	
-	static GetScreenData gcd = new GetScreenData();
-	static Launcher launcher = new Launcher();
-	static Main Main = new Main();
+	private ClientController ClientController;
 	
-	static String temp = "";
+	public void giveController(ClientController ClientController) {
+		this.ClientController = ClientController;
+	}
+	
+	UISettings uis = new UISettings();	
+	GetScreenData gcd = new GetScreenData();
+	
+	String temp = "";
 	boolean isPressed = false;
 	
 //Panels
 	private JPanel mainWindowReplacer = new JPanel();
-	public static JPanel mainGameArea = new JPanel();
+	private  JPanel mainGameArea = new JPanel();
 	private JPanel statsArea = new JPanel();
 	private JPanel statsAreaText = new JPanel();
-	private JPanel statsAreaDice = new JPanel();
 	private JPanel diceArea = new JPanel();
 	
 	private JPanel redBase = new JPanel();
@@ -52,7 +55,7 @@ public class GameWindow extends JFrame {
 	private JLabel playerTwoStats= new JLabel();
 	private JLabel playerThreeStats= new JLabel();
 	private JLabel playerFourStats= new JLabel();
-	private JLabel playerOneName= new JLabel();
+	private static JLabel playerOneName= new JLabel();
 	private JLabel playerTwoName= new JLabel();
 	private JLabel playerThreeName= new JLabel();
 	private JLabel playerFourName= new JLabel();
@@ -163,7 +166,7 @@ public class GameWindow extends JFrame {
 		
 		this.setLocation(0, 0);
 		this.setSize(windowSize);	//Set de default size to half the screensize for better UX
-		this.setExtendedState(JFrame.MAXIMIZED_BOTH); 
+//		this.setExtendedState(JFrame.MAXIMIZED_BOTH); 
 		this.setResizable(true);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setTitle("Human-Dont-Get-Mad");
@@ -202,24 +205,13 @@ public class GameWindow extends JFrame {
 		statsArea.setLayout(new GridLayout(1, 2, 5, 5));
 		
 		statsArea.add(statsAreaText);
-		statsArea.add(statsAreaDice);
 		
 		statsArea.setBackground(background);
 		statsAreaText.setBackground(background);
-		statsAreaDice.setBackground(background);
 		
 		statsArea.setLayout(new GridLayout(1, 2, 5, 5));
 		statsAreaText.setLayout(new GridLayout(4, 2, 5, 5));
 		
-		//Sets the Text for all Labels
-		playerOneStats.setText("P1: " + "Red");			//for now, the color is a placehold until there is color data
-		playerOneName.setText("");					//for now, the name is a placeholder too
-		playerTwoStats.setText("P2: " + "Green");		//for now, the color is a placehold until there is color data
-		playerTwoName.setText("Konrad");				//for now, the name is a placeholder too
-		playerThreeStats.setText("P3: " + "Blue");		//for now, the color is a placehold until there is color data
-		playerThreeName.setText("Paul");				//for now, the name is a placeholder too
-		playerFourStats.setText("P4: " + "Yellow");		//for now, the color is a placehold until there is color data
-		playerFourName.setText("Bot Yellow");			//for now, the name is a placeholder too
 		
 		for(JLabel playerStat : playerStats ) {
 			playerStat.setBackground(background);
@@ -241,17 +233,16 @@ public class GameWindow extends JFrame {
 			}
 			else {
 				if (isPressed) {
-					playerOneStats.setBackground(background);
-					playerOneStats.setText("P1: Red");
-					playerOneName.setBackground(background);
-					playerOneName.setText("");
+					
+					ClientController.isReady = false;
+					ClientController.sendReady();
+					
 					isPressed = false;
 				}
 				else {
-					playerOneStats.setBackground(Color.green);
-					playerOneStats.setText("P1: Ready!");
-					playerOneName.setBackground(Color.green);
-					playerOneName.setText(launcher.lUserName);
+					
+					ClientController.isReady = true;
+					ClientController.sendReady();
 					isPressed = true;
 				}
 			}
