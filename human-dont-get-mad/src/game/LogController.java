@@ -43,15 +43,15 @@ public abstract class LogController {
         
 		//error lvl
 		if (globalLogLvl == Log.ERROR && logLvl == Log.ERROR) {
-			System.out.println(LocalDateTime.now() + " [" + logLvl + "] (" + element.getClassName() + ") " + logLine);
+			System.out.println(LocalDateTime.now() + " [" + logLvl + "] (" + element.getClassName() + "." + element.getMethodName() + ") " + logLine);
 		}
 		//info lvl
 		else if (globalLogLvl == Log.INFO && (logLvl == Log.ERROR || logLvl == Log.INFO)) {
-			System.out.println(LocalDateTime.now() + " [" + logLvl + "] (" + element.getClassName() + ") " + logLine);
+			System.out.println(LocalDateTime.now() + " [" + logLvl + "] (" + element.getClassName() + "." + element.getMethodName() + ") " + logLine);
 		}
 		//debug lvl
 		else if (globalLogLvl == Log.DEBUG && (logLvl == Log.ERROR || logLvl == Log.INFO || logLvl == Log.DEBUG)) {
-			System.out.println(LocalDateTime.now() + " [" + logLvl + "] (" + element.getClassName() + ") " + logLine);
+			System.out.println(LocalDateTime.now() + " [" + logLvl + "] (" + element.getClassName() + "." + element.getMethodName() + ") " + logLine);
 		}
 	}
 }

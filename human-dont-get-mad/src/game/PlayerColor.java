@@ -99,4 +99,13 @@ public enum PlayerColor {
         	return null;
     	}
     }
+    
+    /**
+	 * <h1><i>setAvail</i></h1>
+	 * <p>This method makes a color available again if a player disconnects for example.</p>
+	 * @param add - PlayerColor is the color that is available again
+	 */
+    public static void setAvail(PlayerColor add) {
+    	availColor[add.getValue()] = true;
+    }
 }

@@ -18,7 +18,7 @@ import org.json.JSONObject;
 * @since   2021-08-02
 * @apiNote MAEDN 3.0
 */
-public class Game implements GameController{
+public class Game implements GameController {
 	private HashMap<PlayerColor, Player> players = new HashMap<PlayerColor, Player>();
 	private GameState state = GameState.WAITINGFORPLAYERS;
 	private PlayerColor currentPlayer = null;
@@ -33,6 +33,18 @@ public class Game implements GameController{
 			return assignedColor;
 		}
 		else { return null; }
+	}
+	
+	public void remove(PlayerColor color) {
+		LogController.log(Log.INFO, "Player disconnected: " + players.get(color).toJSON());
+		if (state == GameState.WAITINGFORPLAYERS) {
+			PlayerColor.setAvail(color);
+			players.remove(color, players.get(color));
+		}
+		else if (state == GameState.RUNNING) {
+			PlayerColor.setAvail(color);
+			//TODO replace player in running game with BOT
+		}
 	}
 
 	public Boolean ready(PlayerColor color, Boolean isReady) {
@@ -52,7 +64,7 @@ public class Game implements GameController{
 			return true;
 		}
 		else {
-			LogController.log(Log.DEBUG, "Player ready: " + players.get(color).getColor().toString());
+			LogController.log(Log.DEBUG, "Player ready " + isReady + ": " + players.get(color).toJSON());
 			return false;
 		}
 		
