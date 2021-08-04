@@ -74,8 +74,10 @@ public class Game implements GameController{
 			json.put("winner", "null");
 		}
 		else { json.put("winner", winner.toString()); }
-		for (Map.Entry<PlayerColor, Player> player : players.entrySet()) {
-			data.put(player.getValue().toJSON());
+		for (Integer i = 0; i < 4; i++) {
+			if (players.get(PlayerColor.valueOf(i)) != null) {
+				data.put(players.get(PlayerColor.valueOf(i)).toJSON());
+			}
 		}
 		json.put("players", data);
 		return json;
