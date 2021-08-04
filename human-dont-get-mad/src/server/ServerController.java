@@ -131,6 +131,7 @@ public class ServerController {
 		// ready
 		else if (json.getString("type").equals(MsgType.READY.toString()) && client.getState() == MsgType.REGISTER && game.getGameState() == GameState.WAITINGFORPLAYERS) {
 			client.setState(MsgType.READY);
+			//TODO set ready to false or true and check payload
 			if (game.ready(clients.get(client))) {
 				//TODO handshake finished; game started and sendTurn() to first player
 			}
