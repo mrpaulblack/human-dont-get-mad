@@ -29,14 +29,14 @@ public class Game implements GameController {
 			PlayerColor assignedColor = null;
 			assignedColor = PlayerColor.getAvail(requestedColor);
 			players.put(assignedColor, new Player(assignedColor, name, clientName, clientVersion, false));
-			LogController.log(Log.INFO, "New Player registered: " + players.get(assignedColor).toJSON().toString());
+			LogController.log(Log.INFO, "New Player registered: " + players.get(assignedColor).toJSON(false).toString());
 			return assignedColor;
 		}
 		else { return null; }
 	}
 	
 	public void remove(PlayerColor color) {
-		LogController.log(Log.INFO, "Player disconnected: " + players.get(color).toJSON());
+		LogController.log(Log.INFO, "Player disconnected: " + players.get(color).toJSON(false));
 		if (state == GameState.WAITINGFORPLAYERS) {
 			PlayerColor.setAvail(color);
 			players.remove(color, players.get(color));
@@ -64,7 +64,7 @@ public class Game implements GameController {
 			return true;
 		}
 		else {
-			LogController.log(Log.DEBUG, "Player ready " + isReady + ": " + players.get(color).toJSON());
+			LogController.log(Log.DEBUG, "Player ready " + isReady + ": " + players.get(color).toJSON(false));
 			return false;
 		}
 		
@@ -72,6 +72,10 @@ public class Game implements GameController {
 
 	public GameState getState() {
 		return state;
+	}
+
+	public PlayerColor currentPlayer() {
+		return currentPlayer;
 	}
 
 	public JSONObject toJSON() {
@@ -88,16 +92,11 @@ public class Game implements GameController {
 		else { json.put("winner", winner.toString()); }
 		for (Integer i = 0; i < 4; i++) {
 			if (players.get(PlayerColor.valueOf(i)) != null) {
-				data.put(players.get(PlayerColor.valueOf(i)).toJSON());
+				data.put(players.get(PlayerColor.valueOf(i)).toJSON(true));
 			}
 		}
 		json.put("players", data);
 		return json;
-	}
-	
-	// returns currentPlayer so the controller knows who gets the next turn
-	public PlayerColor currentPlayer() {
-		return currentPlayer;
 	}
 	
 	//returns true if executed move or when called with -1 returns turn options as array
@@ -105,13 +104,15 @@ public class Game implements GameController {
 		JSONObject json = new JSONObject();
 		JSONArray data = new JSONArray();
 		if (selected <= -1) {
-			//execute turn
-			json.put("successful", true);
+			//TODO add turn options to data Array
+			// dry run
+			json.put("options", data);
 			return json;
 		}
 		else {
-			//TODO add turn options to data Array
-			json.put("options", data);
+			// execute turn
+			// if turn unsuccessful return error
+			json.put("successful", true);
 			return json;
 		}
 	}

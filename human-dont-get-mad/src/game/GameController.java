@@ -27,7 +27,7 @@ public interface GameController {
 	 * @return PlayerColor - returns the selected color for the player
 	 */
 	public PlayerColor register(PlayerColor requestedColor, String name, String clientName, Float clientVersion);
-	
+
 	/**
 	 * <h1><i>remove</i></h1>
 	 * <p>This method removes a player from the game. It does not matter if the game
@@ -37,7 +37,7 @@ public interface GameController {
 	 * @param color - PlayerColor of the removed player
 	 */
 	public void remove(PlayerColor color);
-	
+
 	/**
 	 * <h1><i>ready</i></h1>
 	 * <p>This Constructor saves the socket object of the client the
@@ -48,14 +48,21 @@ public interface GameController {
 	 * @return Boolean - returns true if all players are ready; false otherwise
 	 */
 	public Boolean ready(PlayerColor color, Boolean isReady);
-	
+
 	/**
-	 *	<h1><i>getState</i></h1>
+	 * <h1><i>getState</i></h1>
 	 * <p>This method returns the current game state.</p>
 	 * @return gameState - returns the current game state
 	 */
 	public GameState getState();
-	
+
+	/**
+	 * <h1><i>currentPlayer</i></h1>
+	 * <p>This method returns the current player in the game logic.</p>
+	 * @return PlayerColor - color of the current player
+	 */
+	public PlayerColor currentPlayer();
+
 	/**
 	 * <h1><i>toJSON</i></h1>
 	 * <p>This method is like a toString() and returns the current game state and all players
@@ -64,9 +71,6 @@ public interface GameController {
 	 * @return JSONObject - returns the game as JSON
 	 */
 	public JSONObject toJSON();
-	
-	//TODO add doc
-	public PlayerColor currentPlayer();
 	
 	//TODO add doc
 	public JSONObject turn(Integer selected);

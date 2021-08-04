@@ -66,9 +66,10 @@ public class Player {
 	 * <h1><i>toJSON</i></h1>
 	 * <p>This method returns all positions of all player figures and the attributes
 	 * of the player as JSON in MAEDN specifications.</p>
+	 * @param addFigure - Boolean adds figure position array if true
 	 * @return JSONObject - returns JSON about the player
 	 */
-	protected JSONObject toJSON() {
+	protected JSONObject toJSON(Boolean addFigure) {
 		JSONObject json = new JSONObject();
 		JSONArray data = new JSONArray();
 		json.put("color", color.toString());
@@ -77,10 +78,12 @@ public class Player {
 		json.put("ready", ready);
 		json.put("isBot", isBot);
 		json.put("dice", dice.getDice());
-		for (Figure figure : figures) {
-			data.put(figure.getJSON());
+		if (addFigure) {
+			for (Figure figure : figures) {
+				data.put(figure.getJSON());
+			}
+			json.put("figures", data);
 		}
-		json.put("figures", data);
 		return json;
 	}
 }
