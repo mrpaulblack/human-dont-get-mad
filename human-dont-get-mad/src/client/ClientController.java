@@ -1,11 +1,14 @@
 package client;
 
+import java.awt.Color;
+
 // external: https://mvnrepository.com/artifact/org.json/json/20210307
 import org.json.JSONObject;
 
 import game.Log;
 import game.LogController;
 import game.MsgType;
+import client.GameWindow;
 
 /**
 * <h1>ClientController</h1>
@@ -20,6 +23,9 @@ import game.MsgType;
 * @since   2021-07-23
 */
 public class ClientController {
+	
+	//Placehold if theres is more data to work with
+	static boolean gameIsStarted = false;
 	
 	Launcher l = new Launcher();
 	
@@ -68,16 +74,20 @@ public class ClientController {
 		LogController.log(Log.DEBUG, json.get("type") + ": " + data);
 
 		if (json.get("type").equals(MsgType.WELCOME.toString())) {
+			System.out.println("OUT1");
 			//TODO check if protocol and servr software is supported
 			sendRegister();
 		}
 		else if (json.get("type").equals(MsgType.ASSIGNCOLOR.toString())) {
+			System.out.println("OUT2");
+			updateReadyScreen();
 			//TODO wait for GUI and send ready
 		}
 		else if (json.get("type").equals(MsgType.UPDATE.toString())) {
-			//TODO update board; asynchron
+			System.out.println("OUT3");
 		}
 		else if (json.get("type").equals(MsgType.TURN.toString())) {
+			System.out.println("OUT4");
 			//TODO send move
 		}
 		else if (json.get("type").equals(MsgType.PLAYERDISCONNECTED.toString())) {
@@ -91,6 +101,15 @@ public class ClientController {
 		}
 		else {
 			//TODO wrong data terminate connection
+		}
+	}
+	
+	public void updateReadyScreen() {
+		if (gameIsStarted) {
+			//TODO got executed if the game has started after the pregame screen
+		}
+		else {
+			//TODO should be executed befor the game started -> if a player pressed ready, set it everywhere green
 		}
 	}
 }
