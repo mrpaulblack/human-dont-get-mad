@@ -32,7 +32,7 @@ public class ServerController {
 	private String serverName = "human-dont-get-mad";
 	private HashMap<ClientThread, PlayerColor> clients = new HashMap<ClientThread, PlayerColor>();
 	private GameController game = new Game();
-	
+
 	/**
 	 * <h1><i>sendWelcome</i></h1>
 	 * <p>This method is sending a welcome message to the selected player (ClientThread).</p>
@@ -48,7 +48,7 @@ public class ServerController {
 		json.put("data", data);
 		client.out(json.toString());
 	}
-	
+
 	/**
 	 * <h1><i>sendassignColor</i></h1>
 	 * <p>This method is sending a assingColor message to the selected player (ClientThread).</p>
@@ -63,7 +63,7 @@ public class ServerController {
 		json.put("data", data);
 		client.out(json.toString());
 	}
-	
+
 	/**
 	 * <h1><i>broadcastUpdate</i></h1>
 	 * <p>This method is broadcasting the current game state,
@@ -78,7 +78,7 @@ public class ServerController {
 			client.getKey().out(json.toString());
 		}
 	}
-	
+
 	/**
 	 * <h1><i>sendError</i></h1>
 	 * <p>This method returns a selected error without a message to the
@@ -94,7 +94,21 @@ public class ServerController {
 		json.put("data", data);
 		client.out(json.toString());
 	}
-	
+
+	/**
+	 * <h1><i>disconnect</i></h1>
+	 * <p>This method is called when a client socket disconnects from the server by
+	 * cutting the TCP connection. It checks if the client is part of the game (finished handshake)
+	 * and informs the game, if so.</p>
+	 * @param client - ClientThread that disconnects from the server
+	 */
+	protected void disconnect(ClientThread client) {
+		if (clients.containsKey(client)) {
+			game.remove(clients.get(client));
+			clients.remove(client, clients.get(client));
+		}
+	}
+
 	/**
 	 * <h1><i>decoder</i></h1>
 	 * <p>This method decodes the received data by a client and calls based on the 
@@ -108,7 +122,7 @@ public class ServerController {
 		JSONObject data = new JSONObject(json.get("data").toString());
 
 		// register
-		if (json.getString("type").equals(MsgType.REGISTER.toString()) && client.getState() == MsgType.WELCOME && game.getGameState() == GameState.WAITINGFORPLAYERS) {
+		if (json.getString("type").equals(MsgType.REGISTER.toString()) && client.getState() == MsgType.WELCOME && game.getState() == GameState.WAITINGFORPLAYERS) {
 			PlayerColor tempColor;
 			if (data.has("requestedColor")) {
 				tempColor = game.register(decodeColor(data.getString("requestedColor")), data.getString("playerName"), data.getString("clientName"), data.getFloat("clientVersion"));
@@ -129,16 +143,16 @@ public class ServerController {
 		}
 		
 		// ready
-		else if (json.getString("type").equals(MsgType.READY.toString()) && client.getState() == MsgType.REGISTER && game.getGameState() == GameState.WAITINGFORPLAYERS) {
-			client.setState(MsgType.READY);
-			if (game.ready(clients.get(client))) {
+		else if (json.getString("type").equals(MsgType.READY.toString()) && (client.getState() == MsgType.REGISTER || client.getState() == MsgType.READY) && game.getState() == GameState.WAITINGFORPLAYERS) {
+			if (game.ready(clients.get(client), data.getBoolean("ready"))) {
 				//TODO handshake finished; game started and sendTurn() to first player
 			}
+			client.setState(MsgType.READY);
 			broadcastUpdate();
 		}
 		
 		// move
-		else if (json.getString("type").equals(MsgType.MOVE.toString()) && client.getState() == MsgType.READY && game.getGameState() == GameState.RUNNING) {
+		else if (json.getString("type").equals(MsgType.MOVE.toString()) && client.getState() == MsgType.READY && game.getState() == GameState.RUNNING) {
 			//TODO execute move or error when illegal argument
 		}
 		

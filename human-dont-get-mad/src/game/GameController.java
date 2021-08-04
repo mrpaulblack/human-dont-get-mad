@@ -29,21 +29,32 @@ public interface GameController {
 	public PlayerColor register(PlayerColor requestedColor, String name, String clientName, Float clientVersion);
 	
 	/**
+	 * <h1><i>remove</i></h1>
+	 * <p>This method removes a player from the game. It does not matter if the game
+	 * is already running or not, since it is just going to replace the player with
+	 * a BOT while running or replacing the player with a new one while queuing.
+	 * It does also make the color of the player available again.</p>
+	 * @param color - PlayerColor of the removed player
+	 */
+	public void remove(PlayerColor color);
+	
+	/**
 	 * <h1><i>ready</i></h1>
 	 * <p>This Constructor saves the socket object of the client the
 	 * thread is getting created for and the ServerController object for 
 	 * interaction with game logic.</p>
 	 * @param color - PlayerColor of the client that is ready
+	 * @param isReady - Boolean if player is ready or not
 	 * @return Boolean - returns true if all players are ready; false otherwise
 	 */
-	public Boolean ready(PlayerColor color);
+	public Boolean ready(PlayerColor color, Boolean isReady);
 	
 	/**
-	 *	<h1><i>getGameState</i></h1>
+	 *	<h1><i>getState</i></h1>
 	 * <p>This method returns the current game state.</p>
 	 * @return gameState - returns the current game state
 	 */
-	public GameState getGameState();
+	public GameState getState();
 	
 	/**
 	 * <h1><i>toJSON</i></h1>

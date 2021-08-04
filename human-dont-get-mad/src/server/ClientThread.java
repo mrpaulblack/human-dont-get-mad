@@ -72,9 +72,10 @@ public class ClientThread implements Runnable {
 			}
 			catch (IOException e) { LogController.log(Log.ERROR, e.toString()); }
 			LogController.log(Log.INFO, "Client disconnect: " + socket);
+			controller.disconnect(this);
 		}
 	}
-	    
+
 	/**
 	 * <h1><i>out</i></h1>
 	 * <p>This method just sends a string to the client.</p>

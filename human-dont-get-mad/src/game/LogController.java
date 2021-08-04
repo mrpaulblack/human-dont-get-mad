@@ -17,6 +17,7 @@ import java.time.LocalDateTime;
 * @since   2021-07-23
 */
 public abstract class LogController {
+	private static StackTraceElement element;
 	private static Log globalLogLvl = Log.INFO;
 
 	/**
@@ -38,17 +39,19 @@ public abstract class LogController {
 	 * @param logLine - String is the actual log line (you can use [object].toString() when calling this method)
 	 */
 	public static void log(Log logLvl, String logLine) {
+        element = Thread.currentThread().getStackTrace()[2];
+        
 		//error lvl
 		if (globalLogLvl == Log.ERROR && logLvl == Log.ERROR) {
-			System.out.println(LocalDateTime.now() + " [" + logLvl + "] " + logLine);
+			System.out.println(LocalDateTime.now() + " [" + logLvl + "] (" + element.getClassName() + "." + element.getMethodName() + ") " + logLine);
 		}
 		//info lvl
 		else if (globalLogLvl == Log.INFO && (logLvl == Log.ERROR || logLvl == Log.INFO)) {
-			System.out.println(LocalDateTime.now() + " [" + logLvl + "] " + logLine);
+			System.out.println(LocalDateTime.now() + " [" + logLvl + "] (" + element.getClassName() + "." + element.getMethodName() + ") " + logLine);
 		}
 		//debug lvl
 		else if (globalLogLvl == Log.DEBUG && (logLvl == Log.ERROR || logLvl == Log.INFO || logLvl == Log.DEBUG)) {
-			System.out.println(LocalDateTime.now() + " [" + logLvl + "] " + logLine);
+			System.out.println(LocalDateTime.now() + " [" + logLvl + "] (" + element.getClassName() + "." + element.getMethodName() + ") " + logLine);
 		}
 	}
 }

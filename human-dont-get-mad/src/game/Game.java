@@ -18,7 +18,7 @@ import org.json.JSONObject;
 * @since   2021-08-02
 * @apiNote MAEDN 3.0
 */
-public class Game implements GameController{
+public class Game implements GameController {
 	private HashMap<PlayerColor, Player> players = new HashMap<PlayerColor, Player>();
 	private GameState state = GameState.WAITINGFORPLAYERS;
 	private PlayerColor currentPlayer = null;
@@ -34,11 +34,23 @@ public class Game implements GameController{
 		}
 		else { return null; }
 	}
+	
+	public void remove(PlayerColor color) {
+		LogController.log(Log.INFO, "Player disconnected: " + players.get(color).toJSON());
+		if (state == GameState.WAITINGFORPLAYERS) {
+			PlayerColor.setAvail(color);
+			players.remove(color, players.get(color));
+		}
+		else if (state == GameState.RUNNING) {
+			PlayerColor.setAvail(color);
+			//TODO replace player in running game with BOT
+		}
+	}
 
-	public Boolean ready(PlayerColor color) {
+	public Boolean ready(PlayerColor color, Boolean isReady) {
 		//TODO if game starts with <4 player; fill the rest with BOTS
 		Integer counter = 0;
-		players.get(color).setReady();
+		players.get(color).setReady(isReady);
 		for (Map.Entry<PlayerColor, Player> player : players.entrySet()) {
 			if (player.getValue().getReady()) {
 				counter++;
@@ -52,13 +64,13 @@ public class Game implements GameController{
 			return true;
 		}
 		else {
-			LogController.log(Log.DEBUG, "Player ready: " + players.get(color).getColor().toString());
+			LogController.log(Log.DEBUG, "Player ready " + isReady + ": " + players.get(color).toJSON());
 			return false;
 		}
 		
 	}
 
-	public GameState getGameState() {
+	public GameState getState() {
 		return state;
 	}
 
@@ -74,8 +86,10 @@ public class Game implements GameController{
 			json.put("winner", "null");
 		}
 		else { json.put("winner", winner.toString()); }
-		for (Map.Entry<PlayerColor, Player> player : players.entrySet()) {
-			data.put(player.getValue().toJSON());
+		for (Integer i = 0; i < 4; i++) {
+			if (players.get(PlayerColor.valueOf(i)) != null) {
+				data.put(players.get(PlayerColor.valueOf(i)).toJSON());
+			}
 		}
 		json.put("players", data);
 		return json;
