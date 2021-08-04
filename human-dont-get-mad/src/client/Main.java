@@ -31,6 +31,12 @@ public class Main {
 		while (isConnected == false) {
 			
 			lui.setVisible(true);
+			try {
+				TimeUnit.MILLISECONDS.sleep(50);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			
 			//get triggered by the connect Button -> sets the window to false
 			while (tryingConnect) {
