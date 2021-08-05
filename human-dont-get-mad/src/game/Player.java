@@ -16,7 +16,6 @@ import org.json.JSONObject;
 * @apiNote MAEDN 3.0
 */
 public class Player {
-	private Figure[] figures = {new Figure(0), new Figure(1), new Figure(2), new Figure(3)};
 	private PlayerColor color;
 	private String name;
 	private String clientName;
@@ -25,6 +24,7 @@ public class Player {
 	private Boolean ready = false;
 	private Boolean isBot = false;
 	
+	protected Figure[] figures = {new Figure(0), new Figure(1), new Figure(2), new Figure(3)};
 	protected Dice dice = new Dice();
 	
 	/**

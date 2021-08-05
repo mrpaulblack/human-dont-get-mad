@@ -48,7 +48,6 @@ public class Game implements GameController {
 	}
 
 	public Boolean ready(PlayerColor color, Boolean isReady) {
-		//TODO if game starts with <4 player; fill the rest with BOTS
 		Integer counter = 0;
 		players.get(color).setReady(isReady);
 		for (Map.Entry<PlayerColor, Player> player : players.entrySet()) {
@@ -57,6 +56,9 @@ public class Game implements GameController {
 			}
 		}
 		if (counter >= players.size()) {
+			if (players.size() <= 4) {
+				//TODO fill the rest with BOTS
+			}
 			state = GameState.RUNNING;
 			currentPlayer = PlayerColor.RED;
 			players.get(currentPlayer).dice.setStartDice();
@@ -101,11 +103,17 @@ public class Game implements GameController {
 	
 	//returns true if executed move or when called with -1 returns turn options as array
 	public JSONObject turn(Integer selected) {
+		RuleSet ruleset = new RuleSet();
 		JSONObject json = new JSONObject();
 		JSONArray data = new JSONArray();
+		JSONObject tempTurn = new JSONObject();
 		if (selected <= -1) {
-			//TODO add turn options to data Array
-			// dry run
+			for (Integer i = 0; i < players.get(currentPlayer).figures.length; i++) {
+				tempTurn = ruleset.dryRun(currentPlayer, players.get(currentPlayer).figures[i], players);
+				if (tempTurn != null) {
+					data.put(tempTurn);
+				}
+			}
 			json.put("options", data);
 			return json;
 		}
