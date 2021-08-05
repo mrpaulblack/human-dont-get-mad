@@ -13,13 +13,13 @@ public class RuleSet {
 	protected JSONObject dryRun(PlayerColor currentPlayer, Figure currentFigure, HashMap<PlayerColor, Player> players) {
 		LogController.log(Log.DEBUG, "Generating Turn for: " + players.get(currentPlayer).toJSON(false));
 		JSONObject json = new JSONObject();
-		JSONObject tempPosition = new JSONObject(rules(currentPlayer, currentFigure, players, false));
+		JSONObject tempPosition = new JSONObject(rules(currentPlayer, currentFigure, players).toString());
 
-		if (tempPosition.has("type")) {
+		if (tempPosition.has("index")) {
 			JSONObject oldPosition = new JSONObject(currentFigure.getJSON().toString());
-			JSONObject newPosition = new JSONObject(tempPosition);
-			json.put("newPosition", newPosition);
+			JSONObject newPosition = new JSONObject(tempPosition.toString());
 			json.put("oldPosition", oldPosition);
+			json.put("newPosition", newPosition);
 			LogController.log(Log.DEBUG, "Turn avail: " + json);
 			return json;
 		}
@@ -29,25 +29,25 @@ public class RuleSet {
 	}
 
 	//TODO write doc; returns new Position or if successful
-	private JSONObject rules(PlayerColor currentPlayer, Figure currentFigure, HashMap<PlayerColor, Player> players, Boolean execute) {
-		JSONObject json = new JSONObject();
+	private JSONObject rules(PlayerColor currentPlayer, Figure currentFigure, HashMap<PlayerColor, Player> players) {
+		JSONObject newPosition = new JSONObject();
 		Integer tempIndex;
 
 		// you can move figure out of player start (when figure in start, dice = 6 and starting field is not currentPlayer)
-		if (currentFigure.getType() == GamePosition.START && players.get(currentPlayer).dice.getDice() == 6 && getBoard(currentPlayer.getOffset(), players) != currentPlayer) {
-			json.put("type", GamePosition.FIELD.toString());
-			json.put("index", currentPlayer.getOffset());
-			return json;
+		if (currentFigure.getType() == GamePosition.START && players.get(currentPlayer).dice.getDice() == 6 && getBoardPosition(currentPlayer.getOffset(), players) != currentPlayer) {
+			newPosition.put("type", GamePosition.FIELD.toString());
+			newPosition.put("index", currentPlayer.getOffset());
+			return newPosition;
 		}
 
 		// returns new position on the field if possible
 		else if (currentFigure.getType() == GamePosition.FIELD && players.get(currentPlayer).dice.getDice() != 0) {
 			tempIndex = getNewBoardPosition(currentFigure.getIndex(), currentPlayer, players.get(currentPlayer));
 			// return move on field
-			if (tempIndex != null && tempIndex > 0 && getBoard(tempIndex, players) != currentPlayer) {
-				json.put("type", GamePosition.FIELD.toString());
-				json.put("index", tempIndex);
-				return json;
+			if (tempIndex != null && tempIndex > 0 && getBoardPosition(tempIndex, players) != currentPlayer) {
+				newPosition.put("type", GamePosition.FIELD.toString());
+				newPosition.put("index", tempIndex);
+				return newPosition;
 			}
 			// return move in player home
 			else if (tempIndex != null && tempIndex < 0) {
@@ -59,12 +59,12 @@ public class RuleSet {
 		else if (currentFigure.getType() == GamePosition.HOME  && players.get(currentPlayer).dice.getDice() != 0 && players.get(currentPlayer).dice.getDice() < players.get(currentPlayer).figures.length) {
 			tempIndex = getNewHomePosition(players.get(currentPlayer).dice, currentFigure, players.get(currentPlayer).figures);
 			if (tempIndex != null) {
-				json.put("type", GamePosition.HOME.toString());
-				json.put("index", tempIndex);
-				return json;
+				newPosition.put("type", GamePosition.HOME.toString());
+				newPosition.put("index", tempIndex);
+				return newPosition;
 			}
 		}
-		return json;
+		return newPosition;
 	}
 
 	//TODO write doc; check if figure can be moved in player home
@@ -108,7 +108,7 @@ public class RuleSet {
 	}
 	
 	//TODO write doc; returns the Player Color thats on that index or else null
-	private PlayerColor getBoard(Integer index, HashMap<PlayerColor, Player> players) {
+	private PlayerColor getBoardPosition(Integer index, HashMap<PlayerColor, Player> players) {
 		for (Map.Entry<PlayerColor, Player> player : players.entrySet()) {
 			for (Integer i = 0; i < player.getValue().figures.length; i++) {
 				if (player.getValue().figures[i].getType() == GamePosition.FIELD && player.getValue().figures[i].getIndex() == index) {

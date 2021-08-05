@@ -105,25 +105,24 @@ public class Game implements GameController {
 	
 	//returns true if executed move or when called with -1 returns turn options as array
 	public JSONObject turn(Integer selected) {
-		JSONObject json = new JSONObject();
-		JSONArray data = new JSONArray();
+		JSONObject data = new JSONObject();
+		JSONArray options = new JSONArray();
 		JSONObject tempTurn = new JSONObject();
 
 		if (selected <= -1) {
 			for (Integer i = 0; i < players.get(currentPlayer).figures.length; i++) {
 				tempTurn = ruleset.dryRun(currentPlayer, players.get(currentPlayer).figures[i], players);
 				if (tempTurn.has("newPosition")) {
-					data.put(tempTurn);
+					options.put(tempTurn);
 				}
 			}
-			json.put("options", data);
-			return json;
+			data.put("options", options);
+			return data;
 		}
 		else {
 			// execute turn
 			// if turn unsuccessful return error
-			json.put("successful", true);
-			return json;
+			return data;
 		}
 	}
 }
