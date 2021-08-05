@@ -108,6 +108,18 @@ public class ServerController {
 		json.put("data", data);
 		client.out(json.toString());
 	}
+	
+	//TODO add doc
+	private void broadcastPlayerDisconnected(ClientThread client) {
+		JSONObject json = new JSONObject();
+		JSONObject data = new JSONObject();
+		json.put("type", MsgType.PLAYERDISCONNECTED.toString());
+		data.put("player", clients.get(client).toString());
+		json.put("data", data);
+		for (Entry<ClientThread, PlayerColor> entry : clients.entrySet()) {
+			entry.getKey().out(json.toString());
+		}
+	}
 
 	/**
 	 * <h1><i>disconnect</i></h1>
@@ -118,6 +130,7 @@ public class ServerController {
 	 */
 	protected void disconnect(ClientThread client) {
 		if (clients.containsKey(client)) {
+			broadcastPlayerDisconnected(client);
 			game.remove(clients.get(client));
 			clients.remove(client, clients.get(client));
 		}
