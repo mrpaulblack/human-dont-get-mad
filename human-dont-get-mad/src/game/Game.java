@@ -117,6 +117,7 @@ public class Game implements GameController {
 				}
 			}
 			data.put("options", options);
+			LogController.log(Log.DEBUG, "Generated Turn for " + currentPlayer + ": " + data);
 			return data;
 		}
 		else {

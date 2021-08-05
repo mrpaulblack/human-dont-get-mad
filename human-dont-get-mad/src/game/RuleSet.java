@@ -11,7 +11,6 @@ public class RuleSet {
 
 	//TODO write doc; returns turn option for figure or null if cannot be moved
 	protected JSONObject dryRun(PlayerColor currentPlayer, Figure currentFigure, HashMap<PlayerColor, Player> players) {
-		LogController.log(Log.DEBUG, "Generating Turn for: " + players.get(currentPlayer).toJSON(false));
 		JSONObject json = new JSONObject();
 		JSONObject tempPosition = new JSONObject(rules(currentPlayer, currentFigure, players).toString());
 

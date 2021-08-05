@@ -51,7 +51,7 @@ public class ClientThread implements Runnable {
 	 */
 	@Override
 	public void run() {
-		LogController.log(Log.INFO, "Client connected: " + socket);
+		LogController.log(Log.DEBUG, "Client connected: " + socket);
 		try {
 			in = new Scanner(socket.getInputStream());
 			out = new PrintWriter(socket.getOutputStream(), true);
@@ -71,7 +71,7 @@ public class ClientThread implements Runnable {
 				socket.close();
 			}
 			catch (IOException e) { LogController.log(Log.ERROR, e.toString()); }
-			LogController.log(Log.INFO, "Client disconnect: " + socket);
+			LogController.log(Log.DEBUG, "Client disconnect: " + socket);
 			controller.disconnect(this);
 		}
 	}
