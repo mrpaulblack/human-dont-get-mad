@@ -38,18 +38,17 @@ public class Dice {
 		currentDice = random.nextInt(6) +1;
 	}
 	
+	//TODO add doc
 	protected void setStartDice() {
 		Boolean gotSix = false;
 		for (Integer i = 0; i < 3; i++) {
 			if (random.nextInt(6) +1 == 6) {
 				gotSix = true;
-				currentDice = random.nextInt(6) +1;
 				break;
 			}
 		}
-		if (!gotSix) {
-			currentDice = 0;
-		}
+		if (gotSix) { currentDice = 6; }
+		else { currentDice = 0; }
 	}
 	
 	/**

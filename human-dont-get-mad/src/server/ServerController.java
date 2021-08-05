@@ -76,8 +76,10 @@ public class ServerController {
 		for (Map.Entry<ClientThread, PlayerColor> entry : clients.entrySet()) {
 			if (entry.getValue() == game.currentPlayer()) {
 				client = entry.getKey();
+				break;
 			}
 		}
+		json.put("type", MsgType.TURN.toString());
 		json.put("data", game.turn(-1));
 		client.out(json.toString());
 	}

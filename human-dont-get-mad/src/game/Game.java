@@ -20,6 +20,7 @@ import org.json.JSONObject;
 */
 public class Game implements GameController {
 	private HashMap<PlayerColor, Player> players = new HashMap<PlayerColor, Player>();
+	RuleSet ruleset = new RuleSet();
 	private GameState state = GameState.WAITINGFORPLAYERS;
 	private PlayerColor currentPlayer = null;
 	private PlayerColor winner = null;
@@ -104,7 +105,6 @@ public class Game implements GameController {
 	
 	//returns true if executed move or when called with -1 returns turn options as array
 	public JSONObject turn(Integer selected) {
-		RuleSet ruleset = new RuleSet();
 		JSONObject json = new JSONObject();
 		JSONArray data = new JSONArray();
 		JSONObject tempTurn = new JSONObject();
@@ -112,7 +112,7 @@ public class Game implements GameController {
 		if (selected <= -1) {
 			for (Integer i = 0; i < players.get(currentPlayer).figures.length; i++) {
 				tempTurn = ruleset.dryRun(currentPlayer, players.get(currentPlayer).figures[i], players);
-				if (tempTurn != null) {
+				if (tempTurn.has("newPosition")) {
 					data.put(tempTurn);
 				}
 			}

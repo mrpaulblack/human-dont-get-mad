@@ -82,8 +82,8 @@ public class ClientThread implements Runnable {
 	 * @param data - String with the payload
 	 */
 	protected void out(String data) {
-		out.println(data);
 		LogController.log(Log.DEBUG, "TX: " + data);
+		out.println(data);
 	}
 	
 	/**

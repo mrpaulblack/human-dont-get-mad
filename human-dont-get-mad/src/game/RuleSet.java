@@ -11,18 +11,19 @@ public class RuleSet {
 
 	//TODO write doc; returns turn option for figure or null if cannot be moved
 	protected JSONObject dryRun(PlayerColor currentPlayer, Figure currentFigure, HashMap<PlayerColor, Player> players) {
-		String tempPosition = rules(currentPlayer, currentFigure, players, false).toString();
 		LogController.log(Log.DEBUG, "Generating Turn for: " + players.get(currentPlayer).toJSON(false));
-		if (tempPosition == null ) {
-			return null;
-		}
-		else {
-			JSONObject json = new JSONObject();
-			JSONObject oldPosition = new JSONObject(currentFigure.getJSON());
+		JSONObject json = new JSONObject();
+		JSONObject tempPosition = new JSONObject(rules(currentPlayer, currentFigure, players, false));
+
+		if (tempPosition.has("type")) {
+			JSONObject oldPosition = new JSONObject(currentFigure.getJSON().toString());
 			JSONObject newPosition = new JSONObject(tempPosition);
 			json.put("newPosition", newPosition);
 			json.put("oldPosition", oldPosition);
-			LogController.log(Log.DEBUG, "Turn avail:" + json);
+			LogController.log(Log.DEBUG, "Turn avail: " + json);
+			return json;
+		}
+		else {
 			return json;
 		}
 	}
@@ -34,7 +35,7 @@ public class RuleSet {
 
 		// you can move figure out of player start (when figure in start, dice = 6 and starting field is not currentPlayer)
 		if (currentFigure.getType() == GamePosition.START && players.get(currentPlayer).dice.getDice() == 6 && getBoard(currentPlayer.getOffset(), players) != currentPlayer) {
-			json.put("type", GamePosition.FIELD).toString();
+			json.put("type", GamePosition.FIELD.toString());
 			json.put("index", currentPlayer.getOffset());
 			return json;
 		}
@@ -44,7 +45,7 @@ public class RuleSet {
 			tempIndex = getNewBoardPosition(currentFigure.getIndex(), currentPlayer, players.get(currentPlayer));
 			// return move on field
 			if (tempIndex != null && tempIndex > 0 && getBoard(tempIndex, players) != currentPlayer) {
-				json.put("type", GamePosition.FIELD).toString();
+				json.put("type", GamePosition.FIELD.toString());
 				json.put("index", tempIndex);
 				return json;
 			}
@@ -58,12 +59,12 @@ public class RuleSet {
 		else if (currentFigure.getType() == GamePosition.HOME  && players.get(currentPlayer).dice.getDice() != 0 && players.get(currentPlayer).dice.getDice() < players.get(currentPlayer).figures.length) {
 			tempIndex = getNewHomePosition(players.get(currentPlayer).dice, currentFigure, players.get(currentPlayer).figures);
 			if (tempIndex != null) {
-				json.put("type", GamePosition.HOME).toString();
+				json.put("type", GamePosition.HOME.toString());
 				json.put("index", tempIndex);
 				return json;
 			}
 		}
-		return null;
+		return json;
 	}
 
 	//TODO write doc; check if figure can be moved in player home
