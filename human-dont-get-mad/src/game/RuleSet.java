@@ -33,9 +33,9 @@ public class RuleSet {
 		Integer tempIndex;
 
 		// you can move figure out of player start (when figure in start, dice = 6 and starting field is not currentPlayer)
-		if (currentFigure.getType() == GamePosition.START && players.get(currentPlayer).dice.getDice() == 6 && getBoard(getBoardOffset(currentPlayer), players) != currentPlayer) {
+		if (currentFigure.getType() == GamePosition.START && players.get(currentPlayer).dice.getDice() == 6 && getBoard(currentPlayer.getOffset(), players) != currentPlayer) {
 			json.put("type", GamePosition.FIELD).toString();
-			json.put("index", getBoardOffset(currentPlayer));
+			json.put("index", currentPlayer.getOffset());
 			return json;
 		}
 
@@ -83,23 +83,18 @@ public class RuleSet {
 			return tempIndex;
 		}
 		// if there is already a wrap around and not out of bounds
-		else if (currentIndex < getBoardOffset(currentPlayer) && tempIndex < getBoardOffset(currentPlayer)) {
+		else if (currentIndex < currentPlayer.getOffset() && tempIndex < currentPlayer.getOffset()) {
 			return tempIndex;
 		}
 		// if new position is bigger then offset for the player and smaller than the size of the board (NO wrap around)
-		else if (currentIndex >= getBoardOffset(currentPlayer) && tempIndex < boardSize) {
+		else if (currentIndex >= currentPlayer.getOffset() && tempIndex < boardSize) {
 			return tempIndex;
 		}
 		// if new position is bigger then board size wrap around if new value is smaller than offset
-		else if (currentIndex >= getBoardOffset(currentPlayer) && tempIndex >= boardSize && tempIndex - boardSize < getBoardOffset(currentPlayer)) {
+		else if (currentIndex >= currentPlayer.getOffset() && tempIndex >= boardSize && tempIndex - boardSize < currentPlayer.getOffset()) {
 			return tempIndex - boardSize;
 		}
 		else { return null; }
-	}
-
-	//TODO write doc; returns board offset for a player
-	private Integer getBoardOffset(PlayerColor color) {
-		return 10 * color.getValue();
 	}
 	
 	//TODO write doc; returns the Player Color thats on that index or else null

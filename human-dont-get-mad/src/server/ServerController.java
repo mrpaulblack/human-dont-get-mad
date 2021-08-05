@@ -65,7 +65,11 @@ public class ServerController {
 		client.out(json.toString());
 	}
 	
-	//TODO add doc
+	/**
+	 * <h1><i>sendTurn</i></h1>
+	 * <p>This method sends the turn with the move options
+	 * to the client socket of the currentPlayer in the game logic.</p>
+	 */
 	private void sendTurn() {
 		JSONObject json = new JSONObject();
 		ClientThread client = null;
@@ -109,7 +113,12 @@ public class ServerController {
 		client.out(json.toString());
 	}
 	
-	//TODO add doc
+	/**
+	 * <h1><i>broadcastPlayerDisconnected</i></h1>
+	 * <p>This method broadcasts the registered client that disconnected from the
+	 * game to all other registered clients.</p>
+	 * @param client - ClientThread with the socket
+	 */
 	private void broadcastPlayerDisconnected(ClientThread client) {
 		JSONObject json = new JSONObject();
 		JSONObject data = new JSONObject();
