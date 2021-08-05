@@ -12,6 +12,7 @@ public class RuleSet {
 	//TODO write doc; returns turn option for figure or null if cannot be moved
 	protected JSONObject dryRun(PlayerColor currentPlayer, Figure currentFigure, HashMap<PlayerColor, Player> players) {
 		String tempPosition = rules(currentPlayer, currentFigure, players, false).toString();
+		LogController.log(Log.DEBUG, "Generating Turn for: " + players.get(currentPlayer).toJSON(false));
 		if (tempPosition == null ) {
 			return null;
 		}
@@ -21,6 +22,7 @@ public class RuleSet {
 			JSONObject newPosition = new JSONObject(tempPosition);
 			json.put("newPosition", newPosition);
 			json.put("oldPosition", oldPosition);
+			LogController.log(Log.DEBUG, "Turn avail:" + json);
 			return json;
 		}
 	}
@@ -28,6 +30,7 @@ public class RuleSet {
 	//TODO write doc; returns new Position or if successful
 	private JSONObject rules(PlayerColor currentPlayer, Figure currentFigure, HashMap<PlayerColor, Player> players, Boolean execute) {
 		JSONObject json = new JSONObject();
+		Integer tempIndex;
 
 		// you can move figure out of player start (when figure in start, dice = 6 and starting field is not currentPlayer)
 		if (currentFigure.getType() == GamePosition.START && players.get(currentPlayer).dice.getDice() == 6 && getBoard(getBoardOffset(currentPlayer), players) != currentPlayer) {
@@ -38,22 +41,43 @@ public class RuleSet {
 
 		// returns new position on the field if possible
 		else if (currentFigure.getType() == GamePosition.FIELD && players.get(currentPlayer).dice.getDice() != 0) {
-			Integer tempIndex = getNewBoardPosition(currentFigure.getIndex(), currentPlayer, players);
+			tempIndex = getNewBoardPosition(currentFigure.getIndex(), currentPlayer, players.get(currentPlayer));
+			//TODO need to check if player can move their figure into their home
 			if (tempIndex != null && getBoard(tempIndex, players) != currentPlayer) {
 				json.put("type", GamePosition.FIELD).toString();
 				json.put("index", tempIndex);
 				return json;
 			}
 		}
-		else if (currentFigure.getType() == GamePosition.HOME  && players.get(currentPlayer).dice.getDice() != 0) {
-			//try to move in player
+		
+		// returns new position in player home if  possible
+		else if (currentFigure.getType() == GamePosition.HOME  && players.get(currentPlayer).dice.getDice() != 0 && players.get(currentPlayer).dice.getDice() < 4) {
+			tempIndex = getNewHomePosition(players.get(currentPlayer).dice, currentFigure, players.get(currentPlayer).figures);
+			if (tempIndex != null) {
+				json.put("type", GamePosition.HOME).toString();
+				json.put("index", tempIndex);
+				return json;
+			}
 		}
 		return null;
 	}
+
+	//TODO write doc; check if figure can be moved in player home
+	private Integer getNewHomePosition(Dice dice, Figure currentFigure, Figure[] figures) {
+		if (currentFigure.getIndex() + dice.getDice() < figures.length) {
+			for (Integer i = 0; i < figures.length; i++) {
+				if (figures[i] != currentFigure && figures[i].getType() == GamePosition.HOME && figures[i].getIndex() == currentFigure.getIndex() + dice.getDice()) {
+					return null;
+				}
+			}
+			return currentFigure.getIndex() + dice.getDice();
+		}
+		else { return null; }
+	}
 	
 	//TODO write doc; return new Position on Field
-	private Integer getNewBoardPosition(Integer currentIndex, PlayerColor currentPlayer, HashMap<PlayerColor, Player> players) {
-		Integer tempIndex = currentIndex + players.get(currentPlayer).dice.getDice();
+	private Integer getNewBoardPosition(Integer currentIndex, PlayerColor currentPlayer, Player player) {
+		Integer tempIndex = currentIndex + player.dice.getDice();
 		// player0
 		if (currentPlayer.getValue() == 0 && tempIndex < boardSize) {
 			return tempIndex;
