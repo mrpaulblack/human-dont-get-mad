@@ -16,9 +16,7 @@ import javax.swing.*;
 public class Launcher extends JFrame{
 	
 	static String TEMP = "1";
-	
-	static String lUserName = "123";
-	static String lFavColor = "";
+	private ClientController clientController;
 	
 	//Create Object
 	
@@ -26,7 +24,8 @@ public class Launcher extends JFrame{
 	GetScreenData gcd = new GetScreenData();
 	
 	//Constructor
-	public Launcher() {
+	public Launcher(ClientController clientController) {
+		this.clientController = clientController;
 		Launcher();	
 	}
 	
@@ -237,17 +236,19 @@ public class Launcher extends JFrame{
 		connectButton.setText("Connect");
 		connectButton.setFont(generalFont);
 		connectButton.addActionListener(e -> {
-			Client client = new Client();
+			Client client = new Client(clientController);
+			clientController.player(client);
 			
 			client.serverAdress = serverAddress.getText();
 			client.port = Integer.parseInt(port.getText());
-			lUserName = userName.getText();
-			lFavColor = colorSelect.getSelectedItem().toString().toLowerCase(); //for now it is yellow because there isent a function to handle this feature
+			clientController.userName = userName.getText();
+			clientController.favColor = colorSelect.getSelectedItem().toString().toLowerCase(); //for now it is yellow because there isent a function to handle this feature
+			
 			
 			LogController.log(Log.DEBUG, "Server Adress:" + client.serverAdress);
 			LogController.log(Log.DEBUG, "Port:" + client.port);
-			LogController.log(Log.DEBUG, "Username: " + lUserName);
-			LogController.log(Log.DEBUG, "Picked Color:" + lFavColor) ;
+			LogController.log(Log.DEBUG, "Username: " + clientController.userName);
+			LogController.log(Log.DEBUG, "Picked Color:" + clientController.favColor) ;
 
 			Main.tryingConnect = true;
 			

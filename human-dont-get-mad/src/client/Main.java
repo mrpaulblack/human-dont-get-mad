@@ -24,8 +24,12 @@ public class Main {
 		
 		boolean isConnected = false;
 		
-		Launcher lui = new Launcher();
+	
 		GameWindow gw = new GameWindow();	
+		ClientController cc = new ClientController(gw);
+		Launcher lui = new Launcher(cc);
+		
+		gw.giveController(cc);
 		
 		//Runns as long as no connection get established
 		while (isConnected == false) {
