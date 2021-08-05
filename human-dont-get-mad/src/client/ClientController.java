@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
+import javax.swing.JButton;
 import javax.swing.JLabel;
 
 import org.json.JSONArray;
@@ -35,6 +36,8 @@ public class ClientController {
 	private String clientName = "human-dont-get-mad";
 	public String userName = "";
 	public String favColor = "";
+	public Integer selsectedOption = -1;
+	private int getMyIntInMyEnclosedScale = 0;
 	private double clientVersion = 0.1;
 	
 	UISettings uis = new UISettings();
@@ -83,6 +86,15 @@ public class ClientController {
 		player.out(json.toString());
 	}
 	
+	protected void sendMove() {
+		JSONObject json = new JSONObject();
+		JSONObject data = new JSONObject();
+		json.put("type", MsgType.MOVE.toString());
+		data.put("selectedOption", selsectedOption);
+		json.put("data", data);
+		player.out(json.toString());
+	}
+	
 	
 	/**
 	 *	<h1><i>decoder</i></h1>
@@ -108,7 +120,7 @@ public class ClientController {
 			
 		}
 		else if (json.get("type").equals(MsgType.TURN.toString())) {
-			//TODO send move
+			updateTurns(data);
 		}
 		else if (json.get("type").equals(MsgType.PLAYERDISCONNECTED.toString())) {
 			//TODO update stats; asynchron
@@ -139,82 +151,154 @@ public class ClientController {
 			
 			JSONArray players = new JSONArray(data.getJSONArray("players"));
 			
-			try {
-				JSONObject player0 = new JSONObject(players.get(0).toString());
-				gameWindow.playerStats[0].setText("P1: " + player0.getString("color"));
-				gameWindow.playerStats[1].setText(player0.getString("name"));
-				System.out.println("Hier WAR ICH");
-				System.out.println("+ " + player0.getBoolean("ready"));
-				System.out.println("+s " + player0.get("ready"));
-				System.out.println("+ " + isReady);
+			for (int i = 0; i < players.length(); i++) {
+				JSONObject player = new JSONObject(players.get(i).toString());
 				
-				if (player0.getBoolean("ready")) {
-					gameWindow.playerStats[0].setBackground(uis.isReadyColor);
-					gameWindow.playerStats[1].setBackground(uis.isReadyColor);
+				gameWindow.playerStats[i].setText("P" + i+1 + ": " + player.getString("color"));
+				gameWindow.playerNames[i].setText(player.getString("name"));
+				
+				if (player.getBoolean("ready")) {
+					gameWindow.playerStats[i].setBackground(uis.isReadyColor);
+					gameWindow.playerNames[i].setBackground(uis.isReadyColor);
 				} 
 				else {
-					gameWindow.playerStats[0].setBackground(uis.background);
-					gameWindow.playerStats[1].setBackground(uis.background);
+					gameWindow.playerStats[i].setBackground(uis.background);
+					gameWindow.playerNames[i].setBackground(uis.background);
 				}
 			}
-			catch(Exception e) {
-				System.out.println("IFTHISTHWOSIDK");			}
-			
-			try {
-				JSONObject player1 = new JSONObject(players.get(1).toString());
-				gameWindow.playerStats[2].setText("P1: " + player1.getString("color"));
-				gameWindow.playerStats[3].setText(player1.getString("name"));
-				if (player1.getBoolean("ready")) {
-					gameWindow.playerStats[2].setBackground(uis.isReadyColor);
-					gameWindow.playerStats[3].setBackground(uis.isReadyColor);
-				} 
-				else {
-					gameWindow.playerStats[2].setBackground(uis.background);
-					gameWindow.playerStats[3].setBackground(uis.background);
-				}
-			}
-			catch(Exception e) {
-				//dummyCode
-			}
-			
-			try {
-				JSONObject player2 = new JSONObject(players.get(2).toString());
-				gameWindow.playerStats[4].setText("P1: " + player2.getString("color"));
-				gameWindow.playerStats[5].setText(player2.getString("name"));
-				if (player2.getBoolean("ready")) {
-					gameWindow.playerStats[4].setBackground(uis.isReadyColor);
-					gameWindow.playerStats[5].setBackground(uis.isReadyColor);
-				} 
-				else {
-					gameWindow.playerStats[4].setBackground(uis.background);
-					gameWindow.playerStats[5].setBackground(uis.background);
-				}
-			}
-			catch(Exception e) {
-				//dummyCode
-			}
-			
-			try {
-				JSONObject player3 = new JSONObject(players.get(3).toString());
-				gameWindow.playerStats[6].setText("P1: " + player3.getString("color"));
-				gameWindow.playerStats[7].setText(player3.getString("name"));
-				if (player3.getBoolean("ready")) {
-					gameWindow.playerStats[6].setBackground(uis.isReadyColor);
-					gameWindow.playerStats[7].setBackground(uis.isReadyColor);
-				} 
-				else {
-					gameWindow.playerStats[6].setBackground(uis.background);
-					gameWindow.playerStats[7].setBackground(uis.background);
-				}
-			}
-			catch(Exception e) {
-				//dummyCode
-			}
-		
 		}
 		else if (data.getString("state").equals("running")) {
-			for (JLabel stats : gameWindow.playerStats) {
+			
+			gameIsStarted = true;
+					
+			for (JLabel stats : gameWindow.playerStats) 
 				stats.setBackground(uis.background);
+				
+			for (JLabel names : gameWindow.playerNames)
+				names.setBackground(uis.background);
+				
+			for(JButton[] Houses : gameWindow.houses ) 
+				for (JButton subHouses : Houses)
+					subHouses.setBackground(Color.LIGHT_GRAY);
+						
+			for (JButton[] Bases : gameWindow.bases)
+				for (JButton subBases : Bases)
+					subBases.setBackground(Color.LIGHT_GRAY);
+				
+			JSONArray players = new JSONArray(data.getJSONArray("players"));	
+			
+			for (int i = 0; i <= players.length(); i++) {
+						
+				JSONObject player = new JSONObject(players.get(i).toString());
+				LogController.log(Log.DEBUG, "Player Array " + player);
+						
+					for (int j = 0; j <= 3; j++) {
+						
+						JSONArray figuers = new JSONArray(player.getJSONArray("figures"));
+						JSONObject figuer = new JSONObject(figuers.get(j).toString());
+						LogController.log(Log.DEBUG, "Figure Array " + figuer);
+							
+						switch (i) {
+						case 0: 
+							if (figuer.get("type").equals("start")) {
+								gameWindow.redBases[figuer.getInt("index")].setBackground(Color.red);
+							}
+							else if (figuer.get("type").equals("field")) {
+								gameWindow.buttons[figuer.getInt("index")].setBackground(Color.red);
+							}
+							else if (figuer.get("type").equals("home")) {
+								gameWindow.redHouses[figuer.getInt("index")].setBackground(Color.red);
+									
+							}break;
+						case 1: 
+							if (figuer.get("type").equals("start")) {
+								gameWindow.greenBases[figuer.getInt("index")].setBackground(Color.green);
+							}
+							else if (figuer.get("type").equals("field")) {
+								gameWindow.buttons[figuer.getInt("index")].setBackground(Color.green);
+							}
+							else if (figuer.get("type").equals("home")) {
+								gameWindow.greenHouses[figuer.getInt("index")].setBackground(Color.green);
+									
+							}break;
+						case 2:
+							if (figuer.get("type").equals("start")) {
+								gameWindow.blueBases[figuer.getInt("index")].setBackground(Color.blue);
+							}
+							else if (figuer.get("type").equals("field")) {
+								gameWindow.buttons[figuer.getInt("index")].setBackground(Color.blue);
+							}
+							else if (figuer.get("type").equals("home")) {
+								gameWindow.blueHouses[figuer.getInt("index")].setBackground(Color.blue);
+									
+							}break;
+						case 3:
+							if (figuer.get("type").equals("start")) {
+								gameWindow.yellowBases[figuer.getInt("index")].setBackground(Color.yellow);
+							}
+							else if (figuer.get("type").equals("field")) {
+								gameWindow.buttons[figuer.getInt("index")].setBackground(Color.yellow);
+							}
+							else if (figuer.get("type").equals("home")) {
+								gameWindow.yellowHouses[figuer.getInt("index")].setBackground(Color.yellow);
+								
+							}
+						}
+					}
+				}
+			}
+		}
+	
+	//NOT TESTET JET BECAUSE OF MISSING DATA
+	public void updateTurns(JSONObject data) {
+		
+		JSONArray options = new JSONArray(data.getJSONArray("options"));
+		
+		for (int i = 0; i < options.length(); i++) {
+	
+			JSONObject option = new JSONObject(options.get(i).toString());
+			if(option.get("oldPosition").equals("oldPosition"))
+			{
+				if (option.get("type").equals("start")) {
+					gameWindow.yellowBases[option.getInt("index")].setBackground(Color.white);
+					gameWindow.redBases[option.getInt("index")].setBackground(Color.white);
+					gameWindow.greenBases[option.getInt("index")].setBackground(Color.white);
+					gameWindow.blueBases[option.getInt("index")].setBackground(Color.white);
+				}
+				else if (option.get("type").equals("field")) {
+					gameWindow.buttons[option.getInt("index")].setBackground(Color.white);
+				}
+				else if (option.get("type").equals("home")) {					
+					gameWindow.yellowHouses[option.getInt("index")].setBackground(Color.white);
+					gameWindow.redHouses[option.getInt("index")].setBackground(Color.white);
+					gameWindow.greenHouses[option.getInt("index")].setBackground(Color.white);
+					gameWindow.blueHouses[option.getInt("index")].setBackground(Color.white);
+				}
+			}
+			else if(option.get("newPosition").equals("newPosition"))
+			{
+				if (option.get("type").equals("start")) {
+					gameWindow.yellowBases[option.getInt("index")].setBackground(Color.black);
+					gameWindow.redBases[option.getInt("index")].setBackground(Color.black);
+					gameWindow.greenBases[option.getInt("index")].setBackground(Color.black);
+					gameWindow.blueBases[option.getInt("index")].setBackground(Color.black);
+				}
+				else if (option.get("type").equals("field")) {
+					gameWindow.buttons[option.getInt("index")].setBackground(Color.black);
+				}
+				else if (option.get("type").equals("home")) {					
+					gameWindow.yellowHouses[option.getInt("index")].setBackground(Color.black);
+					gameWindow.redHouses[option.getInt("index")].setBackground(Color.black);
+					gameWindow.greenHouses[option.getInt("index")].setBackground(Color.black);
+					gameWindow.blueHouses[option.getInt("index")].setBackground(Color.black);
+				}
+				
+				i = getMyIntInMyEnclosedScale;
+				
+				gameWindow.buttons[option.getInt("index")].addActionListener(e -> {
+					selsectedOption = getMyIntInMyEnclosedScale;
+					sendMove();
+				});
 			}
 		}
 	}

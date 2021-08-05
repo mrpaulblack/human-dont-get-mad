@@ -38,7 +38,8 @@ public class GameWindow extends JFrame {
 	private JPanel mainWindowReplacer = new JPanel();
 	private  JPanel mainGameArea = new JPanel();
 	private JPanel statsArea = new JPanel();
-	private JPanel statsAreaText = new JPanel();
+	private JPanel statsAreaNames = new JPanel();
+	private JPanel statsAreaStats = new JPanel();
 	private JPanel diceArea = new JPanel();
 	
 	private JPanel redBase = new JPanel();
@@ -55,14 +56,14 @@ public class GameWindow extends JFrame {
 	private JLabel playerTwoStats= new JLabel();
 	private JLabel playerThreeStats= new JLabel();
 	private JLabel playerFourStats= new JLabel();
-	private static JLabel playerOneName= new JLabel();
+	private JLabel playerOneName= new JLabel();
 	private JLabel playerTwoName= new JLabel();
 	private JLabel playerThreeName= new JLabel();
 	private JLabel playerFourName= new JLabel();
 	
 //String of all labels 
-	JLabel[] playerStats = {playerOneStats, playerOneName, playerTwoStats, playerTwoName, 
-							playerThreeStats, playerThreeName, playerFourStats, playerFourName};
+	JLabel[] playerStats = {playerOneStats, playerTwoStats, playerThreeStats, playerFourStats};
+	JLabel[] playerNames = {playerOneName, playerTwoName, playerThreeName, playerFourName};
 	
 //Buttons
 	JButton dice = new JButton();
@@ -89,10 +90,13 @@ public class GameWindow extends JFrame {
 	JButton yellowBaseTwo = new JButton();
 	JButton yellowBaseThree = new JButton();
 	JButton yellowBaseFour = new JButton();
-	JButton[] bases =  {redBaseOne, redBaseTwo, redBaseThree, redBaseFour,
-						greenBaseOne, greenBaseTwo, greenBaseThree, greenBaseFour,
-						blueBaseOne, blueBaseTwo, blueBaseThree, blueBaseFour,
-						yellowBaseOne, yellowBaseTwo, yellowBaseThree, yellowBaseFour};
+	
+	JButton[] redBases =  {redBaseOne, redBaseTwo, redBaseThree, redBaseFour};
+	JButton[] greenBases =  {greenBaseOne, greenBaseTwo, greenBaseThree, greenBaseFour};
+	JButton[] blueBases =  {blueBaseOne, blueBaseTwo, blueBaseThree, blueBaseFour};
+	JButton[] yellowBases =  {yellowBaseOne, yellowBaseTwo, yellowBaseThree, yellowBaseFour};
+	
+	JButton[][] bases = {redBases, greenBases, blueBases, yellowBases};
 	
 	
 	JButton redHouseOne = new JButton();
@@ -115,10 +119,12 @@ public class GameWindow extends JFrame {
 	JButton yellowHouseThree = new JButton();
 	JButton yellowHouseFour = new JButton();
 	
-	JButton[] houses = {redHouseOne, redHouseTwo, redHouseThree, redHouseFour,
-						greenHouseOne, greenHouseTwo, greenHouseThree, greenHouseFour,
-						blueHouseOne, blueHouseTwo, blueHouseThree, blueHouseFour,
-						yellowHouseOne, yellowHouseTwo, yellowHouseThree, yellowHouseFour};
+	JButton[] redHouses = {redHouseOne, redHouseTwo, redHouseThree, redHouseFour};
+	JButton[] greenHouses = {greenHouseOne, greenHouseTwo, greenHouseThree, greenHouseFour};
+	JButton[] blueHouses = {blueHouseOne, blueHouseTwo, blueHouseThree, blueHouseFour};
+	JButton[] yellowHouses = {yellowHouseOne, yellowHouseTwo, yellowHouseThree, yellowHouseFour};
+	
+	JButton[][] houses = {redHouses, greenHouses, blueHouses, yellowHouses};
 	
 	
 //Variables
@@ -154,7 +160,6 @@ public class GameWindow extends JFrame {
 	
 	
 	
-	
 	/**
 	 *	<h1><i>GameWinodw</i></h1>
 	 * <p>This function will proceed and display the current window</p>
@@ -166,7 +171,7 @@ public class GameWindow extends JFrame {
 		
 		this.setLocation(0, 0);
 		this.setSize(windowSize);	//Set de default size to half the screensize for better UX
-//		this.setExtendedState(JFrame.MAXIMIZED_BOTH); 
+		this.setExtendedState(JFrame.MAXIMIZED_BOTH); 
 		this.setResizable(true);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setTitle("Human-Dont-Get-Mad");
@@ -204,19 +209,28 @@ public class GameWindow extends JFrame {
 	
 		statsArea.setLayout(new GridLayout(1, 2, 5, 5));
 		
-		statsArea.add(statsAreaText);
+		statsArea.add(statsAreaStats);
+		statsArea.add(statsAreaNames);
 		
 		statsArea.setBackground(background);
-		statsAreaText.setBackground(background);
+		statsAreaStats.setBackground(background);
+		statsAreaNames.setBackground(background);
 		
 		statsArea.setLayout(new GridLayout(1, 2, 5, 5));
-		statsAreaText.setLayout(new GridLayout(4, 2, 5, 5));
+		statsAreaStats.setLayout(new GridLayout(4, 1, 5, 5));
+		statsAreaNames.setLayout(new GridLayout(4, 1, 5, 5));
 		
 		
 		for(JLabel playerStat : playerStats ) {
 			playerStat.setBackground(background);
 			playerStat.setOpaque(true);
-			statsAreaText.add(playerStat);
+			statsAreaStats.add(playerStat);
+		}
+		
+		for(JLabel playerName : playerNames ) {
+			playerName.setBackground(background);
+			playerName.setOpaque(true);
+			statsAreaNames.add(playerName);
 		}
 		
 		
@@ -279,7 +293,7 @@ public class GameWindow extends JFrame {
 			gbcls.gridx = 0;
 			gbcls.gridy = 0;
 			gbcls.gridheight = 2;
-			gbcls.weightx = 2;
+			gbcls.weightx = 1;
 			mainWindowReplacer.add(mainGameArea, gbcls);
 			mainGameArea.setBackground(background);
 			gbcls.gridheight = 1;
@@ -302,7 +316,7 @@ public class GameWindow extends JFrame {
 			gbcp.gridx = 0;
 			gbcp.gridy = 0;
 			gbcp.gridwidth = 2;
-			gbcp.weighty = 2;
+			gbcp.weighty = 1;
 			mainWindowReplacer.add(mainGameArea, gbcp);
 			mainGameArea.setBackground(background);
 			gbcp.gridwidth = 1;
@@ -328,11 +342,6 @@ public class GameWindow extends JFrame {
 	int setHeigthInsets = dim.height;
 	
 	GridBagConstraints gbcgb = new GridBagConstraints();
-	
-	public void constructGameWindow() {
-		
-	}
-	
 
 	
 	/**
@@ -354,48 +363,21 @@ public class GameWindow extends JFrame {
 		yellowHouse.setBackground(background);
 		
 		
-		for(JButton Houses : houses ) 
-			Houses.setBackground(Color.LIGHT_GRAY);
+		for(JButton[] Houses : houses ) 
+			for (JButton subHouses : Houses)
+				subHouses.setBackground(Color.LIGHT_GRAY);
+		
+		for (JButton[] Bases : bases)
+			for (JButton subBases : Bases)
+				subBases.setBackground(Color.LIGHT_GRAY);
 		
 		for(JButton btn : buttons ) 
 			btn.setBackground(Color.WHITE);
 		
-		for (int i = 0; i < bases.length; i++) {
-			if (0 <= i && i <= 3)
-				bases [i].setBackground(Color.red);
-			if (4 <= i && i <= 7)
-				bases [i].setBackground(Color.green);
-			if (8 <= i && i <= 11)
-				bases [i].setBackground(Color.blue);
-			if (12 <= i && i <= 15)
-				bases [i].setBackground(Color.yellow);
-		}
-		
-		for (JButton Bases : bases) {
-			Bases.addActionListener(e -> {
-				if (isPressed) {
-					Bases.setBackground(Color.black);
-				}
-				else {
-					for (int i = 0; i < bases.length; i++) {
-						if (0 <= i && i <= 3)
-							bases [i].setBackground(Color.red);
-						if (4 <= i && i <= 7)
-							bases [i].setBackground(Color.green);
-						if (8 <= i && i <= 11)
-							bases [i].setBackground(Color.blue);
-						if (12 <= i && i <= 15)
-							bases [i].setBackground(Color.yellow);
-					}
-				}
-			});
-		}
-		
 		
 		//need to be called first to construct the window
 		
-		//Wait 2 seconds is
-		//This is for stability reasons
+		
     	setWidthInsets = gcd.width/80;
 		setHeigthInsets = gcd.height/80;
 		System.out.println("Penis: " + gcd.width);
@@ -424,22 +406,14 @@ public class GameWindow extends JFrame {
 		LogController.log(Log.DEBUG, "Insetes y: " + setHeigthInsets);
 		
 		redBase.setLayout(new GridLayout(2,2,setWidthInsets, setHeigthInsets));
-		
 		greenBase.setLayout(new GridLayout(2,2,setWidthInsets, setHeigthInsets));
-		
 		blueBase.setLayout(new GridLayout(2,2,setWidthInsets, setHeigthInsets));
-			
 		yellowBase.setLayout(new GridLayout(2,2,setWidthInsets, setHeigthInsets));
-		
 		redHouse.setLayout(new GridLayout(1,4,setWidthInsets, setHeigthInsets));
-		
 		greenHouse.setLayout(new GridLayout(4,1, setWidthInsets, setHeigthInsets));
-				
 		blueHouse.setLayout(new GridLayout(1,4,setWidthInsets, setHeigthInsets));
-
 		yellowHouse.setLayout(new GridLayout(4,1, setWidthInsets, setHeigthInsets));
-		
-		gbcgb.insets = new Insets(2, 2, setWidthInsets, setHeigthInsets);
+		gbcgb.insets = new Insets(setHeigthInsets,setWidthInsets, 0,0);
 		  
 		    
 		gbcgb.weightx = 1;
