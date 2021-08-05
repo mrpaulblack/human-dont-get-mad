@@ -53,5 +53,9 @@ public abstract class LogController {
 		else if (globalLogLvl == Log.DEBUG && (logLvl == Log.ERROR || logLvl == Log.INFO || logLvl == Log.DEBUG)) {
 			System.out.println(LocalDateTime.now() + " [" + logLvl + "] (" + element.getClassName() + "." + element.getMethodName() + "$" + element.getLineNumber() + ") " + logLine);
 		}
+		//trace lvl
+		else if (globalLogLvl == Log.TRACE && (logLvl == Log.ERROR || logLvl == Log.INFO || logLvl == Log.DEBUG || logLvl == Log.TRACE)) {
+			System.out.println(LocalDateTime.now() + " [" + logLvl + "] (" + element.getClassName() + "." + element.getMethodName() + "$" + element.getLineNumber() + ") " + logLine);
+		}
 	}
 }

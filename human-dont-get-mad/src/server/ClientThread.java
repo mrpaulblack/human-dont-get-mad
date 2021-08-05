@@ -59,7 +59,7 @@ public class ClientThread implements Runnable {
 			
 			while (in.hasNextLine()) {
 				bufferIn = in.nextLine();
-				LogController.log(Log.DEBUG, "RX: " + bufferIn);
+				LogController.log(Log.TRACE, "RX: " + bufferIn);
 				controller.decoder(this, bufferIn);
 			}
 		}
@@ -82,7 +82,7 @@ public class ClientThread implements Runnable {
 	 * @param data - String with the payload
 	 */
 	protected void out(String data) {
-		LogController.log(Log.DEBUG, "TX: " + data);
+		LogController.log(Log.TRACE, "TX: " + data);
 		out.println(data);
 	}
 	

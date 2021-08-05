@@ -13,5 +13,6 @@ package game;
 public enum Log {
 	ERROR,
 	INFO,
-	DEBUG;
+	DEBUG,
+	TRACE;
 }

@@ -60,7 +60,7 @@ public class Client extends Thread{
 			
 			while (in.hasNextLine()) {
 				bufferIn = in.nextLine();
-				LogController.log(Log.DEBUG, "RX: " + bufferIn);
+				LogController.log(Log.TRACE, "RX: " + bufferIn);
 				controller.decoder(bufferIn);
 			}
 		}
@@ -83,6 +83,6 @@ public class Client extends Thread{
 	//transmission / output to server
 	public void out(String data) {
 		out.println(data);
-		LogController.log(Log.DEBUG, "TX: " + data);
+		LogController.log(Log.TRACE, "TX: " + data);
 	}
 }
