@@ -57,7 +57,7 @@ public class Game implements GameController {
 		}
 		// TODO dirty fix so game starts only with 4 players since BOTS are not implemented yet; (counter >= players.size())
 		if (counter >= 4) {
-			if (players.size() <= 4) {
+			if (players.size() < 4) {
 				//TODO fill the rest with BOTS
 			}
 			state = GameState.RUNNING;
@@ -108,6 +108,7 @@ public class Game implements GameController {
 		JSONObject json = new JSONObject();
 		JSONArray data = new JSONArray();
 		JSONObject tempTurn = new JSONObject();
+
 		if (selected <= -1) {
 			for (Integer i = 0; i < players.get(currentPlayer).figures.length; i++) {
 				tempTurn = ruleset.dryRun(currentPlayer, players.get(currentPlayer).figures[i], players);
