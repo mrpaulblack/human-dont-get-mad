@@ -42,16 +42,20 @@ public class RuleSet {
 		// returns new position on the field if possible
 		else if (currentFigure.getType() == GamePosition.FIELD && players.get(currentPlayer).dice.getDice() != 0) {
 			tempIndex = getNewBoardPosition(currentFigure.getIndex(), currentPlayer, players.get(currentPlayer));
-			//TODO need to check if player can move their figure into their home
-			if (tempIndex != null && getBoard(tempIndex, players) != currentPlayer) {
+			// return move on field
+			if (tempIndex != null && tempIndex > 0 && getBoard(tempIndex, players) != currentPlayer) {
 				json.put("type", GamePosition.FIELD).toString();
 				json.put("index", tempIndex);
 				return json;
 			}
+			// return move in player home
+			else if (tempIndex != null && tempIndex < 0) {
+				// TODO try to move figure into player end
+			}
 		}
 		
 		// returns new position in player home if  possible
-		else if (currentFigure.getType() == GamePosition.HOME  && players.get(currentPlayer).dice.getDice() != 0 && players.get(currentPlayer).dice.getDice() < 4) {
+		else if (currentFigure.getType() == GamePosition.HOME  && players.get(currentPlayer).dice.getDice() != 0 && players.get(currentPlayer).dice.getDice() < players.get(currentPlayer).figures.length) {
 			tempIndex = getNewHomePosition(players.get(currentPlayer).dice, currentFigure, players.get(currentPlayer).figures);
 			if (tempIndex != null) {
 				json.put("type", GamePosition.HOME).toString();
@@ -93,6 +97,11 @@ public class RuleSet {
 		// if new position is bigger then board size wrap around if new value is smaller than offset
 		else if (currentIndex >= currentPlayer.getOffset() && tempIndex >= boardSize && tempIndex - boardSize < currentPlayer.getOffset()) {
 			return tempIndex - boardSize;
+		}
+		// if new position is in player end return value as -1 * index
+		else if (currentIndex >= currentPlayer.getOffset() && tempIndex >= boardSize && tempIndex - boardSize < currentPlayer.getOffset() + player.figures.length) {
+			//TODO rewrite for all options so that method returns right home value
+			return -1 * ((tempIndex - boardSize) - currentPlayer.getOffset());
 		}
 		else { return null; }
 	}
