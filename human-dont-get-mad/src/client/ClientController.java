@@ -187,7 +187,7 @@ public class ClientController {
 				
 			JSONArray players = new JSONArray(data.getJSONArray("players"));	
 			
-			for (int i = 0; i <= players.length(); i++) {
+			for (int i = 0; i < players.length(); i++) {
 						
 				JSONObject player = new JSONObject(players.get(i).toString());
 				LogController.log(Log.DEBUG, "Player Array " + player);

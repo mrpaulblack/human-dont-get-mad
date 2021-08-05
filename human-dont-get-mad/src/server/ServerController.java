@@ -126,7 +126,9 @@ public class ServerController {
 		data.put("player", clients.get(client).toString());
 		json.put("data", data);
 		for (Entry<ClientThread, PlayerColor> entry : clients.entrySet()) {
-			entry.getKey().out(json.toString());
+			if (client != entry.getKey()) {
+				entry.getKey().out(json.toString());
+			}
 		}
 	}
 
