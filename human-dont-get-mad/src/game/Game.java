@@ -55,7 +55,8 @@ public class Game implements GameController {
 				counter++;
 			}
 		}
-		if (counter >= players.size()) {
+		// TODO dirty fix so game starts only with 4 players since BOTS are not implemented yet; (counter >= players.size())
+		if (counter >= 4) {
 			if (players.size() <= 4) {
 				//TODO fill the rest with BOTS
 			}
