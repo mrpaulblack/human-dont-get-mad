@@ -17,7 +17,7 @@ public class Figure {
 	//TODO implement position and position change
 	private GamePosition positionType = GamePosition.START;
 	private Integer positionIndex;
-	
+
 	/**
 	 * <h1><i>Figure</i></h1>
 	 * <p>This Constructor just sets the start position for that figure.</p>
@@ -26,7 +26,28 @@ public class Figure {
 	public Figure(Integer startIndex) {
 		this.positionIndex = startIndex;
 	}
-	
+
+	//TODO write doc
+	protected GamePosition getType() {
+		return positionType;
+	}
+
+	//TODO write doc
+	protected void setType(GamePosition newType) {
+		positionType = newType;
+	}
+
+	//TODO write doc
+	protected Integer getIndex() {
+		return positionIndex;
+	}
+
+	//TODO write doc
+	protected void setIndex(Integer newIndex) {
+		//TODO check if index is valid based on position type
+		positionIndex = newIndex;
+	}
+
 	/**
 	 * <h1><i>getJSON</i></h1>
 	 * <p>This method returns the position of the figure on the field

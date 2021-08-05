@@ -29,14 +29,14 @@ public class Game implements GameController {
 			PlayerColor assignedColor = null;
 			assignedColor = PlayerColor.getAvail(requestedColor);
 			players.put(assignedColor, new Player(assignedColor, name, clientName, clientVersion, false));
-			LogController.log(Log.INFO, "New Player registered: " + players.get(assignedColor).toJSON().toString());
+			LogController.log(Log.INFO, "New Player registered: " + players.get(assignedColor).toJSON(false).toString());
 			return assignedColor;
 		}
 		else { return null; }
 	}
 	
 	public void remove(PlayerColor color) {
-		LogController.log(Log.INFO, "Player disconnected: " + players.get(color).toJSON());
+		LogController.log(Log.INFO, "Player disconnected: " + players.get(color).toJSON(false));
 		if (state == GameState.WAITINGFORPLAYERS) {
 			PlayerColor.setAvail(color);
 			players.remove(color, players.get(color));
@@ -48,7 +48,6 @@ public class Game implements GameController {
 	}
 
 	public Boolean ready(PlayerColor color, Boolean isReady) {
-		//TODO if game starts with <4 player; fill the rest with BOTS
 		Integer counter = 0;
 		players.get(color).setReady(isReady);
 		for (Map.Entry<PlayerColor, Player> player : players.entrySet()) {
@@ -56,15 +55,19 @@ public class Game implements GameController {
 				counter++;
 			}
 		}
-		if (counter >= players.size()) {
+		// TODO dirty fix so game starts only with 4 players since BOTS are not implemented yet; (counter >= players.size())
+		if (counter >= 4) {
+			if (players.size() < 4) {
+				//TODO fill the rest with BOTS
+			}
 			state = GameState.RUNNING;
 			currentPlayer = PlayerColor.RED;
-			//TODO generate dice for first (red player)
+			players.get(currentPlayer).dice.setStartDice();
 			LogController.log(Log.INFO, "Game started: " + players);
 			return true;
 		}
 		else {
-			LogController.log(Log.DEBUG, "Player ready " + isReady + ": " + players.get(color).toJSON());
+			LogController.log(Log.DEBUG, "Player ready " + isReady + ": " + players.get(color).toJSON(false));
 			return false;
 		}
 		
@@ -72,6 +75,10 @@ public class Game implements GameController {
 
 	public GameState getState() {
 		return state;
+	}
+
+	public PlayerColor currentPlayer() {
+		return currentPlayer;
 	}
 
 	public JSONObject toJSON() {
@@ -88,11 +95,35 @@ public class Game implements GameController {
 		else { json.put("winner", winner.toString()); }
 		for (Integer i = 0; i < 4; i++) {
 			if (players.get(PlayerColor.valueOf(i)) != null) {
-				data.put(players.get(PlayerColor.valueOf(i)).toJSON());
+				data.put(players.get(PlayerColor.valueOf(i)).toJSON(true));
 			}
 		}
 		json.put("players", data);
 		return json;
 	}
+	
+	//returns true if executed move or when called with -1 returns turn options as array
+	public JSONObject turn(Integer selected) {
+		RuleSet ruleset = new RuleSet();
+		JSONObject json = new JSONObject();
+		JSONArray data = new JSONArray();
+		JSONObject tempTurn = new JSONObject();
 
+		if (selected <= -1) {
+			for (Integer i = 0; i < players.get(currentPlayer).figures.length; i++) {
+				tempTurn = ruleset.dryRun(currentPlayer, players.get(currentPlayer).figures[i], players);
+				if (tempTurn != null) {
+					data.put(tempTurn);
+				}
+			}
+			json.put("options", data);
+			return json;
+		}
+		else {
+			// execute turn
+			// if turn unsuccessful return error
+			json.put("successful", true);
+			return json;
+		}
+	}
 }

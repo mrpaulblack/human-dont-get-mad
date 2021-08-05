@@ -38,6 +38,20 @@ public class Dice {
 		currentDice = random.nextInt(6) +1;
 	}
 	
+	protected void setStartDice() {
+		Boolean gotSix = false;
+		for (Integer i = 0; i < 3; i++) {
+			if (random.nextInt(6) +1 == 6) {
+				gotSix = true;
+				currentDice = random.nextInt(6) +1;
+				break;
+			}
+		}
+		if (!gotSix) {
+			currentDice = 0;
+		}
+	}
+	
 	/**
 	 * <h1><i>geDice</i></h1>
 	 * <p>This method returns the current dice.</p>

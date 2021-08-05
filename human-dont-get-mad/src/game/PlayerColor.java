@@ -19,7 +19,7 @@ public enum PlayerColor {
 	BLUE(1),
 	GREEN(2),
 	YELLOW(3);
-	
+
 	/**
 	 * <h1><i>toString</i></h1>
 	 * <p>This method is converting the ENUM to strings that are supported
@@ -36,7 +36,7 @@ public enum PlayerColor {
 		default: return "";
 		}
 	}
-	
+
 	private int value;
     private static Map<Integer, PlayerColor> map = new HashMap<Integer, PlayerColor>();
     private static Boolean[] availColor = {true, true, true, true};
@@ -76,7 +76,17 @@ public enum PlayerColor {
     public Integer getValue() {
         return value;
     }
-    
+   
+    /**
+	 * <h1><i>getOffset</i></h1>
+	 * <p>This method returns the offset of the start field on the board
+	 * for a specific player color.</p>
+	 * @return Integer - return offset on the board for that player
+	 */
+    public Integer getOffset() {
+    	return 10 * value;
+    }
+
     /**
 	 * <h1><i>getAvail</i></h1>
 	 * <p>This method checks if the requested color is still available and returns
@@ -99,7 +109,7 @@ public enum PlayerColor {
         	return null;
     	}
     }
-    
+
     /**
 	 * <h1><i>setAvail</i></h1>
 	 * <p>This method makes a color available again if a player disconnects for example.</p>

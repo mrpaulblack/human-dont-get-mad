@@ -1,6 +1,7 @@
 package server;
 
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Map.Entry;
 
 // external: https://mvnrepository.com/artifact/org.json/json/20210307
@@ -63,6 +64,23 @@ public class ServerController {
 		json.put("data", data);
 		client.out(json.toString());
 	}
+	
+	/**
+	 * <h1><i>sendTurn</i></h1>
+	 * <p>This method sends the turn with the move options
+	 * to the client socket of the currentPlayer in the game logic.</p>
+	 */
+	private void sendTurn() {
+		JSONObject json = new JSONObject();
+		ClientThread client = null;
+		for (Map.Entry<ClientThread, PlayerColor> entry : clients.entrySet()) {
+			if (entry.getValue() == game.currentPlayer()) {
+				client = entry.getKey();
+			}
+		}
+		json.put("data", game.turn(-1));
+		client.out(json.toString());
+	}
 
 	/**
 	 * <h1><i>broadcastUpdate</i></h1>
@@ -94,6 +112,23 @@ public class ServerController {
 		json.put("data", data);
 		client.out(json.toString());
 	}
+	
+	/**
+	 * <h1><i>broadcastPlayerDisconnected</i></h1>
+	 * <p>This method broadcasts the registered client that disconnected from the
+	 * game to all other registered clients.</p>
+	 * @param client - ClientThread with the socket
+	 */
+	private void broadcastPlayerDisconnected(ClientThread client) {
+		JSONObject json = new JSONObject();
+		JSONObject data = new JSONObject();
+		json.put("type", MsgType.PLAYERDISCONNECTED.toString());
+		data.put("player", clients.get(client).toString());
+		json.put("data", data);
+		for (Entry<ClientThread, PlayerColor> entry : clients.entrySet()) {
+			entry.getKey().out(json.toString());
+		}
+	}
 
 	/**
 	 * <h1><i>disconnect</i></h1>
@@ -104,6 +139,7 @@ public class ServerController {
 	 */
 	protected void disconnect(ClientThread client) {
 		if (clients.containsKey(client)) {
+			broadcastPlayerDisconnected(client);
 			game.remove(clients.get(client));
 			clients.remove(client, clients.get(client));
 		}
@@ -144,16 +180,17 @@ public class ServerController {
 		
 		// ready
 		else if (json.getString("type").equals(MsgType.READY.toString()) && (client.getState() == MsgType.REGISTER || client.getState() == MsgType.READY) && game.getState() == GameState.WAITINGFORPLAYERS) {
-			if (game.ready(clients.get(client), data.getBoolean("ready"))) {
-				//TODO handshake finished; game started and sendTurn() to first player
-			}
 			client.setState(MsgType.READY);
-			broadcastUpdate();
+			if (game.ready(clients.get(client), data.getBoolean("ready"))) {
+				broadcastUpdate();
+				sendTurn();
+			}
+			else { broadcastUpdate(); }
 		}
 		
 		// move
 		else if (json.getString("type").equals(MsgType.MOVE.toString()) && client.getState() == MsgType.READY && game.getState() == GameState.RUNNING) {
-			//TODO execute move or error when illegal argument
+			//TODO execute move or error when illegal argument and after that send turn to next player
 		}
 		
 		// message (optional)
