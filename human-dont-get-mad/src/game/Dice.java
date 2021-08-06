@@ -48,7 +48,7 @@ public class Dice {
 			}
 		}
 		if (gotSix) { currentDice = 6; }
-		else { currentDice = 0; }
+		else { currentDice = random.nextInt(5) +1; }
 	}
 	
 	/**
