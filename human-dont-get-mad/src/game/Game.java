@@ -36,7 +36,7 @@ public class Game implements GameController {
 		}
 		else { return null; }
 	}
-	
+
 	public void remove(PlayerColor color) {
 		LogController.log(Log.INFO, "Player disconnected: " + players.get(color).toJSON(false));
 		if (state == GameState.WAITINGFORPLAYERS) {
@@ -58,7 +58,7 @@ public class Game implements GameController {
 			}
 		}
 		// TODO dirty fix so game starts only with 4 players since BOTS are not implemented yet; (counter >= players.size())
-		if (counter >= 4) {
+		if (counter >= players.size()) {
 			if (players.size() < 4) {
 				//TODO fill the rest with BOTS
 			}
@@ -103,14 +103,14 @@ public class Game implements GameController {
 		json.put("players", data);
 		return json;
 	}
-	
+
 	//returns true if executed move or when called with -1 returns turn options as array
 	public JSONObject turn(Integer selected) {
 		JSONObject data = new JSONObject();
 		JSONArray options = new JSONArray();
 		JSONObject tempTurn = new JSONObject();
 
-		if (selected <= -1) {
+		if (selected == null) {
 			currentTurn.clear();
 			for (Integer i = 0; i < players.get(currentPlayer).figures.length; i++) {
 				tempTurn = ruleset.dryrun(currentPlayer, players.get(currentPlayer).figures[i], players);
@@ -123,14 +123,51 @@ public class Game implements GameController {
 			LogController.log(Log.DEBUG, "Generated Turn for " + currentPlayer + ": " + data);
 			return data;
 		}
-		else {
-			// execute turn
-			if(currentTurn.containsKey(selected) && ruleset.execute(currentPlayer, currentTurn.get(selected), players)) {
-				data.put("ok", "ok");
-			}
-			else { return data; }
-			LogController.log(Log.DEBUG, "Executing turn: " + currentPlayer + ": " + data);
+		else if (selected == -1 && currentTurn.size() <= 0) {
+			nextPlayer();
+			data.put("ok", "ok");
 			return data;
 		}
+		else if(currentTurn.containsKey(selected) && ruleset.execute(currentPlayer, currentTurn.get(selected), players)) {
+			LogController.log(Log.DEBUG, "Executed turn succesfully.");
+			nextPlayer();
+			data.put("ok", "ok");
+			return data;
+		}
+		else { return data; }
 	}
+
+	//TODO add doc
+	private void nextPlayer() {
+		// six; current player again
+		if (players.get(currentPlayer).dice.getDice() == 6) {
+				players.get(currentPlayer).dice.setDice();
+		}
+		// next player
+		else {
+			if (currentPlayer.getValue() >= players.size()) {
+					currentPlayer = PlayerColor.valueOf(0);
+			}
+			else { currentPlayer = PlayerColor.valueOf(currentPlayer.getValue() +1); }
+		}
+		if (allFiguresStart(players.get(currentPlayer).figures)) {
+			players.get(currentPlayer).dice.setStartDice();
+		}
+		else { players.get(currentPlayer).dice.setDice(); }
+		LogController.log(Log.DEBUG, "Next Player: " + players.get(currentPlayer).toJSON(false));
+	}
+
+	//TODO add doc; returns true if all figures are in start
+		private Boolean allFiguresStart(Figure[] figures) {
+			Integer counter = 0;
+			for (Integer i = 0; i < figures.length; i++) {
+				if (figures[i].getType() == GamePosition.START) {
+					counter++;
+				}
+			}
+			if (counter >= figures.length) {
+				return true;
+			}
+			else { return false; }
+		}
 }

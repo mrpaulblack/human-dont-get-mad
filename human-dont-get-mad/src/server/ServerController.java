@@ -80,7 +80,7 @@ public class ServerController {
 			}
 		}
 		json.put("type", MsgType.TURN.toString());
-		json.put("data", game.turn(-1));
+		json.put("data", game.turn(null));
 		client.out(json.toString());
 	}
 
