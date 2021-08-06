@@ -44,7 +44,6 @@ public class Main {
 			
 			//get triggered by the connect Button -> sets the window to false
 			while (tryingConnect) {
-				
 				lui.setVisible(false);
 				
 				//Waits for connection

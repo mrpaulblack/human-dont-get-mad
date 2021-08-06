@@ -2,6 +2,8 @@ package client;
 
 import java.awt.Color;
 import java.io.IOException;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
 import javax.swing.JButton;
@@ -37,7 +39,7 @@ public class ClientController {
 	public String userName = "";
 	public String favColor = "";
 	public Integer selsectedOption = -1;
-	private int getMyIntInMyEnclosedScale = 0;
+	private Integer[] j = new Integer[4];
 	private double clientVersion = 0.1;
 	
 	UISettings uis = new UISettings();
@@ -86,13 +88,14 @@ public class ClientController {
 		player.out(json.toString());
 	}
 	
-	protected void sendMove() {
+	protected void sendMove(int option) {
 		JSONObject json = new JSONObject();
 		JSONObject data = new JSONObject();
 		json.put("type", MsgType.MOVE.toString());
-		data.put("selectedOption", selsectedOption);
+		data.put("selectedOption", option);
 		json.put("data", data);
 		player.out(json.toString());
+		LogController.log(Log.DEBUG, "TX  Selecet Move: " + option);
 	}
 	
 	
@@ -113,6 +116,9 @@ public class ClientController {
 		}
 		else if (json.get("type").equals(MsgType.ASSIGNCOLOR.toString())) {
 			updateReadyScreen();
+			
+			//QuikDeBug
+			gameWindow.setTitle("Human-Dont-Get-Mad: " + data.getString("color"));
 			//TODO wait for GUI and send ready
 		}
 		else if (json.get("type").equals(MsgType.UPDATE.toString())) {
@@ -147,14 +153,17 @@ public class ClientController {
 	
 	public void updateGameScreen(JSONObject data) {
 		
+	
+		
 		if(data.getString("state").equals("waitingForPlayers")) {
 			
 			JSONArray players = new JSONArray(data.getJSONArray("players"));
 			
+			
 			for (int i = 0; i < players.length(); i++) {
 				JSONObject player = new JSONObject(players.get(i).toString());
 				
-				gameWindow.playerStats[i].setText("P" + i+1 + ": " + player.getString("color"));
+				gameWindow.playerStats[i].setText("P" + (i + 1) + ": " + player.getString("color"));
 				gameWindow.playerNames[i].setText(player.getString("name"));
 				
 				if (player.getBoolean("ready")) {
@@ -254,52 +263,63 @@ public class ClientController {
 		
 		JSONArray options = new JSONArray(data.getJSONArray("options"));
 		
-		for (int i = 0; i < options.length(); i++) {
+		
+		
+		LogController.log(Log.DEBUG, "Turns " + options.toString());
+		LogController.log(Log.DEBUG, "Turns " + options.length());
+		
+		if(options.length() != 0) {
+		
+			for (int i = 0; i < options.length(); i++) {
 	
-			JSONObject option = new JSONObject(options.get(i).toString());
-			if(option.get("oldPosition").equals("oldPosition"))
-			{
-				if (option.get("type").equals("start")) {
-					gameWindow.yellowBases[option.getInt("index")].setBackground(Color.white);
-					gameWindow.redBases[option.getInt("index")].setBackground(Color.white);
-					gameWindow.greenBases[option.getInt("index")].setBackground(Color.white);
-					gameWindow.blueBases[option.getInt("index")].setBackground(Color.white);
-				}
-				else if (option.get("type").equals("field")) {
-					gameWindow.buttons[option.getInt("index")].setBackground(Color.white);
-				}
-				else if (option.get("type").equals("home")) {					
-					gameWindow.yellowHouses[option.getInt("index")].setBackground(Color.white);
-					gameWindow.redHouses[option.getInt("index")].setBackground(Color.white);
-					gameWindow.greenHouses[option.getInt("index")].setBackground(Color.white);
-					gameWindow.blueHouses[option.getInt("index")].setBackground(Color.white);
-				}
-			}
-			else if(option.get("newPosition").equals("newPosition"))
-			{
-				if (option.get("type").equals("start")) {
-					gameWindow.yellowBases[option.getInt("index")].setBackground(Color.black);
-					gameWindow.redBases[option.getInt("index")].setBackground(Color.black);
-					gameWindow.greenBases[option.getInt("index")].setBackground(Color.black);
-					gameWindow.blueBases[option.getInt("index")].setBackground(Color.black);
-				}
-				else if (option.get("type").equals("field")) {
-					gameWindow.buttons[option.getInt("index")].setBackground(Color.black);
-				}
-				else if (option.get("type").equals("home")) {					
-					gameWindow.yellowHouses[option.getInt("index")].setBackground(Color.black);
-					gameWindow.redHouses[option.getInt("index")].setBackground(Color.black);
-					gameWindow.greenHouses[option.getInt("index")].setBackground(Color.black);
-					gameWindow.blueHouses[option.getInt("index")].setBackground(Color.black);
+				JSONObject option = new JSONObject(options.get(i).toString());
+				JSONObject oldPosition = new JSONObject(option.get("oldPosition").toString());
+				JSONObject newPosition = new JSONObject(option.get("newPosition").toString());
+				
+				LogController.log(Log.DEBUG, "Possible Move: " + options.get(i).toString());
+				
+				switch (gameWindow.getTitle()) {
+					case "Human-Dont-Get-Mad: red": 
+						
+						System.out.println("+" + option.get("oldPosition"));
+						System.out.println("x" + option.get("oldPosition").toString());
+						
+						int k = i;
+						if (oldPosition.get("type").equals("start")) {
+							gameWindow.redBases[oldPosition.getInt("index")].setBackground(Color.black);
+							gameWindow.redBases[oldPosition.getInt("index")].addActionListener(e -> {
+								sendMove(k);
+							});;
+						}
+						else if (oldPosition.get("type").equals("field")) {
+							gameWindow.buttons[oldPosition.getInt("index")].setBackground(Color.black);
+							gameWindow.buttons[oldPosition.getInt("index")].addActionListener(e -> {
+								sendMove(k);
+							});;	
+						}
+						else if (oldPosition.get("type").equals("home")) {
+							gameWindow.redHouses[oldPosition.getInt("index")].setBackground(Color.black);
+							gameWindow.buttons[oldPosition.getInt("index")].addActionListener(e -> {
+								sendMove(k);
+							});;	
+						}
+						break;
+					case "Human-Dont-Get-Mad: green": 
+						
+						break;
+					case "Human-Dont-Get-Mad: blue": 
+						
+						break;
+					case "Human-Dont-Get-Mad: yellow": 
+						
+						break;
 				}
 				
-				i = getMyIntInMyEnclosedScale;
-				
-				gameWindow.buttons[option.getInt("index")].addActionListener(e -> {
-					selsectedOption = getMyIntInMyEnclosedScale;
-					sendMove();
-				});
 			}
+		}
+		else {
+			sendMove(selsectedOption);
+			LogController.log(Log.DEBUG, "TX Move: " + selsectedOption);
 		}
 	}
 }

@@ -171,7 +171,7 @@ public class GameWindow extends JFrame {
 		
 		this.setLocation(0, 0);
 		this.setSize(windowSize);	//Set de default size to half the screensize for better UX
-		this.setExtendedState(JFrame.MAXIMIZED_BOTH); 
+//		this.setExtendedState(JFrame.MAXIMIZED_BOTH); 
 		this.setResizable(true);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setTitle("Human-Dont-Get-Mad");
@@ -198,7 +198,7 @@ public class GameWindow extends JFrame {
 	        else {
 	        	isLandScape = false;
 	        	
-	        	if(!isLandScape && !gotTurned) {
+	        	if(!isLandScape && !gotTurned) { 
 	        		gotTurned = true;
 	        		alignmentConstruct(false);
 	        		LogController.log(Log.DEBUG, "The Window Layout is set to Portrait");
