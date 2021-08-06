@@ -39,7 +39,7 @@ public class ServerController {
 	 * <p>This method is sending a welcome message to the selected player (ClientThread).</p>
 	 * @param client - ClientThread that receives JSON
 	 */
-	protected void sendWelcome(ClientThread client) {
+	protected synchronized void sendWelcome(ClientThread client) {
 		JSONObject json = new JSONObject();
 		JSONObject data = new JSONObject();
 		json.put("type", MsgType.WELCOME.toString());
@@ -141,7 +141,7 @@ public class ServerController {
 	 * and informs the game, if so.</p>
 	 * @param client - ClientThread that disconnects from the server
 	 */
-	protected void disconnect(ClientThread client) {
+	protected synchronized void disconnect(ClientThread client) {
 		if (clients.containsKey(client)) {
 			broadcastPlayerDisconnected(client);
 			game.remove(clients.get(client));
@@ -157,7 +157,7 @@ public class ServerController {
 	 * @param imput - String with the received data by ClientThread
 	 * @throws Exception if message cannot be decoded
 	 */
-	protected void decoder(ClientThread client, String input) throws Exception {
+	protected synchronized void decoder(ClientThread client, String input) throws Exception {
 		JSONObject json = new JSONObject(input);
 		JSONObject data = new JSONObject(json.get("data").toString());
 
