@@ -10,7 +10,7 @@ public class RuleSet {
 	Integer boardSize = 40;
 
 	//TODO write doc; returns turn option for figure or null if cannot be moved
-	protected JSONObject dryRun(PlayerColor currentPlayer, Figure currentFigure, HashMap<PlayerColor, Player> players) {
+	protected JSONObject dryrun(PlayerColor currentPlayer, Figure currentFigure, HashMap<PlayerColor, Player> players) {
 		JSONObject json = new JSONObject();
 		JSONObject tempPosition = new JSONObject(rules(currentPlayer, currentFigure, players).toString());
 
@@ -25,6 +25,11 @@ public class RuleSet {
 		else {
 			return json;
 		}
+	}
+	
+	// TODO add doc; execute turn
+	protected Boolean execute(PlayerColor currentPlayer, Figure currentFigure, HashMap<PlayerColor, Player> players) {
+		return false;
 	}
 
 	//TODO write doc; returns new Position or if successful

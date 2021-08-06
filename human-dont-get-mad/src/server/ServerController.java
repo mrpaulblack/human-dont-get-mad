@@ -194,7 +194,11 @@ public class ServerController {
 		
 		// move
 		else if (json.getString("type").equals(MsgType.MOVE.toString()) && client.getState() == MsgType.READY && game.getState() == GameState.RUNNING) {
-			//TODO execute move or error when illegal argument and after that send turn to next player
+			if (!game.turn(data.getInt("selectedOption")).has("ok")) {
+				sendError(client, MsgError.ILLEGALMOVE);
+			}
+			broadcastUpdate();
+			sendTurn();
 		}
 		
 		// message (optional)

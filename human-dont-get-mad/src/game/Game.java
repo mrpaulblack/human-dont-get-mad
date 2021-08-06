@@ -20,7 +20,8 @@ import org.json.JSONObject;
 */
 public class Game implements GameController {
 	private HashMap<PlayerColor, Player> players = new HashMap<PlayerColor, Player>();
-	RuleSet ruleset = new RuleSet();
+	private HashMap<Integer, Figure> currentTurn = new HashMap<Integer, Figure>();
+	private RuleSet ruleset = new RuleSet();
 	private GameState state = GameState.WAITINGFORPLAYERS;
 	private PlayerColor currentPlayer = null;
 	private PlayerColor winner = null;
@@ -110,9 +111,11 @@ public class Game implements GameController {
 		JSONObject tempTurn = new JSONObject();
 
 		if (selected <= -1) {
+			currentTurn.clear();
 			for (Integer i = 0; i < players.get(currentPlayer).figures.length; i++) {
-				tempTurn = ruleset.dryRun(currentPlayer, players.get(currentPlayer).figures[i], players);
+				tempTurn = ruleset.dryrun(currentPlayer, players.get(currentPlayer).figures[i], players);
 				if (tempTurn.has("newPosition")) {
+					currentTurn.put(i, players.get(currentPlayer).figures[i]);
 					options.put(tempTurn);
 				}
 			}
@@ -122,7 +125,11 @@ public class Game implements GameController {
 		}
 		else {
 			// execute turn
-			// if turn unsuccessful return error
+			if(currentTurn.containsKey(selected) && ruleset.execute(currentPlayer, currentTurn.get(selected), players)) {
+				data.put("ok", "ok");
+			}
+			else { return data; }
+			LogController.log(Log.DEBUG, "Executing turn: " + currentPlayer + ": " + data);
 			return data;
 		}
 	}
