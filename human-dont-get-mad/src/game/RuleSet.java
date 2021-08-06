@@ -40,8 +40,8 @@ public class RuleSet {
 		}
 
 		// returns new position on the field if possible
-		else if (currentFigure.getType() == GamePosition.FIELD && players.get(currentPlayer).dice.getDice() != 0) {
-			tempIndex = getNewBoardPosition(currentFigure.getIndex(), currentPlayer, players.get(currentPlayer));
+		else if (currentFigure.getType() == GamePosition.FIELD) {
+			tempIndex = getNewBoardIndex(currentFigure.getIndex(), currentPlayer, players.get(currentPlayer));
 			// return move on field
 			if (tempIndex != null && tempIndex > 0 && getBoardPosition(tempIndex, players) != currentPlayer) {
 				newPosition.put("type", GamePosition.FIELD.toString());
@@ -49,14 +49,19 @@ public class RuleSet {
 				return newPosition;
 			}
 			// return move in player home
-			else if (tempIndex != null && tempIndex < 0) {
-				// TODO try to move figure into player end
+			else if (tempIndex != null && tempIndex <= 0) {
+				Integer tempHomeIndex = getNewHomePosition(tempIndex * -1, currentFigure, players.get(currentPlayer).figures);
+				if (tempHomeIndex != null) {
+					newPosition.put("type", GamePosition.HOME.toString());
+					newPosition.put("index", tempHomeIndex);
+					return newPosition;
+				}
 			}
 		}
 		
 		// returns new position in player home if  possible
-		else if (currentFigure.getType() == GamePosition.HOME  && players.get(currentPlayer).dice.getDice() != 0 && players.get(currentPlayer).dice.getDice() < players.get(currentPlayer).figures.length) {
-			tempIndex = getNewHomePosition(players.get(currentPlayer).dice, currentFigure, players.get(currentPlayer).figures);
+		else if (currentFigure.getType() == GamePosition.HOME && players.get(currentPlayer).dice.getDice() < players.get(currentPlayer).figures.length) {
+			tempIndex = getNewHomePosition(currentFigure.getIndex() + players.get(currentPlayer).dice.getDice(), currentFigure, players.get(currentPlayer).figures);
 			if (tempIndex != null) {
 				newPosition.put("type", GamePosition.HOME.toString());
 				newPosition.put("index", tempIndex);
@@ -67,41 +72,35 @@ public class RuleSet {
 	}
 
 	//TODO write doc; check if figure can be moved in player home
-	private Integer getNewHomePosition(Dice dice, Figure currentFigure, Figure[] figures) {
-		if (currentFigure.getIndex() + dice.getDice() < figures.length) {
+	private Integer getNewHomePosition(Integer newIndex, Figure currentFigure, Figure[] figures) {
+		if (newIndex < figures.length && newIndex >= 0) {
 			for (Integer i = 0; i < figures.length; i++) {
-				if (figures[i] != currentFigure && figures[i].getType() == GamePosition.HOME && figures[i].getIndex() == currentFigure.getIndex() + dice.getDice()) {
+				if (figures[i] != currentFigure && figures[i].getType() == GamePosition.HOME && figures[i].getIndex() == newIndex) {
 					return null;
 				}
 			}
-			return currentFigure.getIndex() + dice.getDice();
+			return newIndex;
 		}
 		else { return null; }
 	}
 	
 	//TODO write doc; return new Position on Field
-	private Integer getNewBoardPosition(Integer currentIndex, PlayerColor currentPlayer, Player player) {
+	private Integer getNewBoardIndex(Integer currentIndex, PlayerColor currentPlayer, Player player) {
 		Integer tempIndex = currentIndex + player.dice.getDice();
-		// player0
-		if (currentPlayer.getValue() == 0 && tempIndex < boardSize) {
+		Integer oldVirt = currentIndex - currentPlayer.getOffset();
+		Integer newVirt = tempIndex - currentPlayer.getOffset();
+
+		// move on field with wrap around
+		if (newVirt < boardSize && newVirt >= 0 && oldVirt >= 0) {
+			return tempIndex >= boardSize ? tempIndex -40 : tempIndex;
+		}
+		// move after one wrap around on field
+		else if (newVirt < boardSize && newVirt < 0 && oldVirt < 0) {
 			return tempIndex;
 		}
-		// if there is already a wrap around and not out of bounds
-		else if (currentIndex < currentPlayer.getOffset() && tempIndex < currentPlayer.getOffset()) {
-			return tempIndex;
-		}
-		// if new position is bigger then offset for the player and smaller than the size of the board (NO wrap around)
-		else if (currentIndex >= currentPlayer.getOffset() && tempIndex < boardSize) {
-			return tempIndex;
-		}
-		// if new position is bigger then board size wrap around if new value is smaller than offset
-		else if (currentIndex >= currentPlayer.getOffset() && tempIndex >= boardSize && tempIndex - boardSize < currentPlayer.getOffset()) {
-			return tempIndex - boardSize;
-		}
-		// if new position is in player end return value as -1 * index
-		else if (currentIndex >= currentPlayer.getOffset() && tempIndex >= boardSize && tempIndex - boardSize < currentPlayer.getOffset() + player.figures.length) {
-			//TODO rewrite for all options so that method returns right home value
-			return -1 * ((tempIndex - boardSize) - currentPlayer.getOffset());
+		// able to move into player end
+		else if (newVirt < boardSize && newVirt < player.figures.length && oldVirt < 0) {
+			return newVirt * -1;
 		}
 		else { return null; }
 	}
