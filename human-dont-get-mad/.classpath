@@ -8,5 +8,7 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="lib" path="lib/json-20210307.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
+	<classpathentry kind="lib" path="lib/guava-30.1.1-jre.jar"/>
+	<classpathentry kind="lib" path="lib/failureaccess-1.0.1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
