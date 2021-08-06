@@ -36,7 +36,7 @@ public class GameWindow extends JFrame {
 	
 //Panels
 	private JPanel mainWindowReplacer = new JPanel();
-	private  JPanel mainGameArea = new JPanel();
+	private JPanel mainGameArea = new JPanel();
 	private JPanel statsArea = new JPanel();
 	private JPanel statsAreaNames = new JPanel();
 	private JPanel statsAreaStats = new JPanel();
@@ -126,7 +126,6 @@ public class GameWindow extends JFrame {
 	
 	JButton[][] houses = {redHouses, greenHouses, blueHouses, yellowHouses};
 	
-	
 //Variables
 	private	int heightCurrentWindow = 0;
 	private int widthCurrentWindow = 0;
@@ -154,8 +153,8 @@ public class GameWindow extends JFrame {
 	public void getCurrentWindowSize() {
 		widthCurrentWindow = this.getBounds().width;
 		heightCurrentWindow = this.getBounds().height;
-		LogController.log(Log.DEBUG, "Current Screen Width: " + widthCurrentWindow);
-		LogController.log(Log.DEBUG, "Current Screeen Hight: " + heightCurrentWindow);
+		LogController.log(Log.TRACE, "Current Screen Width: " + widthCurrentWindow);
+		LogController.log(Log.TRACE, "Current Screeen Hight: " + heightCurrentWindow);
 		}
 	
 	
@@ -168,7 +167,7 @@ public class GameWindow extends JFrame {
 
 		Dimension windowSize = new Dimension();
 		windowSize.setSize(gcd.width/2, gcd.height/2);
-		
+
 		this.setLocation(0, 0);
 		this.setSize(windowSize);	//Set de default size to half the screensize for better UX
 //		this.setExtendedState(JFrame.MAXIMIZED_BOTH); 
@@ -182,8 +181,8 @@ public class GameWindow extends JFrame {
 	this.addComponentListener(new ComponentAdapter() {
 	    public void componentResized(ComponentEvent componentEvent) {
 	    	getCurrentWindowSize();
-	    	LogController.log(Log.DEBUG, "Current Window Width: " + widthCurrentWindow);
-	    	LogController.log(Log.DEBUG, "Current Window Hight: " + heightCurrentWindow);
+	    	LogController.log(Log.TRACE, "Current Window Width: " + widthCurrentWindow);
+	    	LogController.log(Log.TRACE, "Current Window Hight: " + heightCurrentWindow);
 	        
 	        //Logic to turn the layout as resources friendly as possible
 	        if(widthCurrentWindow >= heightCurrentWindow) {
@@ -236,21 +235,21 @@ public class GameWindow extends JFrame {
 		
 		
 		dice.setLocation(5, 5);
-		dice.setSize(150, 150);
-		dice.setText("Are Your Ready "
+		dice.setSize(241, 241);
+		dice.setText("Are Your Ready\n "
 				+ "For Fun!");
 		diceArea.add(dice);
 		diceArea.setLayout(null);
 		dice.addActionListener(e -> {
 			if (ClientController.gameIsStarted) {
-				
+				ClientController.rollDice();
 			}
 			else {
 				if (isPressed) {
-					
+	
 					ClientController.isReady = false;
 					ClientController.sendReady();
-					
+			
 					isPressed = false;
 				}
 				else {
@@ -380,7 +379,6 @@ public class GameWindow extends JFrame {
 		
     	setWidthInsets = gcd.width/80;
 		setHeigthInsets = gcd.height/80;
-		System.out.println("Penis: " + gcd.width);
 		
 		rePrintGameBoard();
 		mainGameArea.addComponentListener(new ComponentAdapter() {
@@ -402,8 +400,8 @@ public class GameWindow extends JFrame {
     	//dim = mainWindowReplacer.getSize();
 		
     	
-		LogController.log(Log.DEBUG, "Insetes x: " + setWidthInsets);
-		LogController.log(Log.DEBUG, "Insetes y: " + setHeigthInsets);
+		LogController.log(Log.TRACE, "Insetes x: " + setWidthInsets);
+		LogController.log(Log.TRACE, "Insetes y: " + setHeigthInsets);
 		
 		redBase.setLayout(new GridLayout(2,2,setWidthInsets, setHeigthInsets));
 		greenBase.setLayout(new GridLayout(2,2,setWidthInsets, setHeigthInsets));
@@ -414,7 +412,6 @@ public class GameWindow extends JFrame {
 		blueHouse.setLayout(new GridLayout(1,4,setWidthInsets, setHeigthInsets));
 		yellowHouse.setLayout(new GridLayout(4,1, setWidthInsets, setHeigthInsets));
 		gbcgb.insets = new Insets(setHeigthInsets,setWidthInsets, 0,0);
-		  
 		    
 		gbcgb.weightx = 1;
 		gbcgb.weighty = 1;
@@ -429,7 +426,6 @@ public class GameWindow extends JFrame {
 		gbcgb.gridx = 9;
 		gbcgb.gridy = 0;
 		mainGameArea.add(greenBase, gbcgb);
-		
 		
 		gbcgb.gridx = 0;
 		gbcgb.gridy = 9;
@@ -458,7 +454,6 @@ public class GameWindow extends JFrame {
 		yellowBase.add(yellowBaseTwo);
 		yellowBase.add(yellowBaseThree);
 		yellowBase.add(yellowBaseFour);
-		
 			
 		gbcgb.gridx = 1;
 		gbcgb.gridy = 5;

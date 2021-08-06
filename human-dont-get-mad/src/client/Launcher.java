@@ -15,11 +15,9 @@ import javax.swing.*;
 */
 public class Launcher extends JFrame{
 	
-	static String TEMP = "1";
 	private ClientController clientController;
 	
 	//Create Object
-	
 	Main Main = new Main();
 	GetScreenData gcd = new GetScreenData();
 	
@@ -34,13 +32,10 @@ public class Launcher extends JFrame{
 	 * <p>This is the screen you will see while you want to establish a connection</p>
 	 */
 	public void Launcher() {
-
-
 		
 		Dimension size = new Dimension();
 		Dimension findMidPoint = new Dimension();
 
-		
 		//Set Screen Size to this //So Parts are Hardcoded -> Changes may lead to errors
 		size.setSize(400, 450);
 		
@@ -52,7 +47,7 @@ public class Launcher extends JFrame{
 		this.setResizable(false);
 		this.setLocation(findMidPoint.width, findMidPoint.height);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		this.setTitle("Human-Dont-Get-Mad");
+		this.setTitle("Human-Dont-Get-Mad: connect");
 		
 //*****************************************************************************************
 		
@@ -182,9 +177,6 @@ public class Launcher extends JFrame{
 		centerInputField.add(userNameLbl);
 		centerInputField.add(colorSelectLbl);
 		centerInputField.add(colorSelectWarningLbl);
-		
-		
-		
 		
 	//Username Init
 		userNameLbl.setBounds(new Rectangle(10, 2, 320, 12));
