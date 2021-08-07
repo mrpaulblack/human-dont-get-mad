@@ -32,44 +32,6 @@ public class Main {
 		gw.giveController(cc);
 		
 		lui.setVisible(true);
-		
-		//lui.lis
-		//Runns as long as no connection get established
-	/*	while (isConnected == false) {
-			
-			lui.setVisible(true);
-			try {
-				TimeUnit.MILLISECONDS.sleep(50);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			
-			//get triggered by the connect Button -> sets the window to false
-			while (tryingConnect) {
-				lui.setVisible(false);
-				
-				//Waits for connection
-				try {
-					TimeUnit.SECONDS.sleep(2);
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				
-				if (connectionSuccessful) {
-					
-					isConnected = true;
-					tryingConnect = false; //is connect so it can be set false
-					gw.setVisible(true);
-				}
-				//if failed it will be reopend
-				else {
-					tryingConnect = false;
-					lui.setVisible(true);
-				}
-			}
-		}*/
 	}
 }
 
