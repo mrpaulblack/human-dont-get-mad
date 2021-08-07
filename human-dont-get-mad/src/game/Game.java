@@ -109,32 +109,59 @@ public class Game implements GameController {
 		JSONObject data = new JSONObject();
 		JSONArray options = new JSONArray();
 		JSONObject tempTurn = new JSONObject();
-
-		if (selected == null) {
-			currentTurn.clear();
-			for (Integer i = 0; i < players.get(currentPlayer).figures.length; i++) {
-				tempTurn = ruleset.dryrun(currentPlayer, players.get(currentPlayer).figures[i], players);
-				if (tempTurn.has("newPosition")) {
-					currentTurn.put(i, players.get(currentPlayer).figures[i]);
-					options.put(tempTurn);
+		
+		try {
+			if (selected == null) {
+				currentTurn.clear();
+				for (Integer i = 0; i < players.get(currentPlayer).figures.length; i++) {
+					tempTurn = ruleset.dryrun(currentPlayer, players.get(currentPlayer).figures[i], players);
+					if (tempTurn.has("newPosition")) {
+						currentTurn.put(i, players.get(currentPlayer).figures[i]);
+						options.put(tempTurn);
+					}
 				}
+				data.put("options", options);
+				LogController.log(Log.DEBUG, "Generated Turn for " + currentPlayer + ": " + data);
+				return data;
 			}
-			data.put("options", options);
-			LogController.log(Log.DEBUG, "Generated Turn for " + currentPlayer + ": " + data);
-			return data;
+			else if (selected == -1 && currentTurn.size() <= 0) {
+				nextPlayer();
+				data.put("ok", "ok");
+				return data;
+			}
+			else if (currentTurn.containsKey(selected) && ruleset.execute(currentPlayer, currentTurn.get(selected), players)) {
+				LogController.log(Log.DEBUG, "Executed turn succesfully.");
+				if (gameWon()) {
+					data.put("finished", "finished");
+				}
+				else {
+					nextPlayer();
+					data.put("ok", "ok");
+				}
+				return data;
+			}
+			else { return data; }
 		}
-		else if (selected == -1 && currentTurn.size() <= 0) {
-			nextPlayer();
-			data.put("ok", "ok");
-			return data;
+		catch(Exception e) {
+			LogController.log(Log.ERROR, e.toString());
 		}
-		else if(currentTurn.containsKey(selected) && ruleset.execute(currentPlayer, currentTurn.get(selected), players)) {
-			LogController.log(Log.DEBUG, "Executed turn succesfully.");
-			nextPlayer();
-			data.put("ok", "ok");
-			return data;
+		return null;
+	}
+	
+	//TODO write do
+	private Boolean gameWon() {
+		Integer counter = 0;
+		for (Integer i = 0; i < players.get(currentPlayer).figures.length; i++) {
+			if (players.get(currentPlayer).figures[i].getType() == GamePosition.HOME) {
+				counter++;
+			}
 		}
-		else { return data; }
+		if (counter >= players.get(currentPlayer).figures.length) {
+			winner = currentPlayer;
+			state = GameState.FINISHED;
+			return true;
+		}
+		else { return false; }
 	}
 
 	//TODO add doc
@@ -145,10 +172,13 @@ public class Game implements GameController {
 		}
 		// next player
 		else {
-			if (currentPlayer.getValue() >= players.size()) {
+			players.get(currentPlayer).dice.resetDice();
+			if (currentPlayer.getValue() >= players.size() -1) {
 					currentPlayer = PlayerColor.valueOf(0);
 			}
-			else { currentPlayer = PlayerColor.valueOf(currentPlayer.getValue() +1); }
+			else {
+				currentPlayer = PlayerColor.valueOf(currentPlayer.getValue() +1);
+			}
 		}
 		if (allFiguresStart(players.get(currentPlayer).figures)) {
 			players.get(currentPlayer).dice.setStartDice();

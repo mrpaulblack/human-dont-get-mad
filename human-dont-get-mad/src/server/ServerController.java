@@ -146,6 +146,9 @@ public class ServerController {
 			broadcastPlayerDisconnected(client);
 			game.remove(clients.get(client));
 			clients.remove(client, clients.get(client));
+			if (clients.size() <= 0) {
+				game = new Game();
+			}
 		}
 	}
 
@@ -194,11 +197,24 @@ public class ServerController {
 		
 		// move
 		else if (json.getString("type").equals(MsgType.MOVE.toString()) && client.getState() == MsgType.READY && game.getState() == GameState.RUNNING) {
-			if (!game.turn(data.getInt("selectedOption")).has("ok")) {
-				sendError(client, MsgError.ILLEGALMOVE);
+			if (clients.get(client) == game.currentPlayer()) {
+				JSONObject tempTurn = game.turn(data.getInt("selectedOption"));
+				if (tempTurn.has("finished")) {
+					broadcastUpdate();
+				}
+				else if (!tempTurn.has("ok")) {
+					sendError(client, MsgError.ILLEGALMOVE);
+					broadcastUpdate();
+					sendTurn();
+				}
+				else {
+					broadcastUpdate();
+					sendTurn();
+				}
 			}
-			broadcastUpdate();
-			sendTurn();
+			else {
+				sendError(client, MsgError.NOTYOURTURN);
+			}
 		}
 		
 		// message (optional)
