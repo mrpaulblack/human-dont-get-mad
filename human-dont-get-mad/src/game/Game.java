@@ -102,7 +102,7 @@ public class Game implements GameController {
 		else { json.put("winner", winner.toString()); }
 		for (Integer i = 0; i < 4; i++) {
 			if (players.get(PlayerColor.valueOf(i)) != null) {
-				data.put(players.get(PlayerColor.valueOf(i)).toJSON(true));
+				data.put(players.get(PlayerColor.valueOf(i)).toJSON());
 			}
 		}
 		json.put("players", data);
