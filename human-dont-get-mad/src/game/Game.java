@@ -118,7 +118,7 @@ public class Game implements GameController {
 			for (Integer i = 0; i < players.get(currentPlayer).figures.length; i++) {
 				tempTurn = ruleset.dryrun(currentPlayer, players.get(currentPlayer).figures[i], players);
 				if (tempTurn.has("newPosition")) {
-					currentTurn.put(i, players.get(currentPlayer).figures[i]);
+					currentTurn.put(currentTurn.size(), players.get(currentPlayer).figures[i]);
 					options.put(tempTurn);
 				}
 			}
