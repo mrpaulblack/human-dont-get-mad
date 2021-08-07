@@ -27,12 +27,15 @@ public class Main {
 	
 		GameWindow gw = new GameWindow();	
 		ClientController cc = new ClientController(gw);
-		Launcher lui = new Launcher(cc);
+		Launcher lui = new Launcher(cc, gw);
 		
 		gw.giveController(cc);
 		
+		lui.setVisible(true);
+		
+		//lui.lis
 		//Runns as long as no connection get established
-		while (isConnected == false) {
+	/*	while (isConnected == false) {
 			
 			lui.setVisible(true);
 			try {
@@ -66,7 +69,7 @@ public class Main {
 					lui.setVisible(true);
 				}
 			}
-		}
+		}*/
 	}
 }
 

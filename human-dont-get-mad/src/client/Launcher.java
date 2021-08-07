@@ -16,14 +16,15 @@ import javax.swing.*;
 public class Launcher extends JFrame{
 	
 	private ClientController clientController;
+	private GameWindow gamewindow;
 	
 	//Create Object
-	Main Main = new Main();
 	GetScreenData gcd = new GetScreenData();
 	
 	//Constructor
-	public Launcher(ClientController clientController) {
+	public Launcher(ClientController clientController, GameWindow gamewindow) {
 		this.clientController = clientController;
+		this.gamewindow = gamewindow;
 		Launcher();	
 	}
 	
@@ -228,7 +229,9 @@ public class Launcher extends JFrame{
 		connectButton.setText("Connect");
 		connectButton.setFont(generalFont);
 		connectButton.addActionListener(e -> {
-			Client client = new Client(clientController);
+			
+			this.setVisible(false);
+			Client client = new Client(clientController, gamewindow, this);
 			clientController.player(client);
 			
 			client.serverAdress = serverAddress.getText();
@@ -242,8 +245,8 @@ public class Launcher extends JFrame{
 			LogController.log(Log.DEBUG, "Username: " + clientController.userName);
 			LogController.log(Log.DEBUG, "Picked Color:" + clientController.favColor) ;
 
-			Main.tryingConnect = true;
-			
+			//Main.tryingConnect = true;
+			//Main.connectionHandler(this);
 			client.start();
 		});	
 	}

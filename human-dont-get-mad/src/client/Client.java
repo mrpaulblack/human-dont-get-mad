@@ -30,9 +30,15 @@ public class Client extends Thread{
 	private String bufferIn;
 	public String serverAdress = "";
 	public Integer port = 0;
+	private GameWindow gamewindow;
+	private Launcher launcher;
 	
-	public Client(ClientController controller) {
+	
+	public Client(ClientController controller, GameWindow gamewindow, Launcher launcher) {
 		this.controller = controller;
+		this.gamewindow = gamewindow;
+		this.launcher = launcher;
+		
 	}
 	
 	@Override
@@ -55,7 +61,8 @@ public class Client extends Thread{
 			in = new Scanner(socket.getInputStream());
 			out = new PrintWriter(socket.getOutputStream(), true);
 			
-			main.connectionSuccessful = true;
+		
+			gamewindow.setVisible(true);
 			
 			while (in.hasNextLine()) {
 				bufferIn = in.nextLine();
@@ -64,18 +71,14 @@ public class Client extends Thread{
 			}
 		}
 		catch (Exception e) { 
-			main.connectionSuccessful = false;
+			
 			LogController.log(Log.ERROR, e.toString());
 			}
 		
 		finally {
-			try {
-				in.close();
-				out.close();
-				socket.close();
-			}
-			catch (IOException e) { LogController.log(Log.ERROR, e.toString()); }
 			LogController.log(Log.INFO, "Disconnected from server: " + socket);
+			launcher.setVisible(true);
+			gamewindow.setVisible(false);
 		}
 	}
 	
