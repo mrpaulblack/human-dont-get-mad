@@ -16,9 +16,17 @@ import org.json.JSONObject;
 * @apiNote MAEDN 3.0
 */
 public class RuleSet {
-	Integer boardSize = 40;
 
-	//TODO write doc; returns turn option for figure or null if cannot be moved
+	/**
+	 * <h1><i>dryrun</i></h1>
+	 * <p>This method either generates the possible move for a figure and
+	 * returns it in MAEDN specifications or returns an empty object,
+	 * if there is no turn possible for that figure.</p>
+	 * @param currentPlayer - PlayerColor of the current player
+	 * @param currentFigure - Figure that the turn is generated for
+	 * @param players - HashMap<PlayerColor, Player> of all players
+	 * @return JsonObject - of the possible move or else an empty object
+	 */
 	protected JSONObject dryrun(PlayerColor currentPlayer, Figure currentFigure, HashMap<PlayerColor, Player> players) {
 		JSONObject json = new JSONObject();
 		JSONObject tempPosition = rules(currentPlayer, currentFigure, players, false);
@@ -30,8 +38,17 @@ public class RuleSet {
 		}
 		else { return json; }
 	}
-	
-	// TODO add doc; execute turn
+
+	/**
+	 * <h1><i>execute</i></h1>
+	 * <p>This method executes the possible turn for a given figure
+	 * of a given player and either returns true when successful or false
+	 * if not.</p>
+	 * @param currentPlayer - PlayerColor of the current player
+	 * @param currentFigure - Figure that the turn is generated for
+	 * @param players - HashMap<PlayerColor, Player> of all players
+	 * @return Boolean - true if successful, else false
+	 */
 	protected Boolean execute(PlayerColor currentPlayer, Figure currentFigure, HashMap<PlayerColor, Player> players) {
 		if (rules(currentPlayer, currentFigure, players, true).has("ok")) {
 			return true;
@@ -39,7 +56,17 @@ public class RuleSet {
 		else { return false; }
 	}
 
-	//TODO write doc; returns new Position or if successful
+	/**
+	 * <h1><i>rules</i></h1>
+	 * <p>This is the main rule set. It either generates a turn (or returns an empty object
+	 * if not possible) or it executes that turn and returns an OK JSON object if
+	 * successful.</p>
+	 * @param currentPlayer - PlayerColor of the current player
+	 * @param currentFigure - Figure that the turn is generated for
+	 * @param players - HashMap<PlayerColor, Player> of all players
+	 * @param execute - Boolean if the turn should be executed or just tested
+	 * @return Boolean - true if successful, else false
+	 */
 	private JSONObject rules(PlayerColor currentPlayer, Figure currentFigure, HashMap<PlayerColor, Player> players, Boolean execute) {
 		JSONObject newPosition = new JSONObject();
 		Integer tempIndex;
@@ -123,7 +150,16 @@ public class RuleSet {
 		return newPosition;
 	}
 
-	//TODO write doc; check if figure can be moved in player home
+	/**
+	 * <h1><i>getNewHomePosition</i></h1>
+	 * <p>This method checks if a figure of a player can be moved inside
+	 * the player's home to a new position. It either returns that new position or
+	 * null the current figure cannot be moved to that new position.</p>
+	 * @param newIndex - Integer of the new position in player home
+	 * @param currentFigure - Figure that the turn is generated for
+	 * @param figures - Figure[] array of the players figures
+	 * @return Integer - returns null or the new position in player home
+	 */
 	private Integer getNewHomePosition(Integer newIndex, Figure currentFigure, Figure[] figures) {
 		if (newIndex < figures.length && newIndex >= 0) {
 			for (Integer i = 0; i < figures.length; i++) {
@@ -135,13 +171,22 @@ public class RuleSet {
 		}
 		else { return null; }
 	}
-	
-	//TODO write doc; return new Position on Field
+
+	/**
+	 * <h1><i>getNewBoardIndex</i></h1>
+	 * <p>This method generates the new position on the board for a given player.
+	 * It either returns null if the new position if out of bounds, 0 to 39 for a new position
+	 * on the board or -1 to -4 for a new position in the player end.</p>
+	 * @param currentIndex - Integer of the new position in player home
+	 * @param currenPlayer - PlaeyrColor of the current player
+	 * @param player - Player is the current player object
+	 * @return Integer - returns null or the new position on the board / player home
+	 */
 	private Integer getNewBoardIndex(Integer currentIndex, PlayerColor currentPlayer, Player player) {
-		Integer tempIndex = currentIndex + player.dice.get(); // 35 + 5 = 40
-		Integer oldVirt = currentIndex - currentPlayer.getOffset(); // 35 - ( 0 * 10 ) = 35
-		Integer newVirt = tempIndex - currentPlayer.getOffset(); // 20 -20 = 0
-		// boardSize = 40
+		Integer boardSize = 40;
+		Integer tempIndex = currentIndex + player.dice.get();
+		Integer oldVirt = currentIndex - currentPlayer.getOffset();
+		Integer newVirt = tempIndex - currentPlayer.getOffset();
 
 		// move on field with wrap around
 		if (newVirt < boardSize && newVirt >= 0 && oldVirt >= 0) {
@@ -161,8 +206,15 @@ public class RuleSet {
 		}
 		else { return null; }
 	}
-	
-	//TODO write doc; returns the Player Color thats on that index or else null
+
+	/**
+	 * <h1><i>getBoardPosition</i></h1>
+	 * <p>This method checks if there is already a player on a given field
+	 * on the board. It then returns null, if there is none or the color of that player.</p>
+	 * @param index - Integer of the new position
+	 * @param players - HashMap<PlayerColor, Player> of all players
+	 * @return PlayerColor - either null or the color of the player on that field
+	 */
 	private PlayerColor getBoardPosition(Integer index, HashMap<PlayerColor, Player> players) {
 		for (Map.Entry<PlayerColor, Player> player : players.entrySet()) {
 			for (Integer i = 0; i < player.getValue().figures.length; i++) {
@@ -173,8 +225,16 @@ public class RuleSet {
 		}
 		return null;
 	}
-	
-	//TODO write doc; returns the Player figure thats on that index or else null
+
+	/**
+	 * <h1><i>getBoardFigureIndex</i></h1>
+	 * <p>This method checks if there is already a player on a given field
+	 * on the board. It then returns null, if there is none or the index of the blocking
+	 * figure from the player's figures array.</p>
+	 * @param index - Integer of the new position
+	 * @param players - HashMap<PlayerColor, Player> of all players
+	 * @return Integer - of the figure blocking the field
+	 */
 	private Integer getBoardFigureIndex(Integer index, HashMap<PlayerColor, Player> players) {
 		for (Map.Entry<PlayerColor, Player> player : players.entrySet()) {
 			for (Integer i = 0; i < player.getValue().figures.length; i++) {
