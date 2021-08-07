@@ -68,7 +68,7 @@ public class GameWindow extends JFrame {
 //Buttons
 	JButton dice = new JButton();
 	//generate 40 Buttons for the gameboard
-	static JButton[] buttons = new JButton[40];
+	JButton[] buttons = new JButton[40];
 	
 	//these buttons are generated with a specific name for better readability of the code
 	JButton redBaseOne = new JButton();
@@ -167,7 +167,7 @@ public class GameWindow extends JFrame {
 
 		Dimension windowSize = new Dimension();
 		windowSize.setSize(gcd.width/2, gcd.height/2);
-
+		
 		this.setLocation(0, 0);
 		this.setSize(windowSize);	//Set de default size to half the screensize for better UX
 //		this.setExtendedState(JFrame.MAXIMIZED_BOTH); 
@@ -240,22 +240,24 @@ public class GameWindow extends JFrame {
 				+ "For Fun!");
 		diceArea.add(dice);
 		diceArea.setLayout(null);
+		dice.setText("PRESS FOR READY");
 		dice.addActionListener(e -> {
 			if (ClientController.gameIsStarted) {
-				ClientController.rollDice();
+				//ClientController.rollDice();
 			}
 			else {
 				if (isPressed) {
 	
 					ClientController.isReady = false;
 					ClientController.sendReady();
-			
+					dice.setText("YOU ARE READY");
 					isPressed = false;
 				}
 				else {
 					
 					ClientController.isReady = true;
 					ClientController.sendReady();
+					
 					isPressed = true;
 				}
 			}
@@ -425,15 +427,15 @@ public class GameWindow extends JFrame {
 		
 		gbcgb.gridx = 9;
 		gbcgb.gridy = 0;
-		mainGameArea.add(greenBase, gbcgb);
+		mainGameArea.add(blueBase, gbcgb);
 		
 		gbcgb.gridx = 0;
 		gbcgb.gridy = 9;
-		mainGameArea.add(blueBase, gbcgb);
+		mainGameArea.add(yellowBase, gbcgb);
 		
 		gbcgb.gridx = 9;
 		gbcgb.gridy = 9;
-		mainGameArea.add(yellowBase, gbcgb);
+		mainGameArea.add(greenBase, gbcgb);
 		
 		redBase.add(redBaseOne);
 		redBase.add(redBaseTwo);

@@ -2,10 +2,13 @@ package client;
 
 import java.awt.Color;
 import java.awt.Image;
+import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Array;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.Timer;
@@ -51,9 +54,9 @@ public class ClientController {
 	private Integer dice = 0;
 	private double clientVersion = 0.1;
 	
-	UISettings uis = new UISettings();
 	private Client player;
 	private GameWindow gameWindow;
+	UISettings colors = new UISettings();
 	
 //Images
 	 ImageIcon diceOne = new ImageIcon(this.getClass().getResource("/DiceOne.png"));
@@ -68,12 +71,7 @@ public class ClientController {
 	
 	public void rollDice(){	
 		
-		gameWindow.dice.setIcon(diceOne);
-		
-		if (dice == 0) {
-			dice = 1;//i have nothing better than do this
-		}
-		
+		/*
 			Random randomDuration = new Random();
 			Random randomDice = new Random();
 			int showImage = 0;
@@ -84,29 +82,35 @@ public class ClientController {
 				showImage = randomDice.nextInt(6);
 				diceSelection(showImage);
 				System.out.println("CALL");
-			}
+			}*/
 			diceSelection(dice);
-			System.out.println(dice);
+			LogController.log(Log.DEBUG, "Current Dice: " + dice);
 	}
 	
 	public void diceSelection(int t) {
 		switch (t) {
 		case 1:	gameWindow.dice.setIcon(diceOne);
+		LogController.log(Log.DEBUG, "Current dice ONE"); //change to TRACE
 			break;
 			
 		case 2: gameWindow.dice.setIcon(diceTwo);
+		LogController.log(Log.DEBUG, "Current dice TWO");
 			break;
 			
 		case 3: gameWindow.dice.setIcon(diceThree);
+		LogController.log(Log.DEBUG, "Current dice THREE");
 			break;
 			
 		case 4: gameWindow.dice.setIcon(diceFour);
+		LogController.log(Log.DEBUG, "Current dice FOUR");
 			break;
 			
 		case 5: gameWindow.dice.setIcon(diceFive);
+		LogController.log(Log.DEBUG, "Current dice FIVE");
 			break;
 			
 		case 6: gameWindow.dice.setIcon(diceSix);
+		LogController.log(Log.DEBUG, "Current dice SIX");
 			break;
 		}
 	}
@@ -214,16 +218,42 @@ public class ClientController {
 	
 	public void updateGameScreen(JSONObject data) {
 		
+		for (JLabel JL : gameWindow.playerNames)
+			JL.setBackground(colors.background);
+		for (JLabel JL : gameWindow.playerStats)
+			JL.setBackground(colors.background);
+		
+		System.out.println(data.getString("state"));
+		System.out.println(data.has("currentPlayer"));
+		if (data.has("currentPlayer")) {
+			
+			System.out.println(data.getString("currentPlayer"));
+			
+			if (data.get("currentPlayer").equals("red")) {
+				gameWindow.playerNames[0].setBackground(Color.red);
+			}
+			else if (data.get("currentPlayer").equals("blue")) {
+				gameWindow.playerNames[1].setBackground(Color.blue);
+			}
+			else if (data.get("currentPlayer").equals("green")) {
+				gameWindow.playerNames[2].setBackground(Color.green);
+			}
+			else if (data.get("currentPlayer").equals("yellow")) {
+				gameWindow.playerNames[3].setBackground(Color.yellow);
+			}
+		
+		}
+		
+		 
 		LogController.log(Log.TRACE, "RX: Update: " + data.toString());
 		JSONArray players = new JSONArray(data.getJSONArray("players"));
 		JSONObject playert = new JSONObject(players.get(0).toString());
 		gameWindow.dice.setBackground(Color.white);
-		gameWindow.dice.setText("");
 		
-		dice = (playert.getInt("dice"));
 		
 		if(data.getString("state").equals("waitingForPlayers")) {
 			
+		//	gameWindow.dice.setBackground(Color.white);
 			
 			for (int i = 0; i < players.length(); i++) {
 				JSONObject player = new JSONObject(players.get(i).toString());
@@ -232,12 +262,12 @@ public class ClientController {
 				gameWindow.playerNames[i].setText(player.getString("name"));
 				
 				if (player.getBoolean("ready")) {
-					gameWindow.playerStats[i].setBackground(uis.isReadyColor);
-					gameWindow.playerNames[i].setBackground(uis.isReadyColor);
+					gameWindow.playerStats[i].setBackground(colors.isReadyColor);
+					gameWindow.playerNames[i].setBackground(colors.isReadyColor);
 				} 
 				else {
-					gameWindow.playerStats[i].setBackground(uis.background);
-					gameWindow.playerNames[i].setBackground(uis.background);
+					gameWindow.playerStats[i].setBackground(colors.background);
+					gameWindow.playerNames[i].setBackground(colors.background);
 				}
 			}
 		}
@@ -246,18 +276,21 @@ public class ClientController {
 			gameIsStarted = true;
 					
 			for (JLabel stats : gameWindow.playerStats) 
-				stats.setBackground(uis.background);
+				stats.setBackground(colors.background);
 				
 			for (JLabel names : gameWindow.playerNames)
-				names.setBackground(uis.background);
+				names.setBackground(colors.background);
 				
 			for(JButton[] Houses : gameWindow.houses ) 
 				for (JButton subHouses : Houses)
-					subHouses.setBackground(Color.LIGHT_GRAY);
+					subHouses.setBackground(colors.background);
 						
 			for (JButton[] Bases : gameWindow.bases)
 				for (JButton subBases : Bases)
-					subBases.setBackground(Color.LIGHT_GRAY);
+					subBases.setBackground(colors.background);
+			
+			for (JButton field : gameWindow.buttons)
+				field.setBackground(Color.white);
 			
 			for (int i = 0; i < players.length(); i++) {
 						
@@ -319,10 +352,14 @@ public class ClientController {
 					}
 				}
 			}
+		dice = (playert.getInt("dice"));
+		rollDice();
 		}
 	
 	//NOT TESTET JET BECAUSE OF MISSING DATA
 	public void updateTurns(JSONObject data) {
+		
+		gameWindow.dice.setText("");
 		
 		LogController.log(Log.TRACE, "RX: Turns: " + data.toString());
 		
@@ -347,6 +384,7 @@ public class ClientController {
 							gameWindow.redBases[oldPosition.getInt("index")].setBackground(Color.black);
 							gameWindow.redBases[oldPosition.getInt("index")].addActionListener(e -> {
 								sendMove(k);
+							gameWindow.redBases[oldPosition.getInt("index")].setBackground(Color.LIGHT_GRAY);
 							});;
 						}
 						else if (oldPosition.get("type").equals("field")) {
@@ -413,6 +451,7 @@ public class ClientController {
 							gameWindow.yellowBases[oldPosition.getInt("index")].addActionListener(e -> {
 								sendMove(k);
 							});;
+							
 						}
 						else if (oldPosition.get("type").equals("field")) {
 							gameWindow.buttons[oldPosition.getInt("index")].setBackground(Color.black);
@@ -431,7 +470,9 @@ public class ClientController {
 			}
 		}
 		else {
-			sendMove(selsectedOption);
+			gameWindow.dice.addActionListener(e -> {
+				sendMove(selsectedOption);
+			});
 		}
 	}
 }
