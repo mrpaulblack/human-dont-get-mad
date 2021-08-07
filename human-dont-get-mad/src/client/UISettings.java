@@ -16,6 +16,11 @@ public class UISettings {
 	Color background = Color.LIGHT_GRAY;
 	Color interactionFields = new Color(255, 255, 255);
 	Color isReadyColor = new Color(94, 195, 105);
+//Light Player Colors
+	Color cRedPlayer = new Color(240, 165, 165);
+	Color cBluePlayer = new Color(150, 170, 240);
+	Color cGreenPlayer = new Color(150, 240, 170);
+	Color cYellowPlayer = new Color(240, 240, 150);
 	
 //Fonts
 	Font generalFont = new Font("Serif",Font.PLAIN,15);

@@ -52,6 +52,7 @@ public class ClientController {
 	public Integer selsectedOption = -1;
 	private Integer[] j = new Integer[4];
 	private Integer dice = 0;
+	private String colorDep = "";
 	private double clientVersion = 0.1;
 	
 	private Client player;
@@ -230,16 +231,24 @@ public class ClientController {
 			System.out.println(data.getString("currentPlayer"));
 			
 			if (data.get("currentPlayer").equals("red")) {
-				gameWindow.playerNames[0].setBackground(Color.red);
+				
+				gameWindow.playerNames[0].setBackground(colors.cRedPlayer);
+				gameWindow.playerStats[0].setBackground(colors.cRedPlayer);
 			}
 			else if (data.get("currentPlayer").equals("blue")) {
-				gameWindow.playerNames[1].setBackground(Color.blue);
+				
+				gameWindow.playerNames[1].setBackground(colors.cBluePlayer);
+				gameWindow.playerStats[1].setBackground(colors.cBluePlayer);
 			}
 			else if (data.get("currentPlayer").equals("green")) {
-				gameWindow.playerNames[2].setBackground(Color.green);
+				
+				gameWindow.playerNames[2].setBackground(colors.cGreenPlayer);
+				gameWindow.playerStats[2].setBackground(colors.cGreenPlayer);
 			}
 			else if (data.get("currentPlayer").equals("yellow")) {
-				gameWindow.playerNames[3].setBackground(Color.yellow);
+				
+				gameWindow.playerNames[3].setBackground(colors.cYellowPlayer);
+				gameWindow.playerStats[3].setBackground(colors.cYellowPlayer);
 			}
 		
 		}
@@ -274,13 +283,7 @@ public class ClientController {
 		else if (data.getString("state").equals("running")) {
 			
 			gameIsStarted = true;
-					
-			for (JLabel stats : gameWindow.playerStats) 
-				stats.setBackground(colors.background);
-				
-			for (JLabel names : gameWindow.playerNames)
-				names.setBackground(colors.background);
-				
+						
 			for(JButton[] Houses : gameWindow.houses ) 
 				for (JButton subHouses : Houses)
 					subHouses.setBackground(colors.background);
@@ -293,18 +296,19 @@ public class ClientController {
 				field.setBackground(Color.white);
 			
 			for (int i = 0; i < players.length(); i++) {
-						
+				
 				JSONObject player = new JSONObject(players.get(i).toString());
 				LogController.log(Log.DEBUG, "Player Array " + player);
 						
+				System.out.println(player.getString("color"));
+				
 					for (int j = 0; j <= 3; j++) {
 						
 						JSONArray figuers = new JSONArray(player.getJSONArray("figures"));
 						JSONObject figuer = new JSONObject(figuers.get(j).toString());
 						LogController.log(Log.TRACE, "Figure Array " + figuer);
 							
-						switch (i) {
-						case 0: 
+						if (player.getString("color").equals("red")) {
 							if (figuer.get("type").equals("start")) {
 								gameWindow.redBases[figuer.getInt("index")].setBackground(Color.red);
 							}
@@ -313,31 +317,9 @@ public class ClientController {
 							}
 							else if (figuer.get("type").equals("home")) {
 								gameWindow.redHouses[figuer.getInt("index")].setBackground(Color.red);
-									
-							}break;
-						case 1: 
-							if (figuer.get("type").equals("start")) {
-								gameWindow.greenBases[figuer.getInt("index")].setBackground(Color.green);
 							}
-							else if (figuer.get("type").equals("field")) {
-								gameWindow.buttons[figuer.getInt("index")].setBackground(Color.green);
-							}
-							else if (figuer.get("type").equals("home")) {
-								gameWindow.greenHouses[figuer.getInt("index")].setBackground(Color.green);
-									
-							}break;
-						case 2:
-							if (figuer.get("type").equals("start")) {
-								gameWindow.blueBases[figuer.getInt("index")].setBackground(Color.blue);
-							}
-							else if (figuer.get("type").equals("field")) {
-								gameWindow.buttons[figuer.getInt("index")].setBackground(Color.blue);
-							}
-							else if (figuer.get("type").equals("home")) {
-								gameWindow.blueHouses[figuer.getInt("index")].setBackground(Color.blue);
-									
-							}break;
-						case 3:
+						}
+						else if(player.getString("color").equals("yellow")) {
 							if (figuer.get("type").equals("start")) {
 								gameWindow.yellowBases[figuer.getInt("index")].setBackground(Color.yellow);
 							}
@@ -346,12 +328,38 @@ public class ClientController {
 							}
 							else if (figuer.get("type").equals("home")) {
 								gameWindow.yellowHouses[figuer.getInt("index")].setBackground(Color.yellow);
+										
+							}
+						}
+						else if(player.getString("color").equals("blue")) {
+						
+							if (figuer.get("type").equals("start")) {
+								gameWindow.blueBases[figuer.getInt("index")].setBackground(Color.blue);
+							}
+							else if (figuer.get("type").equals("field")) {
+								gameWindow.buttons[figuer.getInt("index")].setBackground(Color.blue);
+							}
+							else if (figuer.get("type").equals("home")) {
+								gameWindow.blueHouses[figuer.getInt("index")].setBackground(Color.blue);
+							}		
+						}
+						else if(player.getString("color").equals("green")) {
+							
+							if (figuer.get("type").equals("start")) {
+								gameWindow.greenBases[figuer.getInt("index")].setBackground(Color.green);
+							}
+							else if (figuer.get("type").equals("field")) {
+								gameWindow.buttons[figuer.getInt("index")].setBackground(Color.green);
+							}
+							else if (figuer.get("type").equals("home")) {
+								gameWindow.greenHouses[figuer.getInt("index")].setBackground(Color.green);
 								
 							}
 						}
 					}
 				}
 			}
+		
 		dice = (playert.getInt("dice"));
 		rollDice();
 		}
