@@ -16,6 +16,7 @@ import org.json.JSONObject;
 public class Figure {
 	private GamePosition positionType = GamePosition.START;
 	private Integer positionIndex;
+	private Integer positionIndexStart;
 
 	/**
 	 * <h1><i>Figure</i></h1>
@@ -24,6 +25,7 @@ public class Figure {
 	 */
 	public Figure(Integer startIndex) {
 		this.positionIndex = startIndex;
+		this.positionIndexStart = startIndex;
 	}
 
 	/**
@@ -42,6 +44,16 @@ public class Figure {
 	 */
 	protected void setType(GamePosition newType) {
 		positionType = newType;
+	}
+
+	/**
+	 * <h1><i>getStartIndex</i></h1>
+	 * <p>Returns the index the figure started on in
+	 * player start.</p>
+	 * @return Integer - start index of that figure
+	 */
+	protected Integer getStartIndex() {
+		return positionIndexStart;
 	}
 
 	/**

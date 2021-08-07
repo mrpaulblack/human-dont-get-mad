@@ -207,6 +207,7 @@ public class Game implements GameController {
 	 * @return Boolean - if all figures are in the start or not
 	 */
 	private Boolean allFiguresStart(Figure[] figures) {
+		//TODO implement that if all figures in start or cannot be moved in end -> return true
 		Integer counter = 0;
 		for (Integer i = 0; i < figures.length; i++) {
 			if (figures[i].getType() == GamePosition.START) {
