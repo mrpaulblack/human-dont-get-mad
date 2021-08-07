@@ -1,11 +1,12 @@
 package testing.server;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
+
 import java.lang.reflect.Method;
 import server.ServerController;
+import game.PlayerColor;
 import org.junit.Before;
 import org.junit.Test;
-import game.PlayerColor;
 
 /**
 * <h1>Unit-Test for server.ServerController</h1>
@@ -19,20 +20,19 @@ import game.PlayerColor;
 *
 * @author  Konrad Krueger
 * @version 1.0
-* @since   2021-07-23
+* @since   2021-07-24
 * @apiNote MAEDN 3.0
+* @implNote JUnit 4
 */
 
-
-public class ServerControllerTest 
+public class TestServerController 
 {	
+		//Declaring an instance of the ServerController class as general setup for tests.
 	    public ServerController testController;
 	    
-	    //Declaring an instance of the ServerController class as general setup for tests.
+	    //Constructor for ServerConroller class
 	    @Before
-	    public void beforeClass() {
-	        testController = new ServerController();
-	    }
+	    public void testClass() { testController = new ServerController(); }
 
 	    //Test of the color decoding method from string to enum for the color red.
 	    @Test
@@ -42,7 +42,8 @@ public class ServerControllerTest
 	        {	           
 	            Method testinstance = ServerController.class.getDeclaredMethod("decodeColor", String.class);
 	            testinstance.setAccessible(true);
-	            assertEquals(PlayerColor.RED, testinstance.invoke(testController, "red"));
+	            String testString = "red";
+	            assertEquals(PlayerColor.RED, testinstance.invoke(testController, testString));
 	        } 
 	        catch (Exception e) {e.printStackTrace();}	        
 	    }
@@ -55,7 +56,8 @@ public class ServerControllerTest
 	        {	           
 	            Method testinstance = ServerController.class.getDeclaredMethod("decodeColor", String.class);
 	            testinstance.setAccessible(true);
-	            assertEquals(PlayerColor.BLUE, testinstance.invoke(testController, "blue"));
+	            String testString = "blue";
+	            assertEquals(PlayerColor.BLUE, testinstance.invoke(testController, testString));
 	        } 
 	        catch (Exception e) {e.printStackTrace();}	        
 	    }
@@ -68,7 +70,8 @@ public class ServerControllerTest
 	        {	           
 	            Method testinstance = ServerController.class.getDeclaredMethod("decodeColor", String.class);
 	            testinstance.setAccessible(true);
-	            assertEquals(PlayerColor.GREEN, testinstance.invoke(testController, "green"));
+	            String testString = "green";
+	            assertEquals(PlayerColor.GREEN, testinstance.invoke(testController, testString));
 	        } 
 	        catch (Exception e) {e.printStackTrace();}	        
 	    }
@@ -81,12 +84,13 @@ public class ServerControllerTest
 	        {	           
 	            Method testinstance = ServerController.class.getDeclaredMethod("decodeColor", String.class);
 	            testinstance.setAccessible(true);
-	            assertEquals(PlayerColor.YELLOW, testinstance.invoke(testController, "yellow"));
+	            String testString = "yellow";
+	            assertEquals(PlayerColor.YELLOW, testinstance.invoke(testController, testString));
 	        } 
 	        catch (Exception e) {e.printStackTrace();}	        
 	    }
 	    
-	    //Test of the color decoding method from string to enum for the default case..
+	    //Test of the color decoding method from string to enum for the default case.
 	    @Test
 	    public void testDecodeColorDefault() 
 	    {
@@ -94,14 +98,9 @@ public class ServerControllerTest
 	        {	           
 	            Method testinstance = ServerController.class.getDeclaredMethod("decodeColor", String.class);
 	            testinstance.setAccessible(true);
-	            assertEquals(null, testinstance.invoke(testController, ""));
+	            String testString = "";
+	            assertNull(testinstance.invoke(testController, testString));
 	        } 
 	        catch (Exception e) {e.printStackTrace();}	        
-	    }
-	    
-	    public void testSendWelcome()
-	    {
-	    	
-	    	
 	    }
 }
