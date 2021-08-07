@@ -63,7 +63,12 @@ public class Game implements GameController {
 				//TODO fill the rest with BOTS
 			}
 			state = GameState.RUNNING;
-			currentPlayer = PlayerColor.RED;
+			for (Integer i = 0; i < 4; i++) {
+				if(players.containsKey(PlayerColor.valueOf(i))) {
+					currentPlayer = PlayerColor.valueOf(i);
+					break;
+				}
+			}
 			players.get(currentPlayer).dice.setStartDice();
 			LogController.log(Log.INFO, "Game started: " + players);
 			return true;
@@ -109,43 +114,37 @@ public class Game implements GameController {
 		JSONObject data = new JSONObject();
 		JSONArray options = new JSONArray();
 		JSONObject tempTurn = new JSONObject();
-		
-		try {
-			if (selected == null) {
-				currentTurn.clear();
-				for (Integer i = 0; i < players.get(currentPlayer).figures.length; i++) {
-					tempTurn = ruleset.dryrun(currentPlayer, players.get(currentPlayer).figures[i], players);
-					if (tempTurn.has("newPosition")) {
-						currentTurn.put(i, players.get(currentPlayer).figures[i]);
-						options.put(tempTurn);
-					}
+
+		if (selected == null) {
+			currentTurn.clear();
+			for (Integer i = 0; i < players.get(currentPlayer).figures.length; i++) {
+				tempTurn = ruleset.dryrun(currentPlayer, players.get(currentPlayer).figures[i], players);
+				if (tempTurn.has("newPosition")) {
+					currentTurn.put(i, players.get(currentPlayer).figures[i]);
+					options.put(tempTurn);
 				}
-				data.put("options", options);
-				LogController.log(Log.DEBUG, "Generated Turn for " + currentPlayer + ": " + data);
-				return data;
 			}
-			else if (selected == -1 && currentTurn.size() <= 0) {
+			data.put("options", options);
+			LogController.log(Log.DEBUG, "Generated Turn for " + currentPlayer + ": " + data);
+			return data;
+		}
+		else if (selected == -1 && currentTurn.size() <= 0) {
+			nextPlayer();
+			data.put("ok", "ok");
+			return data;
+		}
+		else if (currentTurn.containsKey(selected) && ruleset.execute(currentPlayer, currentTurn.get(selected), players)) {
+			LogController.log(Log.DEBUG, "Executed turn succesfully.");
+			if (gameWon()) {
+				data.put("finished", "finished");
+			}
+			else {
 				nextPlayer();
 				data.put("ok", "ok");
-				return data;
 			}
-			else if (currentTurn.containsKey(selected) && ruleset.execute(currentPlayer, currentTurn.get(selected), players)) {
-				LogController.log(Log.DEBUG, "Executed turn succesfully.");
-				if (gameWon()) {
-					data.put("finished", "finished");
-				}
-				else {
-					nextPlayer();
-					data.put("ok", "ok");
-				}
-				return data;
-			}
-			else { return data; }
+			return data;
 		}
-		catch(Exception e) {
-			LogController.log(Log.ERROR, e.toString());
-		}
-		return null;
+		else { return data; }
 	}
 	
 	//TODO write do
@@ -174,7 +173,12 @@ public class Game implements GameController {
 		else {
 			players.get(currentPlayer).dice.resetDice();
 			if (currentPlayer.getValue() >= players.size() -1) {
-					currentPlayer = PlayerColor.valueOf(0);
+				for (Integer i = 0; i < 4; i++) {
+					if(players.containsKey(PlayerColor.valueOf(i))) {
+						currentPlayer = PlayerColor.valueOf(i);
+						break;
+					}
+				}
 			}
 			else {
 				currentPlayer = PlayerColor.valueOf(currentPlayer.getValue() +1);
