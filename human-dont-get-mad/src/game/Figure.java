@@ -14,7 +14,6 @@ import org.json.JSONObject;
 * @apiNote MAEDN 3.0
 */
 public class Figure {
-	//TODO implement position and position change
 	private GamePosition positionType = GamePosition.START;
 	private Integer positionIndex;
 
@@ -27,24 +26,39 @@ public class Figure {
 		this.positionIndex = startIndex;
 	}
 
-	//TODO write doc
+	/**
+	 * <h1><i>getType</i></h1>
+	 * <p>Returns the current position type of that figure.</p>
+	 * @return GamePosition - current position type
+	 */
 	protected GamePosition getType() {
 		return positionType;
 	}
 
-	//TODO write doc
+	/**
+	 * <h1><i>setType</i></h1>
+	 * <p>This method sets the new position type of a figure.</p>
+	 * @param newType - GamePosition is the new position type
+	 */
 	protected void setType(GamePosition newType) {
 		positionType = newType;
 	}
 
-	//TODO write doc
+	/**
+	 * <h1><i>getIndex</i></h1>
+	 * <p>Returns the current position index of that figure.</p>
+	 * @return Integer - current index in the position type
+	 */
 	protected Integer getIndex() {
 		return positionIndex;
 	}
 
-	//TODO write doc
+	/**
+	 * <h1><i>setIndex</i></h1>
+	 * <p>This method sets the new position index of a figure.</p>
+	 * @param newIndex - GamePosition is the new position index
+	 */
 	protected void setIndex(Integer newIndex) {
-		//TODO check if index is valid based on position type
 		positionIndex = newIndex;
 	}
 

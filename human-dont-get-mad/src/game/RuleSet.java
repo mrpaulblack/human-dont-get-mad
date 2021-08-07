@@ -5,14 +5,23 @@ import java.util.Map;
 
 import org.json.JSONObject;
 
-//TODO write doc
+/**
+* <h1>RuleSet</h1>
+* <p>This class is the actual decision maker which generates and executes turns
+* for a given figure.</p>
+*
+* @author  Paul Braeuning
+* @version 1.0
+* @since   2021-08-05
+* @apiNote MAEDN 3.0
+*/
 public class RuleSet {
 	Integer boardSize = 40;
 
 	//TODO write doc; returns turn option for figure or null if cannot be moved
 	protected JSONObject dryrun(PlayerColor currentPlayer, Figure currentFigure, HashMap<PlayerColor, Player> players) {
 		JSONObject json = new JSONObject();
-		JSONObject tempPosition = new JSONObject(rules(currentPlayer, currentFigure, players, false).toString());
+		JSONObject tempPosition = rules(currentPlayer, currentFigure, players, false);
 
 		if (tempPosition.has("index")) {
 			json.put("oldPosition", currentFigure.getJSON());
@@ -35,7 +44,7 @@ public class RuleSet {
 		JSONObject newPosition = new JSONObject();
 		Integer tempIndex;
 		// you can move figure out of player start (when figure in start, dice = 6 and starting field is not currentPlayer)
-		if (currentFigure.getType() == GamePosition.START && players.get(currentPlayer).dice.getDice() == 6 && getBoardPosition(currentPlayer.getOffset(), players) != currentPlayer) {
+		if (currentFigure.getType() == GamePosition.START && players.get(currentPlayer).dice.get() == 6 && getBoardPosition(currentPlayer.getOffset(), players) != currentPlayer) {
 			if (!execute) {
 				newPosition.put("type", GamePosition.FIELD.toString());
 				newPosition.put("index", currentPlayer.getOffset());
@@ -81,8 +90,8 @@ public class RuleSet {
 			}
 		}
 		// returns new position in player home if  possible
-		else if (currentFigure.getType() == GamePosition.HOME && players.get(currentPlayer).dice.getDice() < players.get(currentPlayer).figures.length) {
-			tempIndex = getNewHomePosition(currentFigure.getIndex() + players.get(currentPlayer).dice.getDice(), currentFigure, players.get(currentPlayer).figures);
+		else if (currentFigure.getType() == GamePosition.HOME && players.get(currentPlayer).dice.get() < players.get(currentPlayer).figures.length) {
+			tempIndex = getNewHomePosition(currentFigure.getIndex() + players.get(currentPlayer).dice.get(), currentFigure, players.get(currentPlayer).figures);
 			if (tempIndex != null) {
 				if (!execute) {
 					newPosition.put("type", GamePosition.HOME.toString());
@@ -114,7 +123,7 @@ public class RuleSet {
 	
 	//TODO write doc; return new Position on Field
 	private Integer getNewBoardIndex(Integer currentIndex, PlayerColor currentPlayer, Player player) {
-		Integer tempIndex = currentIndex + player.dice.getDice();
+		Integer tempIndex = currentIndex + player.dice.get();
 		Integer oldVirt = currentIndex - currentPlayer.getOffset();
 		Integer newVirt = tempIndex - currentPlayer.getOffset();
 

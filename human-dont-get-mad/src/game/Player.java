@@ -22,10 +22,10 @@ public class Player {
 	private Float clientVersion;
 	private Boolean ready = false;
 	private Boolean isBot = false;
-	
+
 	protected Figure[] figures = {new Figure(0), new Figure(1), new Figure(2), new Figure(3)};
 	protected Dice dice = new Dice();
-	
+
 	/**
 	 * <h1><i>Player</i></h1>
 	 * <p>Player constructor that writes parameters to attributes.</p>
@@ -42,7 +42,7 @@ public class Player {
 		this.clientVersion = clientVersion;
 		this.isBot = isBot;
 	}
-	
+
 	/**
 	 * <h1><i>setReady</i></h1>
 	 * <p>Sets player to ready.</p>
@@ -51,7 +51,7 @@ public class Player {
 	protected void setReady(Boolean state) {
 		ready = state;
 	}
-	
+
 	/**
 	 * <h1><i>getReady</i></h1>
 	 * <p>This method returns if the player is ready or not.</p>
@@ -60,7 +60,7 @@ public class Player {
 	protected Boolean getReady() {
 		return ready;
 	}
-	
+
 	/**
 	 * <h1><i>toJSON</i></h1>
 	 * <p>This method returns all positions of all player figures and the attributes
@@ -75,7 +75,7 @@ public class Player {
 		json.put("client", clientName);
 		json.put("ready", ready);
 		json.put("isBot", isBot);
-		json.put("dice", dice.getDice());
+		json.put("dice", dice.get());
 		for (Figure figure : figures) {
 			data.put(figure.getJSON());
 		}

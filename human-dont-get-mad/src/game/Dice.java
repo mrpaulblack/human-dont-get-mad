@@ -14,7 +14,7 @@ import java.util.Random;
 public class Dice {
 	private Random random = new Random();
 	private Integer currentDice = 0;
-	
+
 	/**
 	 * <h1><i>getRandomInt</i></h1>
 	 * <p>This method returns an integer between the minimum and maximum integer provided.</p>
@@ -28,18 +28,23 @@ public class Dice {
 		}
 		else { return random.nextInt(max - min) + min; }
 	}
-	
+
 	/**
-	 * <h1><i>setDice</i></h1>
+	 * <h1><i>set</i></h1>
 	 * <p>This method rolls the dice once and saves
 	 * the result as attribute.</p>
 	 */
-	protected void setDice() {
+	protected void set() {
 		currentDice = random.nextInt(6) +1;
 	}
-	
-	//TODO add doc
-	protected void setStartDice() {
+
+	/**
+	 * <h1><i>setStart</i></h1>
+	 * <p>This method throws the dice 3 times and either
+	 * returns a six or a 1 to 5, indicating if a player got a six
+	 * after 3 times or not.</p>
+	 */
+	protected void setStart() {
 		Boolean gotSix = false;
 		for (Integer i = 0; i < 3; i++) {
 			if (random.nextInt(6) +1 == 6) {
@@ -50,23 +55,21 @@ public class Dice {
 		if (gotSix) { currentDice = 6; }
 		else { currentDice = random.nextInt(5) +1; }
 	}
-	
+
 	/**
-	 * <h1><i>geDice</i></h1>
+	 * <h1><i>get</i></h1>
 	 * <p>This method returns the current dice.</p>
 	 * @return Integer - returns the current dice
 	 */
-	protected Integer getDice() {
+	protected Integer get() {
 		return currentDice;
 	}
-	
+
 	/**
-	 * <h1><i>resetDice</i></h1>
+	 * <h1><i>reset</i></h1>
 	 * <p>This method resets the current dice attribute to 0.</p>
 	 */
-	protected void resetDice() {
+	protected void reset() {
 		currentDice = 0;
 	}
-	
-	//TODO generate start dice (6 tries for six an than the throw after that)
 }

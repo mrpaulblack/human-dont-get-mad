@@ -72,6 +72,15 @@ public interface GameController {
 	 */
 	public JSONObject toJSON();
 	
-	//TODO add doc
+	/**
+	 * <h1><i>turn</i></h1>
+	 * <p>This method has two modes:
+	 * Dry run, which is called with null and returns the turn options for
+	 * the current player and second, execute, which is called by an integer starting with
+	 * -1 up to the amount of turn options. After execution it returns OK for successful or finished, if
+	 * the player won the game</p>
+	 * @param selected - Integer with the selected option or null
+	 * @return JSONObject - returns the turn as JSON or if execute was successful
+	 */
 	public JSONObject turn(Integer selected);
 }

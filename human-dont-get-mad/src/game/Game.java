@@ -57,7 +57,6 @@ public class Game implements GameController {
 				counter++;
 			}
 		}
-		// TODO dirty fix so game starts only with 4 players since BOTS are not implemented yet; (counter >= players.size())
 		if (counter >= players.size()) {
 			if (players.size() < 4) {
 				//TODO fill the rest with BOTS
@@ -69,7 +68,7 @@ public class Game implements GameController {
 					break;
 				}
 			}
-			players.get(currentPlayer).dice.setStartDice();
+			players.get(currentPlayer).dice.setStart();
 			LogController.log(Log.INFO, "Game started: " + players);
 			return true;
 		}
@@ -109,7 +108,6 @@ public class Game implements GameController {
 		return json;
 	}
 
-	//returns true if executed move or when called with -1 returns turn options as array
 	public JSONObject turn(Integer selected) {
 		JSONObject data = new JSONObject();
 		JSONArray options = new JSONArray();
@@ -147,7 +145,12 @@ public class Game implements GameController {
 		else { return data; }
 	}
 	
-	//TODO write do
+	/**
+	 * <h1><i>gameWon</i></h1>
+	 * <p>This method checks if the current player won the game and returns true if so.
+	 * It also sets the game state to finished, if the game is won.</p>
+	 * @return Boolean - returns true if the current player won the game; else false
+	 */
 	private Boolean gameWon() {
 		Integer counter = 0;
 		for (Integer i = 0; i < players.get(currentPlayer).figures.length; i++) {
@@ -163,15 +166,20 @@ public class Game implements GameController {
 		else { return false; }
 	}
 
-	//TODO add doc
+	/**
+	 * <h1><i>nextPlayer</i></h1>
+	 * <p>This method sets the next player and keeps the current one, if
+	 * they got a six. It also generates the next set of dice and resets the
+	 * dice of the former current player.</p>
+	 */
 	private void nextPlayer() {
 		// six; current player again
-		if (players.get(currentPlayer).dice.getDice() == 6) {
-				players.get(currentPlayer).dice.setDice();
+		if (players.get(currentPlayer).dice.get() == 6) {
+				players.get(currentPlayer).dice.set();
 		}
 		// next player
 		else {
-			players.get(currentPlayer).dice.resetDice();
+			players.get(currentPlayer).dice.reset();
 			if (currentPlayer.getValue() >= players.size() -1) {
 				for (Integer i = 0; i < 4; i++) {
 					if(players.containsKey(PlayerColor.valueOf(i))) {
@@ -185,13 +193,19 @@ public class Game implements GameController {
 			}
 		}
 		if (allFiguresStart(players.get(currentPlayer).figures)) {
-			players.get(currentPlayer).dice.setStartDice();
+			players.get(currentPlayer).dice.setStart();
 		}
-		else { players.get(currentPlayer).dice.setDice(); }
-		LogController.log(Log.DEBUG, "Next: " + players.get(currentPlayer) + " with dice " + players.get(currentPlayer).dice.getDice());
+		else { players.get(currentPlayer).dice.set(); }
+		LogController.log(Log.DEBUG, "Next: " + players.get(currentPlayer) + " with dice " + players.get(currentPlayer).dice.get());
 	}
 
-	//TODO add doc; returns true if all figures are in start
+	/**
+	 * <h1><i>allFiguresStart</i></h1>
+	 * <p>This method returns true if all figures in the figure array
+	 * are in the player start.</p>
+	 * @param figures - Figure[] array of the figures
+	 * @return Boolean - if all figures are in the start or not
+	 */
 	private Boolean allFiguresStart(Figure[] figures) {
 		Integer counter = 0;
 		for (Integer i = 0; i < figures.length; i++) {
