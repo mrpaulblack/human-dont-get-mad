@@ -28,7 +28,6 @@ public class Client extends Thread{
 	private Scanner in;
 	private PrintWriter out;
 	private String bufferIn;
-	
 	public String serverAdress = "";
 	public Integer port = 0;
 	

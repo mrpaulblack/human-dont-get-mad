@@ -1,6 +1,8 @@
 package client;
 
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import game.Log;
@@ -140,6 +142,7 @@ public class GameWindow extends JFrame {
 	Font generalFont = uis.generalFont;
 	Font labelFont = uis.labelFont;
 	
+	
 //Constructor
 	public GameWindow() {
 		GameWindow();		
@@ -241,26 +244,27 @@ public class GameWindow extends JFrame {
 		diceArea.add(dice);
 		diceArea.setLayout(null);
 		dice.setText("PRESS FOR READY");
-		dice.addActionListener(e -> {
-			if (ClientController.gameIsStarted) {
-				//ClientController.rollDice();
-			}
-			else {
-				if (isPressed) {
-	
-					ClientController.isReady = false;
-					ClientController.sendReady();
-					dice.setText("YOU ARE READY");
-					isPressed = false;
+		dice.addActionListener(e -> { 
+				if (ClientController.gameIsStarted) {
+						//ClientController.rollDice();
 				}
+				
 				else {
-					
-					ClientController.isReady = true;
-					ClientController.sendReady();
-					
-					isPressed = true;
+					if (isPressed) {
+		
+						ClientController.isReady = false;
+						ClientController.sendReady();
+						dice.setText("YOU ARE READY");
+						isPressed = false;
+					}
+					else {
+						
+						ClientController.isReady = true;
+						ClientController.sendReady();
+						
+						isPressed = true;
+					}
 				}
-			}
 		});
 		
 		

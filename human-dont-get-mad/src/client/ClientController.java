@@ -50,9 +50,7 @@ public class ClientController {
 	public String userName = "";
 	public String favColor = "";
 	public Integer selsectedOption = -1;
-	private Integer[] j = new Integer[4];
 	private Integer dice = 0;
-	private String colorDep = "";
 	private double clientVersion = 0.1;
 	
 	private Client player;
@@ -392,6 +390,7 @@ public class ClientController {
 							gameWindow.redBases[oldPosition.getInt("index")].setBackground(Color.black);
 							gameWindow.redBases[oldPosition.getInt("index")].addActionListener(e -> {
 								sendMove(k);
+								 removeAL();
 							gameWindow.redBases[oldPosition.getInt("index")].setBackground(Color.LIGHT_GRAY);
 							});;
 						}
@@ -399,12 +398,14 @@ public class ClientController {
 							gameWindow.buttons[oldPosition.getInt("index")].setBackground(Color.black);
 							gameWindow.buttons[oldPosition.getInt("index")].addActionListener(e -> {
 								sendMove(k);
+								 removeAL();
 							});;	
 						}
 						else if (oldPosition.get("type").equals("home")) {
 							gameWindow.redHouses[oldPosition.getInt("index")].setBackground(Color.black);
 							gameWindow.redHouses[oldPosition.getInt("index")].addActionListener(e -> {
 								sendMove(k);
+								 removeAL();
 							});;	
 						}
 						break;
@@ -414,18 +415,21 @@ public class ClientController {
 							gameWindow.greenBases[oldPosition.getInt("index")].setBackground(Color.black);
 							gameWindow.greenBases[oldPosition.getInt("index")].addActionListener(e -> {
 								sendMove(k);
+								 removeAL();
 							});;
 						}
 						else if (oldPosition.get("type").equals("field")) {
 							gameWindow.buttons[oldPosition.getInt("index")].setBackground(Color.black);
 							gameWindow.buttons[oldPosition.getInt("index")].addActionListener(e -> {
 								sendMove(k);
+								 removeAL();
 							});;	
 						}
 						else if (oldPosition.get("type").equals("home")) {
 							gameWindow.greenHouses[oldPosition.getInt("index")].setBackground(Color.black);
 							gameWindow.greenHouses[oldPosition.getInt("index")].addActionListener(e -> {
 								sendMove(k);
+								 removeAL();
 							});;	
 						}
 						break;
@@ -436,18 +440,21 @@ public class ClientController {
 							gameWindow.blueBases[oldPosition.getInt("index")].setBackground(Color.black);
 							gameWindow.blueBases[oldPosition.getInt("index")].addActionListener(e -> {
 								sendMove(k);
+								 removeAL();
 							});;
 						}
 						else if (oldPosition.get("type").equals("field")) {
 							gameWindow.buttons[oldPosition.getInt("index")].setBackground(Color.black);
 							gameWindow.buttons[oldPosition.getInt("index")].addActionListener(e -> {
 								sendMove(k);
+								 removeAL();
 							});;	
 						}
 						else if (oldPosition.get("type").equals("home")) {
 							gameWindow.blueHouses[oldPosition.getInt("index")].setBackground(Color.black);
 							gameWindow.blueHouses[oldPosition.getInt("index")].addActionListener(e -> {
 								sendMove(k);
+								 removeAL();
 							});;	
 						}
 						break;
@@ -458,6 +465,7 @@ public class ClientController {
 							gameWindow.yellowBases[oldPosition.getInt("index")].setBackground(Color.black);
 							gameWindow.yellowBases[oldPosition.getInt("index")].addActionListener(e -> {
 								sendMove(k);
+								 removeAL();
 							});;
 							
 						}
@@ -465,12 +473,14 @@ public class ClientController {
 							gameWindow.buttons[oldPosition.getInt("index")].setBackground(Color.black);
 							gameWindow.buttons[oldPosition.getInt("index")].addActionListener(e -> {
 								sendMove(k);
+								 removeAL();
 							});;	
 						}
 						else if (oldPosition.get("type").equals("home")) {
 							gameWindow.yellowHouses[oldPosition.getInt("index")].setBackground(Color.black);
 							gameWindow.yellowHouses[oldPosition.getInt("index")].addActionListener(e -> {
 								sendMove(k);
+								 removeAL();
 							});;	
 						}
 						break;
@@ -482,5 +492,11 @@ public class ClientController {
 				sendMove(selsectedOption);
 			});
 		}
+	}
+	
+	public void removeAL() {
+		for (JButton btn : gameWindow.buttons)
+			for (ActionListener al : btn.getActionListeners())
+				btn.removeActionListener(al);
 	}
 }
