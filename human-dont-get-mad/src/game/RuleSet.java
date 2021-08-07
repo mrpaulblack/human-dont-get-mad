@@ -24,7 +24,6 @@ public class RuleSet {
 	
 	// TODO add doc; execute turn
 	protected Boolean execute(PlayerColor currentPlayer, Figure currentFigure, HashMap<PlayerColor, Player> players) {
-		LogController.log(Log.DEBUG, "Trying to execute turn for " + currentPlayer);
 		if (rules(currentPlayer, currentFigure, players, true).has("ok")) {
 			return true;
 		}

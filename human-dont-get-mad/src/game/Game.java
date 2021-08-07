@@ -31,14 +31,14 @@ public class Game implements GameController {
 			PlayerColor assignedColor = null;
 			assignedColor = PlayerColor.getAvail(requestedColor);
 			players.put(assignedColor, new Player(assignedColor, name, clientName, clientVersion, false));
-			LogController.log(Log.INFO, "New Player registered: " + players.get(assignedColor).toJSON(false).toString());
+			LogController.log(Log.INFO, "New Player registered: " + players.get(assignedColor));
 			return assignedColor;
 		}
 		else { return null; }
 	}
 
 	public void remove(PlayerColor color) {
-		LogController.log(Log.INFO, "Player disconnected: " + players.get(color).toJSON(false));
+		LogController.log(Log.INFO, "Player disconnected: " + players.get(color));
 		if (state == GameState.WAITINGFORPLAYERS) {
 			PlayerColor.setAvail(color);
 			players.remove(color, players.get(color));
@@ -74,7 +74,7 @@ public class Game implements GameController {
 			return true;
 		}
 		else {
-			LogController.log(Log.DEBUG, "Player ready " + isReady + ": " + players.get(color).toJSON(false));
+			LogController.log(Log.DEBUG, "Player ready " + isReady + ": " + players.get(color));
 			return false;
 		}
 		
@@ -125,7 +125,7 @@ public class Game implements GameController {
 				}
 			}
 			data.put("options", options);
-			LogController.log(Log.DEBUG, "Generated Turn for " + currentPlayer + ": " + data);
+			LogController.log(Log.DEBUG, "Turn for " + currentPlayer + ": " + data);
 			return data;
 		}
 		else if (selected == -1 && currentTurn.size() <= 0) {
@@ -134,7 +134,7 @@ public class Game implements GameController {
 			return data;
 		}
 		else if (currentTurn.containsKey(selected) && ruleset.execute(currentPlayer, currentTurn.get(selected), players)) {
-			LogController.log(Log.DEBUG, "Executed turn succesfully.");
+			LogController.log(Log.DEBUG, "Executed turn succesfully: " + currentTurn.get(selected).getJSON());
 			if (gameWon()) {
 				data.put("finished", "finished");
 			}
@@ -188,20 +188,20 @@ public class Game implements GameController {
 			players.get(currentPlayer).dice.setStartDice();
 		}
 		else { players.get(currentPlayer).dice.setDice(); }
-		LogController.log(Log.DEBUG, "Next Player: " + players.get(currentPlayer).toJSON(false));
+		LogController.log(Log.DEBUG, "Next: " + players.get(currentPlayer) + " with dice " + players.get(currentPlayer).dice.getDice());
 	}
 
 	//TODO add doc; returns true if all figures are in start
-		private Boolean allFiguresStart(Figure[] figures) {
-			Integer counter = 0;
-			for (Integer i = 0; i < figures.length; i++) {
-				if (figures[i].getType() == GamePosition.START) {
-					counter++;
-				}
+	private Boolean allFiguresStart(Figure[] figures) {
+		Integer counter = 0;
+		for (Integer i = 0; i < figures.length; i++) {
+			if (figures[i].getType() == GamePosition.START) {
+				counter++;
 			}
-			if (counter >= figures.length) {
-				return true;
-			}
-			else { return false; }
 		}
+		if (counter >= figures.length) {
+			return true;
+		}
+		else { return false; }
+	}
 }

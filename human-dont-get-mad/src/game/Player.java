@@ -19,7 +19,6 @@ public class Player {
 	private PlayerColor color;
 	private String name;
 	private String clientName;
-	@SuppressWarnings("unused")
 	private Float clientVersion;
 	private Boolean ready = false;
 	private Boolean isBot = false;
@@ -85,5 +84,11 @@ public class Player {
 			json.put("figures", data);
 		}
 		return json;
+	}
+
+	@Override
+	public String toString() {
+		String tempString = isBot ? "Bot": "Player";
+		return tempString + "[Color=" + color + ",Name=" + name + ",Client=" + clientName + clientVersion + "]";
 	}
 }

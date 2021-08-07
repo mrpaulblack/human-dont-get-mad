@@ -13,6 +13,8 @@ import game.PlayerColor;
 import game.Game;
 import game.GameController;
 import game.GameState;
+import game.Log;
+import game.LogController;
 
 /**
 * <h1>ServerController</h1>
@@ -147,6 +149,7 @@ public class ServerController {
 			game.remove(clients.get(client));
 			clients.remove(client, clients.get(client));
 			if (clients.size() <= 0) {
+				LogController.log(Log.INFO, "All Players left; resetting game.");
 				game = new Game();
 			}
 		}
