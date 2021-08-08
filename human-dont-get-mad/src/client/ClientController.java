@@ -36,6 +36,7 @@ public class ClientController {
 	private String clientName = "human-dont-get-mad";
 	public String userName = "";
 	public String favColor = "";
+	private String showtext = "";
 	public Integer selsectedOption = -1;
 	private double clientVersion = 0.1;
 	
@@ -78,8 +79,6 @@ public class ClientController {
 	 * @param dice
 	 */
 	public void diceSelection(int t) {
-		
-		System.out.println("t= " +t);
 		
 		switch (t) {
 		case 1:	gameWindow.dice.setIcon(diceOne);
@@ -205,7 +204,7 @@ public class ClientController {
 			//TODO update stats; asynchron
 		}
 		else if (json.get("type").equals(MsgType.MESSAGE.toString())) {
-			displayMessage(data);
+			displayMessage(json, data);
 		}
 		else if (json.get("type").equals(MsgType.ERROR.toString())) {
 			//TODO depends; maybe disconnect
@@ -236,12 +235,7 @@ public class ClientController {
 		for (JLabel JL : gameWindow.playerStats)
 			JL.setBackground(colors.background);
 		
-		System.out.println(data.getString("state"));
-		System.out.println(data.has("currentPlayer"));
-		
 		if (data.has("currentPlayer")) {
-			
-			System.out.println(data.getString("currentPlayer"));
 			
 			if (data.get("currentPlayer").equals("red")) {
 				
@@ -587,16 +581,18 @@ public class ClientController {
 	 *	<h1><i>displaymessage</i></h1>
 	 * <p>will controll the message screen.</p>
 	 */
-	public void displayMessage(JSONObject data) {
-		System.out.println("got sometinh");
-		JSONObject newMessage = new JSONObject(data.getString("message"));
-		messager.incommingText.setText(newMessage.get("message").toString());
-		LogController.log(Log.DEBUG, "RX Message: " + newMessage.get("message").toString());
+	public void displayMessage(JSONObject json, JSONObject data) {
+		
+		showtext = showtext + data.get("sender").toString() + ": " + json.get("message").toString() + "\n";
+		messager.incommingText.setText(showtext);
+		LogController.log(Log.DEBUG, "RX Message: " + showtext);
 	}
 	
 	public void ReadysendText() {
 		messager.send.addActionListener(e -> {
 			sendMessage(messager.outgoingText.getText());
+			messager.outgoingText.setText("");
+			
 		});
 	}
 }

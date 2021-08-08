@@ -16,10 +16,10 @@ public class Main {
 	
 	static boolean tryingConnect = false;
 	static boolean connectionSuccessful = false;
-	
+	 
 	public static void main(String[] args) {
 		
-		LogController.setGlobalLogLvl(Log.DEBUG);
+		LogController.setGlobalLogLvl(Log.INFO);
 		
 		Messager m = new Messager();
 		GameWindow gw = new GameWindow();	

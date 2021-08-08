@@ -16,34 +16,37 @@ import javax.swing.ScrollPaneLayout;
 
 public class Messager extends JFrame {
 	
+	UISettings uis = new UISettings();
 
 	JScrollPane messageWindow = new JScrollPane();
-	 
 	JTextArea incommingText = new JTextArea();
 	JTextArea outgoingText = new JTextArea();
 	JButton send = new JButton();
 	
-	String textToSend = "";
+	String textToSend = ""; 
 	
 	GridBagConstraints gbc = new GridBagConstraints();
 	
 	 
 	public void messager() {
 		
-		this.setBackground(Color.pink);
+		this.setBackground(uis.background);
 		this.setLayout(new GridBagLayout());
 		this.setSize(400, 650);
 		
 		messageWindow.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);  
 		messageWindow.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED); 
 		messageWindow.setLayout(new ScrollPaneLayout());
-		messageWindow.getViewport().setBackground(Color.pink);
+		messageWindow.getViewport().setBackground(uis.background);
 		messageWindow.getViewport().add(incommingText);
+		
 		incommingText.setLineWrap(true);
 		incommingText.setWrapStyleWord(true);	
 		
+		send.setText("Send");
+		
 		gbc.weightx = 1;
-		gbc.weighty = 1;
+		gbc.weighty = 2;
 		gbc.fill = GridBagConstraints.BOTH;
 		
 		gbc.gridx = 0;
@@ -53,23 +56,22 @@ public class Messager extends JFrame {
 		
 		this.add(messageWindow, gbc);
 		
+		gbc.weighty = 1;
 		gbc.gridheight = 1;
 		gbc.gridwidth = 1;
 		
 		gbc.gridx = 0;
 		gbc.gridy = 2;
 		this.add(outgoingText, gbc);
-		outgoingText.setBackground(Color.green);
+		outgoingText.setBackground(uis.background);
 		
 		gbc.gridx = 1;
 		gbc.gridy = 2;
 		this.add(send, gbc);
-		send.setBackground(Color.blue);	
+		send.setBackground(uis.background);	
 	}
 	
 	public void displayMassager(boolean visible) {
-		
-		System.out.println("Sichtbarkeit ist "+ visible);
 		this.setVisible(visible);
 	}
 

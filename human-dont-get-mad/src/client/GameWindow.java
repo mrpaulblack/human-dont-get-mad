@@ -177,7 +177,7 @@ public class GameWindow extends JFrame {
 		
 		this.setLocation(0, 0);
 		this.setSize(windowSize);	//Set de default size to half the screensize for better UX
-//		this.setExtendedState(JFrame.MAXIMIZED_BOTH); 
+		this.setExtendedState(JFrame.MAXIMIZED_BOTH); 
 		this.setResizable(true);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setTitle("Human-Dont-Get-Mad");
@@ -244,7 +244,7 @@ public class GameWindow extends JFrame {
 		smessager.setSize(241, 30);
 		smessager.setBackground(Color.white);
 		diceArea.add(smessager);
-		
+		smessager.setText("Open Chat");
 		smessager.addActionListener(e -> { 
 			if(smessager.isVisible()) {
 				showMessager = true;
@@ -266,7 +266,7 @@ public class GameWindow extends JFrame {
 				messager.displayMassager(false);
 			}
 		});
-		
+		 
 		dice.setLocation(5, 5);
 		dice.setSize(241, 241);
 		dice.setText("Are Your Ready\n "
