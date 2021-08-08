@@ -18,7 +18,7 @@ import java.time.LocalDateTime;
 */
 public abstract class LogController {
 	private static StackTraceElement element;
-	private static Log globalLogLvl = Log.INFO;
+	public static Log globalLogLvl = Log.INFO;
 
 	/**
 	 *	<h1><i>setGlobalLogLvl</i></h1>
@@ -29,7 +29,7 @@ public abstract class LogController {
 	public static void setGlobalLogLvl(Log logLvl) {
 		globalLogLvl = logLvl;
 	}
-
+	
 	/**
 	 *	<h1><i>log</i></h1>
 	 * <p>This static method gets called every time a line is added to the log.

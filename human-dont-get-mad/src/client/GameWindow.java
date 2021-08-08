@@ -265,7 +265,9 @@ public class GameWindow extends JFrame {
 						isPressed = true;
 					}
 				}
+				removeDiceAL();
 		});
+		
 		
 		
 		for(int i = 0; i < buttons.length; i++)
@@ -274,6 +276,10 @@ public class GameWindow extends JFrame {
 		gameboard();
 	}
 	
+	public void removeDiceAL() {
+			for (ActionListener al :  dice.getActionListeners())
+				 dice.removeActionListener(al);
+	}
 	
 	/**
 	 *	<h1><i>alignmentConstruct</i></h1>
@@ -414,8 +420,8 @@ public class GameWindow extends JFrame {
 		blueBase.setLayout(new GridLayout(2,2,setWidthInsets, setHeigthInsets));
 		yellowBase.setLayout(new GridLayout(2,2,setWidthInsets, setHeigthInsets));
 		redHouse.setLayout(new GridLayout(1,4,setWidthInsets, setHeigthInsets));
-		greenHouse.setLayout(new GridLayout(4,1, setWidthInsets, setHeigthInsets));
-		blueHouse.setLayout(new GridLayout(1,4,setWidthInsets, setHeigthInsets));
+		greenHouse.setLayout(new GridLayout(1,4, setWidthInsets, setHeigthInsets));
+		blueHouse.setLayout(new GridLayout(4,1,setWidthInsets, setHeigthInsets));
 		yellowHouse.setLayout(new GridLayout(4,1, setWidthInsets, setHeigthInsets));
 		gbcgb.insets = new Insets(setHeigthInsets,setWidthInsets, 0,0);
 		    
@@ -469,13 +475,13 @@ public class GameWindow extends JFrame {
 		
 		gbcgb.gridx = 6;
 		gbcgb.gridy = 5;
-		mainGameArea.add(blueHouse, gbcgb);
+		mainGameArea.add(greenHouse, gbcgb);
 		
 		gbcgb.gridx = 5;
 		gbcgb.gridy = 1;
 		gbcgb.gridheight = 4;
 		gbcgb.gridwidth = 1;
-		mainGameArea.add(greenHouse, gbcgb);
+		mainGameArea.add(blueHouse, gbcgb);
 		
 		gbcgb.gridx = 5;
 		gbcgb.gridy = 6;
@@ -486,20 +492,20 @@ public class GameWindow extends JFrame {
 		redHouse.add(redHouseThree);
 		redHouse.add(redHouseFour);
 		
-		greenHouse.add(greenHouseOne);
-		greenHouse.add(greenHouseTwo);
-		greenHouse.add(greenHouseThree);
 		greenHouse.add(greenHouseFour);
+		greenHouse.add(greenHouseThree);
+		greenHouse.add(greenHouseTwo);
+		greenHouse.add(greenHouseOne);
 		
 		blueHouse.add(blueHouseOne);
 		blueHouse.add(blueHouseTwo);
 		blueHouse.add(blueHouseThree);
 		blueHouse.add(blueHouseFour);
 		
-		yellowHouse.add(yellowHouseOne);
-		yellowHouse.add(yellowHouseTwo);
-		yellowHouse.add(yellowHouseThree);
 		yellowHouse.add(yellowHouseFour);
+		yellowHouse.add(yellowHouseThree);
+		yellowHouse.add(yellowHouseTwo);
+		yellowHouse.add(yellowHouseOne);		
 		
 		gbcgb.gridheight = 1;
 		gbcgb.gridwidth = 1;
@@ -661,5 +667,25 @@ public class GameWindow extends JFrame {
 		gbcgb.gridy = 5;
 		gbcgb.gridx = 0;
 		mainGameArea.add(buttons[39], gbcgb);
+		
+		//DEBUG
+		if(Log.DEBUG == LogController.globalLogLvl) {
+			String temps = "";
+			for (int i = 0; i < 4; i++) {
+				redHouses[i].setText("RH " + temps.valueOf(i));
+				greenHouses[i].setText("GH " + temps.valueOf(i));
+				blueHouses[i].setText("BH " + temps.valueOf(i));
+				yellowHouses[i].setText("YH " + temps.valueOf(i));
+				
+				redBases[i].setText("RB " + temps.valueOf(i));
+				greenBases[i].setText("GB " + temps.valueOf(i));
+				blueBases[i].setText("BB " + temps.valueOf(i));
+				yellowBases[i].setText("YB " + temps.valueOf(i));
+			}
+			
+			for (int i = 0; i < 40; i++) {
+				buttons[i].setText("F " + temps.valueOf(i));
+			}
+		}
 	}
 }   
