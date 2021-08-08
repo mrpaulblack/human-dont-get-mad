@@ -36,7 +36,7 @@ public class ClientController {
 	public String favColor = "";
 	private String showtext = "";
 	public Integer selsectedOption = -1;
-	private double clientVersion = 0.1;
+	private float clientVersion = 1.0f;
 	
 	private Client player;
 	private GameWindow gameWindow;

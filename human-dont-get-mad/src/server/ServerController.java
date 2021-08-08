@@ -30,7 +30,7 @@ import game.LogController;
 */
 public class ServerController {
 	private float protocolVersion = 3.0f;
-	private float serverVersion = 0.1f;
+	private float serverVersion = 1.0f;
 	private String serverName = "human-dont-get-mad";
 	private HashMap<ClientThread, PlayerColor> clients = new HashMap<ClientThread, PlayerColor>();
 	private GameController game = new Game();

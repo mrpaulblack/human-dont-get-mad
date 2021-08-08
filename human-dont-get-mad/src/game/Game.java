@@ -43,7 +43,7 @@ public class Game implements GameController {
 			players.remove(color, players.get(color));
 		}
 		else if (state == GameState.RUNNING) {
-			players.get(color).setToBot("Bot", "human-dont-get-mad-bot", 01.f);
+			players.get(color).setToBot("Bot", "human-dont-get-mad-bot", 1.0f);
 		}
 	}
 
@@ -58,7 +58,7 @@ public class Game implements GameController {
 		if (counter >= players.size()) {
 			while (players.size() < 4) {
 				PlayerColor assignedColor = PlayerColor.getAvail(null);
-				players.put(assignedColor, new Player(assignedColor, "Bot", "human-dont-get-mad-bot", 0.1f, true));
+				players.put(assignedColor, new Player(assignedColor, "Bot", "human-dont-get-mad-bot", 1.0f, true));
 			}
 			state = GameState.RUNNING;
 			for (Integer i = 0; i < 4; i++) {
