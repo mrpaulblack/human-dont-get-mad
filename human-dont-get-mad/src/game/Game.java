@@ -152,7 +152,7 @@ public class Game implements GameController {
 		else { return data; }
 	}
 	
-	public void botTurn() {
+	public void botTurn(long millis) {
 		turn(null);
 		if (currentTurn.size() <= 0) {
 			turn(-1);
@@ -161,7 +161,7 @@ public class Game implements GameController {
 			turn(players.get(currentPlayer).dice.getRandomInt(0, currentTurn.size() -1));
 		}
 		try {
-			Thread.sleep(1000);
+			Thread.sleep(millis);
 		} catch (InterruptedException e) { LogController.log(Log.ERROR, e.toString()); }
 	}
 	

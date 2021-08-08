@@ -116,7 +116,33 @@ public class ServerController {
 		json.put("data", data);
 		client.out(json.toString());
 	}
-	
+
+	/**
+	 * <h1><i>broadcastMessage</i></h1>
+	 * <p>This method broadcasts messages from the server or a client
+	 * to all other clients conected to the current game.</p>
+	 * @param client - ClientThread with the socket
+	 * @param message - String containing the message that is broadcasted
+	 */
+	private void broadcastMessage(ClientThread client, String message) {
+		JSONObject json = new JSONObject();
+		JSONObject data = new JSONObject();
+		json.put("type", MsgType.MESSAGE.toString());
+		json.put("message", message);
+		if (client == null) {
+			data.put("sender", "server");
+		}
+		else {
+			data.put("sender", clients.get(client).toString());
+		}
+		json.put("data", data);
+		for (Entry<ClientThread, PlayerColor> entry : clients.entrySet()) {
+			if (client != entry.getKey()) {
+				entry.getKey().out(json.toString());
+			}
+		}
+	}
+
 	/**
 	 * <h1><i>broadcastPlayerDisconnected</i></h1>
 	 * <p>This method broadcasts the registered client that disconnected from the
@@ -150,7 +176,7 @@ public class ServerController {
 			broadcastPlayerDisconnected(client);
 			clients.remove(client, clients.get(client));
 			if (clients.size() <= 0) {
-				LogController.log(Log.INFO, "All Players left; resetting game.");
+				LogController.log(Log.INFO, "All Players left; resetting game");
 				game = new Game();
 				PlayerColor.resetAvail();
 			}
@@ -192,7 +218,7 @@ public class ServerController {
 				throw new IllegalArgumentException("server full or game already running");
 			}
 		}
-		
+
 		// ready
 		else if (json.getString("type").equals(MsgType.READY.toString()) && (client.getState() == MsgType.REGISTER || client.getState() == MsgType.READY) && game.getState() == GameState.WAITINGFORPLAYERS) {
 			client.setState(MsgType.READY);
@@ -201,7 +227,7 @@ public class ServerController {
 			}
 			else { broadcastUpdate(); }
 		}
-		
+
 		// move
 		else if (json.getString("type").equals(MsgType.MOVE.toString()) && client.getState() == MsgType.READY && game.getState() == GameState.RUNNING) {
 			if (clients.get(client) == game.currentPlayer()) {
@@ -217,15 +243,21 @@ public class ServerController {
 				sendError(client, MsgError.NOTYOURTURN);
 			}
 		}
-		
+
 		// message (optional)
 		else if (json.getString("type").equals(MsgType.MESSAGE.toString()) && (client.getState() == MsgType.READY || client.getState() == MsgType.REGISTER)) {
-			//TODO (optional) chat message support
+			if (data.getBoolean("broadcast")) {
+				broadcastMessage(client, json.getString("message"));
+			}
+			else {
+				LogController.log(Log.INFO, "Message from " + client + ": " + json.getString("message"));
+			}
 		}
-		
+
 		// error
 		else if (json.get("type").equals(MsgType.ERROR.toString())) {
-			//TODO depends; maybe client disconnect
+			LogController.log(Log.ERROR, "Error from " + client + ": " + json.get("type"));
+			throw new IllegalArgumentException("Error message from client recieved");
 		}
 		
 		// unsupported
@@ -243,7 +275,7 @@ public class ServerController {
 	private void doRound() {
 		while (game.currentPlayerIsBot() && game.getState() == GameState.RUNNING) {
 			broadcastUpdate();
-			game.botTurn();
+			game.botTurn(1000);
 		}
 		broadcastUpdate();
 		if (game.getState() == GameState.RUNNING) {

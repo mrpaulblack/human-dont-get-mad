@@ -96,6 +96,7 @@ public interface GameController {
 	 * <h1><i>botTurn</i></h1>
 	 * <p>This method executes the turn for the current player automatically and also sets the next player
 	 * in line, after it is finished.</p>
+	 * @param millis - long is the amount of time the turn is going to take in milliseconds
 	 */
-	public void botTurn();
+	public void botTurn(long millis);
 }
