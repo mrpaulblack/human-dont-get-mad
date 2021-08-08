@@ -5,8 +5,6 @@ import java.lang.reflect.Method;
 import org.junit.Before;
 import org.junit.Test;
 import game.Figure;
-import game.GamePosition;
-import game.PlayerColor;
 
 /**
 * <h1>Unit-Test for game.Figure</h1>

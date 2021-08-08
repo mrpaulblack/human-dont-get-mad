@@ -108,7 +108,8 @@ public class TestRuleSet
 		  } 
 		}
 	
-	@Test
+	// Unit-Test for the method getNewHomePosition within the RuleSet-class. Testing for each possible Position with different figures.
+		@Test
 	public void testGetNewHomePosition()
 	{
 		try
@@ -119,14 +120,19 @@ public class TestRuleSet
 			testInstance.setAccessible(true);
 			Field getFigure = Player.class.getDeclaredField("figures");
 			getFigure.setAccessible(true);
-			Figure[] testFigure = (Figure[]) getFigure.get(testPlayer);
+			Method testSetFigureType = Figure.class.getDeclaredMethod("setType", GamePosition.class);
+			testSetFigureType.setAccessible(true);
+			Figure[] testFigure = (Figure[]) getFigure.get(testPlayer);	
+			testSetFigureType.invoke(testFigure[1], GamePosition.START);
+			testSetFigureType.invoke(testFigure[2], GamePosition.HOME);
+			testSetFigureType.invoke(testFigure[3], GamePosition.FIELD);
             
-			
-			
-			
-			Object[] setUp = {0, testFigure, testFigure};
-			assertEquals(0 ,testInstance.invoke(testRuleSet, setUp));
-			
+			//testFigure[0].	
+			for(int i = 1; i < 4; i++) 
+			{
+				Object[] setUp = {i, testFigure[0], testFigure};
+				assertEquals(i==2 ? null:i ,testInstance.invoke(testRuleSet, setUp));
+			}			
 		}
 		catch (Exception e) {e.printStackTrace();}			
 	}
@@ -144,7 +150,7 @@ public class TestRuleSet
 	  {	
         try 
         {	           
-        	Class<?>[]args = {Integer.class, PlayerColor.class, Figure.class};
+        	Class<?>[]args = {Integer.class, PlayerColor.class, Player.class};
         	
             Method testInstance = RuleSet.class.getDeclaredMethod("getNewBoardIndex", args);
             Field testGetObject = Player.class.getDeclaredField("dice");
@@ -155,7 +161,6 @@ public class TestRuleSet
        
             testGetDice.invoke(testDice);
             testGetObject.set(testPlayer, testDice);
-
             
             Object[] setUp = {0, testColor, testPlayer};            
             
