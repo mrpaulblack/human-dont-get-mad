@@ -9,11 +9,11 @@ https://gitlab.imn.htwk-leipzig.de/aop-pr-fung/maedn-protocol.
 
 ## Deveolpment
 
-* Clone the repo: `git clone https://github.com/MrPaulBlack/human-dont-getmad`
+* Clone this repo: `git clone https://github.com/MrPaulBlack/human-dont-get-mad`
 
-* Import the project as an existing project into eclipse (you can also use the build in git tool, but you are probalby not going to have a great time)
+* Import the project as an existing project into eclipse (you can also use the build in git tool, but you are probalby not going to have a great time with it)
 
-The project requires Java 1.8 at minimum; The needed `org.json` lib depency is already part of the repo.
+The project requires Java 1.8 at minimum; The needed `org.json` lib depency is already part of this repo.
 
 
 
