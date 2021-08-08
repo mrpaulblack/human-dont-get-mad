@@ -10,7 +10,6 @@ import java.awt.Toolkit;
 * <b>Note:</b> Dont Support changing screensizes, if the window got on a new screen 
 * while it is running it wont adjust it self automatically
 *
-* @author  Tim Menzel
 * @version 1.0
 * @since   2021-08-2
 */

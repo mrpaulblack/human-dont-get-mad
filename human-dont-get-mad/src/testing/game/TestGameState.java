@@ -9,7 +9,6 @@ import game.GameState;
 * <p>This is a unit test of the methods found in the GameState class within the game package</p>
 
 *
-* @author  Konrad Krueger
 * @version 1.0
 * @since   2021-07-24
 * @apiNote MAEDN 3.0

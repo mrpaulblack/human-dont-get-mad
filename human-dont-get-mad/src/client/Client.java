@@ -16,8 +16,6 @@ import game.LogController;
 * <b>Note:</b> Please delete this class once the code is implemented and
 * do not write test cases for this since it is going to get removed anyway!
 *
-* @author  Paul Braeuning
-* @author Tim Menzel
 * @version 0.1
 * @since   2021-07-23
 */

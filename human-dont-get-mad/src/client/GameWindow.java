@@ -17,7 +17,6 @@ import javax.swing.*;
 * <p>This is the Main Game Window, it will show things</p>
 * <b>Note:</b> The ClientController should only be instaciated with every client socket.
 *
-* @author  Tim Menzel
 * @version 1.0
 * @since   2021-08-2
 */

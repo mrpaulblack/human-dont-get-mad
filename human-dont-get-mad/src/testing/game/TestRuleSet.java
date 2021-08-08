@@ -24,9 +24,8 @@ import java.util.HashMap;
 * Tests for protected methods are in here as well to have a clear 
 * dividing line between tests and live-code.
 *
-* @author  Konrad Krueger
 * @version 1.0
-* @since   2021-07-24
+* @since   2021-08-07
 * @apiNote MAEDN 3.0
 * @implNote JUnit 4
 */
@@ -53,8 +52,7 @@ public class TestRuleSet
 		testDice = new Dice();
 		players = new HashMap<PlayerColor, Player>();
 		players.put(testColor, testPlayer);
-		testPositionHome = GamePosition.HOME;
-		 
+		testPositionHome = GamePosition.HOME;		 
 	}
 	
 	// Unit-Test for the method execute within the RuleSet-class using a dice roll of six which should return a true
@@ -109,7 +107,7 @@ public class TestRuleSet
 	        catch (Exception e) {e.printStackTrace();}	        
 		  } 
 		}
-	/*
+	
 	@Test
 	public void testGetNewHomePosition()
 	{
@@ -126,13 +124,13 @@ public class TestRuleSet
 			
 			
 			
-			Object[] setUp = {0, , testFigure};
+			Object[] setUp = {0, testFigure, testFigure};
 			assertEquals(0 ,testInstance.invoke(testRuleSet, setUp));
 			
 		}
 		catch (Exception e) {e.printStackTrace();}			
 	}
-	*/
+	
 
 	
 	
@@ -146,7 +144,7 @@ public class TestRuleSet
 	  {	
         try 
         {	           
-        	Class<?>[]args = {Integer.class, PlayerColor.class, Player.class};
+        	Class<?>[]args = {Integer.class, PlayerColor.class, Figure.class};
         	
             Method testInstance = RuleSet.class.getDeclaredMethod("getNewBoardIndex", args);
             Field testGetObject = Player.class.getDeclaredField("dice");

@@ -18,7 +18,6 @@ import org.junit.Test;
 * Tests for protected methods are in here as well to have a clear 
 * dividing line between tests and live-code.
 *
-* @author  Konrad Krueger
 * @version 1.0
 * @since   2021-07-24
 * @apiNote MAEDN 3.0
