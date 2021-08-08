@@ -1,6 +1,5 @@
 package client;
 
-import java.util.concurrent.TimeUnit;
 import game.Log;
 import game.LogController;
 
@@ -22,14 +21,14 @@ public class Main {
 		
 		LogController.setGlobalLogLvl(Log.DEBUG);
 		
-		boolean isConnected = false;
-		
-	
+		Messager m = new Messager();
 		GameWindow gw = new GameWindow();	
-		ClientController cc = new ClientController(gw);
+		ClientController cc = new ClientController(gw, m);
 		Launcher lui = new Launcher(cc, gw);
 		
-		gw.giveController(cc);
+		m.messager();
+		
+		gw.giveController(cc, m);
 		
 		lui.setVisible(true);
 	}

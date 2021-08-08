@@ -118,4 +118,15 @@ public enum PlayerColor {
     public static void setAvail(PlayerColor add) {
     	availColor[add.getValue()] = true;
     }
+
+    /**
+	 * <h1><i>resetAvail</i></h1>
+	 * <p>This method resets the available colors to make
+	 * them all usable again after a game reset.</p>
+	 */
+    public static void resetAvail() {
+    	for (Integer i = 0; i < availColor.length; i++) {
+    		availColor[i] = true;
+    	}
+    }
 }

@@ -22,6 +22,8 @@ public class UISettings {
 	Color cGreenPlayer = new Color(150, 240, 170);
 	Color cYellowPlayer = new Color(240, 240, 150);
 	
+	Color textColor = new Color(50, 50, 50);
+	
 //Fonts
 	Font generalFont = new Font("Serif",Font.PLAIN,15);
 	Font labelFont = new Font("Serif",Font.PLAIN,12);

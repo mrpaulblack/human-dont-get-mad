@@ -44,8 +44,7 @@ public class Game implements GameController {
 			players.remove(color, players.get(color));
 		}
 		else if (state == GameState.RUNNING) {
-			PlayerColor.setAvail(color);
-			//TODO replace player in running game with BOT
+			players.get(color).setToBot("Bot", "human-dont-get-mad-bot", 01.f);
 		}
 	}
 
@@ -58,8 +57,9 @@ public class Game implements GameController {
 			}
 		}
 		if (counter >= players.size()) {
-			if (players.size() < 4) {
-				//TODO fill the rest with BOTS
+			while (players.size() < 4) {
+				PlayerColor assignedColor = PlayerColor.getAvail(null);
+				players.put(assignedColor, new Player(assignedColor, "Bot", "human-dont-get-mad-bot", 0.1f, true));
 			}
 			state = GameState.RUNNING;
 			for (Integer i = 0; i < 4; i++) {
@@ -85,6 +85,13 @@ public class Game implements GameController {
 
 	public PlayerColor currentPlayer() {
 		return currentPlayer;
+	}
+
+	public Boolean currentPlayerIsBot() {
+		if (players.get(currentPlayer).getType()) {
+			return true;
+		}
+		else { return false; }
 	}
 
 	public JSONObject toJSON() {
@@ -132,17 +139,30 @@ public class Game implements GameController {
 			return data;
 		}
 		else if (currentTurn.containsKey(selected) && ruleset.execute(currentPlayer, currentTurn.get(selected), players)) {
-			LogController.log(Log.DEBUG, "Executed turn succesfully: " + currentTurn.get(selected).getJSON());
+			LogController.log(Log.DEBUG, "Executed turn " + selected + " successfully: " + currentTurn.get(selected).getJSON());
 			if (gameWon()) {
-				data.put("finished", "finished");
+				LogController.log(Log.INFO, "Game won: " + players.get(winner));
 			}
 			else {
 				nextPlayer();
-				data.put("ok", "ok");
 			}
+			data.put("ok", "ok");
 			return data;
 		}
 		else { return data; }
+	}
+	
+	public void botTurn(long millis) {
+		turn(null);
+		if (currentTurn.size() <= 0) {
+			turn(-1);
+		}
+		else {
+			turn(players.get(currentPlayer).dice.getRandomInt(0, currentTurn.size() -1));
+		}
+		try {
+			Thread.sleep(millis);
+		} catch (InterruptedException e) { LogController.log(Log.ERROR, e.toString()); }
 	}
 	
 	/**
@@ -192,7 +212,7 @@ public class Game implements GameController {
 				currentPlayer = PlayerColor.valueOf(currentPlayer.getValue() +1);
 			}
 		}
-		if (allFiguresStart(players.get(currentPlayer).figures)) {
+		if (allFiguresBlocked(players.get(currentPlayer).figures)) {
 			players.get(currentPlayer).dice.setStart();
 		}
 		else { players.get(currentPlayer).dice.set(); }
@@ -200,17 +220,16 @@ public class Game implements GameController {
 	}
 
 	/**
-	 * <h1><i>allFiguresStart</i></h1>
+	 * <h1><i>allFiguresBlocked</i></h1>
 	 * <p>This method returns true if all figures in the figure array
-	 * are in the player start.</p>
+	 * are either in the player start or home</p>
 	 * @param figures - Figure[] array of the figures
 	 * @return Boolean - if all figures are in the start or not
 	 */
-	private Boolean allFiguresStart(Figure[] figures) {
-		//TODO implement that if all figures in start or cannot be moved in end -> return true
+	private Boolean allFiguresBlocked(Figure[] figures) {
 		Integer counter = 0;
 		for (Integer i = 0; i < figures.length; i++) {
-			if (figures[i].getType() == GamePosition.START) {
+			if (figures[i].getType() == GamePosition.START || figures[i].getType() == GamePosition.HOME) {
 				counter++;
 			}
 		}

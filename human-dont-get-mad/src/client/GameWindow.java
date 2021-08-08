@@ -1,7 +1,6 @@
 package client;
 
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
@@ -25,9 +24,11 @@ import javax.swing.*;
 public class GameWindow extends JFrame {
 	
 	private ClientController ClientController;
+	private Messager messager;
 	
-	public void giveController(ClientController ClientController) {
+	public void giveController(ClientController ClientController, Messager messager ) {
 		this.ClientController = ClientController;
+		this.messager = messager ;
 	}
 	
 	UISettings uis = new UISettings();	
@@ -53,6 +54,7 @@ public class GameWindow extends JFrame {
 	private JPanel blueHouse = new JPanel();
 	private JPanel yellowHouse = new JPanel();
 	
+	
 //Labels
 	private JLabel playerOneStats= new JLabel();
 	private JLabel playerTwoStats= new JLabel();
@@ -68,6 +70,8 @@ public class GameWindow extends JFrame {
 	JLabel[] playerNames = {playerOneName, playerTwoName, playerThreeName, playerFourName};
 	
 //Buttons
+	JButton smessager = new JButton();
+	
 	JButton dice = new JButton();
 	//generate 40 Buttons for the gameboard
 	JButton[] buttons = new JButton[40];
@@ -99,7 +103,6 @@ public class GameWindow extends JFrame {
 	JButton[] yellowBases =  {yellowBaseOne, yellowBaseTwo, yellowBaseThree, yellowBaseFour};
 	
 	JButton[][] bases = {redBases, greenBases, blueBases, yellowBases};
-	
 	
 	JButton redHouseOne = new JButton();
 	JButton redHouseTwo = new JButton();
@@ -133,6 +136,7 @@ public class GameWindow extends JFrame {
 	private int widthCurrentWindow = 0;
 	private boolean isLandScape = false;
 	private boolean gotTurned = true;
+	public boolean showMessager = true;
 	
 //Colors	
 	Color background = uis.background;
@@ -236,6 +240,32 @@ public class GameWindow extends JFrame {
 		}
 		
 		
+		smessager.setLocation(5, 250);
+		smessager.setSize(241, 30);
+		smessager.setBackground(Color.white);
+		diceArea.add(smessager);
+		
+		smessager.addActionListener(e -> { 
+			if(smessager.isVisible()) {
+				showMessager = true;
+				smessager.setText("Close Chat");
+			}
+			else {
+				smessager.setText("Open Chat");
+				showMessager = false;
+			}
+			
+			if (showMessager) {
+				smessager.setText("Close Chat");
+				showMessager = false;
+				messager.displayMassager(true);
+			}
+			else {
+				smessager.setText("Open Chat");
+				showMessager = true;
+				messager.displayMassager(false);
+			}
+		});
 		
 		dice.setLocation(5, 5);
 		dice.setSize(241, 241);
@@ -246,9 +276,8 @@ public class GameWindow extends JFrame {
 		dice.setText("PRESS FOR READY");
 		dice.addActionListener(e -> { 
 				if (ClientController.gameIsStarted) {
-						//ClientController.rollDice();
+					removeDiceAL();
 				}
-				
 				else {
 					if (isPressed) {
 		
@@ -265,7 +294,6 @@ public class GameWindow extends JFrame {
 						isPressed = true;
 					}
 				}
-				removeDiceAL();
 		});
 		
 		
@@ -406,7 +434,10 @@ public class GameWindow extends JFrame {
 	    });
 	}
 	
-	
+	/**
+	 *	<h1><i>rePrintGameborad</i></h1>
+	 * <p>will do a reprint of the gameborad for better responitivity.</p>
+	 */
 	public void rePrintGameBoard() {
     	//FOR SOME FCK REASON I CANT TAK THE GAMEWINDOW
     	//dim = mainWindowReplacer.getSize();
@@ -669,7 +700,7 @@ public class GameWindow extends JFrame {
 		mainGameArea.add(buttons[39], gbcgb);
 		
 		//DEBUG
-		if(Log.DEBUG == LogController.globalLogLvl) {
+		if(Log.DEBUG == LogController.getGlobalLogLvl()) {
 			String temps = "";
 			for (int i = 0; i < 4; i++) {
 				redHouses[i].setText("RH " + temps.valueOf(i));

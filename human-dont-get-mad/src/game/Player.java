@@ -62,6 +62,30 @@ public class Player {
 	}
 
 	/**
+	 * <h1><i>getType</i></h1>
+	 * <p>This method simply returns false if player type is player
+	 * and true if player type is BOT.</p>
+	 * @return Boolean - true if player is BOT; false if not
+	 */
+	protected Boolean getType() {
+		return isBot;
+	}
+
+	/**
+	 * <h1><i>setToBot</i></h1>
+	 * <p>This method turns player into a BOT.</p>
+	 * @param botName - String of the software name of the BOT
+	 * @param botClient - String of the name of the BOT
+	 * @param botVersion - Float of the version of the BOT
+	 */
+	protected void setToBot(String botName, String botClient, Float botVersion) {
+		isBot = true;
+		name = botName;
+		clientName = botClient;
+		clientVersion = botVersion;
+	}
+
+	/**
 	 * <h1><i>toJSON</i></h1>
 	 * <p>This method returns all positions of all player figures and the attributes
 	 * of the player as JSON in MAEDN specifications.</p>

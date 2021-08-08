@@ -116,7 +116,33 @@ public class ServerController {
 		json.put("data", data);
 		client.out(json.toString());
 	}
-	
+
+	/**
+	 * <h1><i>broadcastMessage</i></h1>
+	 * <p>This method broadcasts messages from the server or a client
+	 * to all other clients connected to the current game.</p>
+	 * @param client - ClientThread with the socket
+	 * @param message - String containing the message that is broadcasted
+	 */
+	private void broadcastMessage(ClientThread client, String message) {
+		JSONObject json = new JSONObject();
+		JSONObject data = new JSONObject();
+		json.put("type", MsgType.MESSAGE.toString());
+		json.put("message", message);
+		if (client == null) {
+			data.put("sender", "server");
+		}
+		else {
+			data.put("sender", clients.get(client).toString());
+		}
+		json.put("data", data);
+		for (Entry<ClientThread, PlayerColor> entry : clients.entrySet()) {
+			if (client != entry.getKey()) {
+				entry.getKey().out(json.toString());
+			}
+		}
+	}
+
 	/**
 	 * <h1><i>broadcastPlayerDisconnected</i></h1>
 	 * <p>This method broadcasts the registered client that disconnected from the
@@ -145,12 +171,17 @@ public class ServerController {
 	 */
 	protected synchronized void disconnect(ClientThread client) {
 		if (clients.containsKey(client)) {
+			PlayerColor tempColor = clients.get(client);
+			game.remove(tempColor);
 			broadcastPlayerDisconnected(client);
-			game.remove(clients.get(client));
 			clients.remove(client, clients.get(client));
 			if (clients.size() <= 0) {
-				LogController.log(Log.INFO, "All Players left; resetting game.");
+				LogController.log(Log.INFO, "All Players left; resetting game");
 				game = new Game();
+				PlayerColor.resetAvail();
+			}
+			else if (tempColor == game.currentPlayer()) {
+				doRound();
 			}
 		}
 	}
@@ -187,53 +218,68 @@ public class ServerController {
 				throw new IllegalArgumentException("server full or game already running");
 			}
 		}
-		
+
 		// ready
 		else if (json.getString("type").equals(MsgType.READY.toString()) && (client.getState() == MsgType.REGISTER || client.getState() == MsgType.READY) && game.getState() == GameState.WAITINGFORPLAYERS) {
 			client.setState(MsgType.READY);
 			if (game.ready(clients.get(client), data.getBoolean("ready"))) {
-				broadcastUpdate();
-				sendTurn();
+				doRound();
 			}
 			else { broadcastUpdate(); }
 		}
-		
+
 		// move
 		else if (json.getString("type").equals(MsgType.MOVE.toString()) && client.getState() == MsgType.READY && game.getState() == GameState.RUNNING) {
 			if (clients.get(client) == game.currentPlayer()) {
-				JSONObject tempTurn = game.turn(data.getInt("selectedOption"));
-				if (tempTurn.has("finished")) {
-					broadcastUpdate();
-				}
-				else if (!tempTurn.has("ok")) {
+				if (!game.turn(data.getInt("selectedOption")).has("ok")) {
 					sendError(client, MsgError.ILLEGALMOVE);
-					broadcastUpdate();
-					sendTurn();
+					doRound();
 				}
 				else {
-					broadcastUpdate();
-					sendTurn();
+					doRound();
 				}
 			}
 			else {
 				sendError(client, MsgError.NOTYOURTURN);
 			}
 		}
-		
+
 		// message (optional)
-		else if (json.getString("type").equals(MsgType.MESSAGE.toString())) {
-			//TODO (optional) chat message support
+		else if (json.getString("type").equals(MsgType.MESSAGE.toString()) && (client.getState() == MsgType.READY || client.getState() == MsgType.REGISTER)) {
+			if (data.getBoolean("broadcast")) {
+				broadcastMessage(client, json.getString("message"));
+			}
+			else {
+				LogController.log(Log.INFO, "Message from " + client + ": " + json.getString("message"));
+			}
 		}
-		
+
 		// error
 		else if (json.get("type").equals(MsgType.ERROR.toString())) {
-			//TODO depends; maybe client disconnect
+			LogController.log(Log.ERROR, "Error from " + client + ": " + json.get("type"));
+			throw new IllegalArgumentException("Error message from client recieved");
 		}
 		
 		// unsupported
 		else {
 			sendError(client, MsgError.UNSUPPORTEDMESSAGETYPE);
 			throw new IllegalArgumentException("Message Type not supported or out of order");
+		}
+	}
+
+	/**
+	 * <h1><i>doRound</i></h1>
+	 * <p>This method is basically just doing BOT turns
+	 * and sending turns to the players until someone won.</p>
+	 */
+	private void doRound() {
+		while (game.currentPlayerIsBot() && game.getState() == GameState.RUNNING) {
+			broadcastUpdate();
+			game.botTurn(1000);
+		}
+		broadcastUpdate();
+		if (game.getState() == GameState.RUNNING) {
+			sendTurn();
 		}
 	}
 

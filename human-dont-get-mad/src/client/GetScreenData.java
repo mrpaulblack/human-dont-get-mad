@@ -2,8 +2,6 @@ package client;
 
 import java.awt.Dimension;
 import java.awt.Toolkit;
-import game.Log;
-import game.LogController;
 
 /**
 * <h1>GetScreenData</h1>
