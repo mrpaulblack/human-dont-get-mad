@@ -31,7 +31,7 @@ public class Server {
 	 */
 	public static void main(String[] args) throws Exception {
 		for (Integer i = 0; i < args.length; i++) {
-			if (args[i].equals("-h") || args[i].equals("--help")) {
+			if (args[i].toLowerCase().equals("-h") || args[i].toLowerCase().equals("--help")) {
 				System.out.println("Human dont get mad server supporting the MAEDN protocol.");
 				System.out.println("The server is listening on 0.0.0.0:2342 by default.\n");
 				System.out.println("The following arguments are supported:");
@@ -40,18 +40,25 @@ public class Server {
 				System.out.println("Set a server port: -p or --port [port]");
 				System.exit(0);
 			}
-			else if ((args[i].equals("-l") || args[i].equals("--log")) && i +1 < args.length) {
-				switch(args[i+1]) {
-					case "error": LogController.setGlobalLogLvl(Log.ERROR);
-					case "info": LogController.setGlobalLogLvl(Log.INFO);
-					case "debug": LogController.setGlobalLogLvl(Log.DEBUG);
-					case "trace": LogController.setGlobalLogLvl(Log.TRACE);
+			else if ((args[i].toLowerCase().equals("-l") || args[i].toLowerCase().equals("--log")) && i +1 < args.length) {
+				if (args[i +1].toLowerCase().equals("error")) {
+					LogController.setGlobalLogLvl(Log.ERROR);
+				}
+				else if (args[i +1].toLowerCase().equals("info")) {
+					LogController.setGlobalLogLvl(Log.INFO);
+				}
+				else if (args[i +1].toLowerCase().equals("debug")) {
+					LogController.setGlobalLogLvl(Log.DEBUG);
+				}
+				else if (args[i +1].toLowerCase().equals("trace")) {
+					LogController.setGlobalLogLvl(Log.TRACE);
 				}
 			}
-			else if ((args[i].equals("-p") || args[i].equals("--port")) && i +1 < args.length) {
+			else if ((args[i].toLowerCase().equals("-p") || args[i].toLowerCase().equals("--port")) && i +1 < args.length) {
 				port = Integer.parseInt(args[i+1]);
 			}
 		}
+
 		Server server = new Server();
 		server.start(port);
 	}
