@@ -209,6 +209,7 @@ public class ServerController {
 					sendError(client, MsgError.ILLEGALMOVE);
 					broadcastUpdate();
 					sendTurn();
+					//TODO send last broadcast after game state finished and won
 				}
 				else {
 					broadcastUpdate();

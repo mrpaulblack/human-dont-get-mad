@@ -669,7 +669,7 @@ public class GameWindow extends JFrame {
 		mainGameArea.add(buttons[39], gbcgb);
 		
 		//DEBUG
-		if(Log.DEBUG == LogController.globalLogLvl) {
+		if(Log.DEBUG == LogController.getGlobalLogLvl()) {
 			String temps = "";
 			for (int i = 0; i < 4; i++) {
 				redHouses[i].setText("RH " + temps.valueOf(i));
