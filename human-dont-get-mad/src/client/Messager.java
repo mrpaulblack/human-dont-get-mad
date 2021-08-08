@@ -42,6 +42,7 @@ public class Messager extends JFrame {
 		
 		incommingText.setLineWrap(true);
 		incommingText.setWrapStyleWord(true);	
+		incommingText.setEditable(false);
 		
 		send.setText("Send");
 		

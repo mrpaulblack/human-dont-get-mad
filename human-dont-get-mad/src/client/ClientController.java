@@ -591,8 +591,10 @@ public class ClientController {
 	public void ReadysendText() {
 		messager.send.addActionListener(e -> {
 			sendMessage(messager.outgoingText.getText());
-			messager.outgoingText.setText("");
 			
+			showtext = showtext + "you" + ": " + messager.outgoingText.getText() + "\n";
+			messager.outgoingText.setText("");
+			messager.incommingText.setText(showtext);
 		});
 	}
 }

@@ -246,14 +246,6 @@ public class GameWindow extends JFrame {
 		diceArea.add(smessager);
 		smessager.setText("Open Chat");
 		smessager.addActionListener(e -> { 
-			if(smessager.isVisible()) {
-				showMessager = true;
-				smessager.setText("Close Chat");
-			}
-			else {
-				smessager.setText("Open Chat");
-				showMessager = false;
-			}
 			
 			if (showMessager) {
 				smessager.setText("Close Chat");
