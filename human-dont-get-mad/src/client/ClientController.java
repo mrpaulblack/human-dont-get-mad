@@ -22,8 +22,6 @@ import game.MsgType;
 * it is the layer between the client socket and the GUI.</p>
 * <b>Note:</b> The ClientController should only be instaciated with every client socket.
 *
-* @author  Paul Braeuning
-* @author Tim Menzel
 * @version 1.0
 * @since   2021-07-23
 */

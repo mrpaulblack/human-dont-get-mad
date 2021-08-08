@@ -8,7 +8,6 @@ import game.LogController;
 * <p>Will controll the behaving of the Windows </p>
 * <b>Note:</b> 
 *
-* @author  Tim Menzel
 * @version 1.0
 * @since   2021-08-2
 */

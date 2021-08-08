@@ -11,7 +11,6 @@ import javax.swing.*;
 * <h1>Launcher</h1>
 * <p>Will display the Launcher</p>
 *
-* @author  Tim Menzel
 * @version 1.0
 * @since   2021-08-2
 */
