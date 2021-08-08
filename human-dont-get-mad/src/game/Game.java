@@ -13,7 +13,6 @@ import org.json.JSONObject;
 * <b>Note:</b> You should only instantiate this class through the GameController interface.
 * The Documentation for these is in the GameController interface.
 *
-* @author  Paul Braeuning
 * @version 1.0
 * @since   2021-08-02
 * @apiNote MAEDN 3.0

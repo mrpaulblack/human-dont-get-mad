@@ -9,7 +9,6 @@ import org.json.JSONObject;
 * parsed information through to the game. It also defines methods to return the game
 * state to the caller.</p>
 *
-* @author  Paul Braeuning
 * @version 1.0
 * @since   2021-08-03
 * @apiNote MAEDN 3.0

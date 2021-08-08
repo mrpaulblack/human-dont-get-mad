@@ -10,7 +10,6 @@ import org.json.JSONObject;
 * <p>This class is the actual decision maker which generates and executes turns
 * for a given figure.</p>
 *
-* @author  Paul Braeuning
 * @version 1.0
 * @since   2021-08-05
 * @apiNote MAEDN 3.0

@@ -15,7 +15,6 @@ import game.LogController;
 * <b>Note:</b> You cannot run multiple server objects on the same port, but it should be possible
 * to run two or more servers at the same time on different ports.
 *
-* @author  Paul Braeuning
 * @version 1.0
 * @since   2021-07-23
 */

@@ -5,7 +5,6 @@ package game;
 * <p>ENUM that contains the valid types of messages defined in
 * update in the MAEDN protocol.</p>
 *
-* @author  Paul Braeuning
 * @version 1.0
 * @since   2021-07-23
 */

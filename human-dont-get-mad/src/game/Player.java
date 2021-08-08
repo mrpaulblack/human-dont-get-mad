@@ -10,7 +10,6 @@ import org.json.JSONObject;
 * figures in their start region. This class also saves all the attributes provided by the client,
 * like name, client name and the version of the client used to connect to the server.</p>
 *
-* @author  Paul Braeuning
 * @version 1.0
 * @since   2021-08-02
 * @apiNote MAEDN 3.0

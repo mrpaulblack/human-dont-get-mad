@@ -5,7 +5,6 @@ package game;
 * <p>ENUM that contains the different error types supported by
 * server and client.</p>
 *
-* @author  Paul Braeuning
 * @version 1.0
 * @since   2021-07-23
 */

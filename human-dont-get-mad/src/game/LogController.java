@@ -12,7 +12,6 @@ import java.time.LocalDateTime;
 * <b>Note:</b> This could be changed pretty easy to include more log level or to
 * write the log to a file instead of printing it into the terminal
 *
-* @author  Paul Braeuning
 * @version 1.0
 * @since   2021-07-23
 */

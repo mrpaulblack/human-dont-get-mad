@@ -8,7 +8,6 @@ import org.json.JSONObject;
 * on the board.</p>
 * <b>Note:</b> The class can return its position in JSON.
 *
-* @author  Paul Braeuning
 * @version 1.0
 * @since   2021-07-23
 * @apiNote MAEDN 3.0

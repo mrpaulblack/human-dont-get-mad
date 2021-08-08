@@ -10,7 +10,6 @@ import java.util.Map;
 * <b>Note:</b> The availColor attribute is static so that every color is
 * only used once.
 *
-* @author  Paul Braeuning
 * @version 1.0
 * @since   2021-08-03
 */

@@ -24,7 +24,6 @@ import game.LogController;
 * <b>Note:</b> The ServerController should only be instantiated once every server
 * and NOT for each ClientThread.
 *
-* @author  Paul Braeuning
 * @version 1.0
 * @since   2021-07-23
 * @apiNote MAEDN 3.0

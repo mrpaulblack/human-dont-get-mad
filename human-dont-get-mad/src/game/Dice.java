@@ -7,7 +7,6 @@ import java.util.Random;
 * <p>A simple dice class that can generate dice throws for the game.</p>
 * <b>Note:</b> This class can also randomly choose an turn option for a BOT.
 *
-* @author  Paul Braeuning
 * @version 1.0
 * @since   2021-08-03
 */

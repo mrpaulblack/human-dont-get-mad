@@ -6,7 +6,6 @@ package game;
 * by the logging controller. A specific level displays all messages of this
 * level and above.</p>
 *
-* @author  Paul Braeuning
 * @version 1.0
 * @since   2021-07-23
 */

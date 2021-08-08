@@ -17,7 +17,6 @@ import game.MsgType;
 * <b>Note:</b> This gets called every time a client joins and every ClientThread
 * uses the same ServerController object
 *
-* @author  Paul Braeuning
 * @version 1.0
 * @since   2021-07-23
 */

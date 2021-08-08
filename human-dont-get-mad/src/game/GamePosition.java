@@ -6,7 +6,6 @@ package game;
 * position defined in position in the MAEDN protocol. A valid position would
 * be for example: [GamePosition.start,2] or [GameState.field, 24].</p>
 *
-* @author  Paul Braeuning
 * @version 1.0
 * @since   2021-07-23
 */
