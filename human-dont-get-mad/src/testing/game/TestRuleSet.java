@@ -3,6 +3,8 @@ package testing.game;
 import static org.junit.Assert.*;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+
+import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
 import game.RuleSet;
@@ -41,7 +43,7 @@ public class TestRuleSet
 	public HashMap<PlayerColor, Player> players;
 	public GamePosition testPositionHome;
 	public Figure[] testFigureArray;
-	
+		
 	//Setup to create the environment for the tested methods	
 	@Before
 	public void testRuleSetConst() 
@@ -127,7 +129,6 @@ public class TestRuleSet
 			testSetFigureType.invoke(testFigure[2], GamePosition.HOME);
 			testSetFigureType.invoke(testFigure[3], GamePosition.FIELD);
             
-			//testFigure[0].	
 			for(int i = 1; i < 4; i++) 
 			{
 				Object[] setUp = {i, testFigure[0], testFigure};
@@ -137,10 +138,157 @@ public class TestRuleSet
 		catch (Exception e) {e.printStackTrace();}			
 	}
 	
+	//Unit-Test for the rules-method found in the RuleSet class without forcing the turn to be executed and testing the movement from Start to Field.
+	@Test
+	public void testRulesToField() 
+	{
+		try 
+		{			
+			Class<?>[]args = {PlayerColor.class, Figure.class, HashMap.class, Boolean.class};
+			
+			Method testInstance = RuleSet.class.getDeclaredMethod("rules", args);
+			testInstance.setAccessible(true);
+			
+			Field getFigure = Player.class.getDeclaredField("figures");
+			getFigure.setAccessible(true);
+			Figure[] testFigure = (Figure[]) getFigure.get(testPlayer);
+			Method testSetFigureType = Figure.class.getDeclaredMethod("setType", GamePosition.class);
+			testSetFigureType.setAccessible(true);
+			testSetFigureType.invoke(testFigure[0], GamePosition.START);
+			
+            Field testGetObject = Player.class.getDeclaredField("dice");
+            
+        	Field setDice = Dice.class.getDeclaredField("currentDice");
+           	setDice.setAccessible(true);
+        	setDice.set(testDice, 6);        
+            testGetObject.setAccessible(true);
 
+            testGetObject.set(testPlayer, testDice);
+            
+            JSONObject expectedObject = new JSONObject();
+            expectedObject.put("type", GamePosition.FIELD.toString());
+            expectedObject.put("index", 0);
+
+			Object[] setUp = {testColor, testFigure[0] , players, false}; //2 Tests mit true vs false			
+			assertEquals(expectedObject.toString() ,(String)testInstance.invoke(testRuleSet, setUp).toString());
+		}
+		catch (Exception e) {e.printStackTrace();}	
+	}
 	
+	//Unit-Test for the rules-method found in the RuleSet class without forcing the turn to be executed and testing the movement within Field.
+	@Test
+	public void testRulesField() 
+	{
+		try 
+		{			
+			//private JSONObject rules(PlayerColor currentPlayer, Figure currentFigure, HashMap<PlayerColor, Player> players, Boolean execute) 
+			Class<?>[]args = {PlayerColor.class, Figure.class, HashMap.class, Boolean.class};
+			
+			Method testInstance = RuleSet.class.getDeclaredMethod("rules", args);
+			testInstance.setAccessible(true);
+			
+			Field getFigure = Player.class.getDeclaredField("figures");
+			getFigure.setAccessible(true);
+			Figure[] testFigure = (Figure[]) getFigure.get(testPlayer);
+			Method testSetFigureType = Figure.class.getDeclaredMethod("setType", GamePosition.class);
+			testSetFigureType.setAccessible(true);
+			testSetFigureType.invoke(testFigure[0], GamePosition.FIELD);
+			
+            Field testGetObject = Player.class.getDeclaredField("dice");
+         
+        	Field setDice = Dice.class.getDeclaredField("currentDice");
+           	setDice.setAccessible(true);
+        	setDice.set(testDice, 6);        
+            testGetObject.setAccessible(true);
+
+            testGetObject.set(testPlayer, testDice);
+            
+            JSONObject expectedObject = new JSONObject();
+            expectedObject.put("type", GamePosition.FIELD.toString());
+            expectedObject.put("index", 6);
+
+			Object[] setUp = {testColor, testFigure[0] , players, false};		
+			assertEquals(expectedObject.toString() ,(String)testInstance.invoke(testRuleSet, setUp).toString());
+		}
+		catch (Exception e) {e.printStackTrace();}	
+	}
 	
+	//Unit-Test for the rules-method found in the RuleSet class without forcing the turn to be executed and testing the movement within Home.
+	@Test
+	public void testRulesHome() 
+	{
+		try 
+		{			
+			Class<?>[]args = {PlayerColor.class, Figure.class, HashMap.class, Boolean.class};
+			
+			Method testInstance = RuleSet.class.getDeclaredMethod("rules", args);
+			testInstance.setAccessible(true);
+			
+			Field getFigure = Player.class.getDeclaredField("figures");
+			getFigure.setAccessible(true);
+			Figure[] testFigure = (Figure[]) getFigure.get(testPlayer);
+			Method testSetFigureType = Figure.class.getDeclaredMethod("setType", GamePosition.class);
+			testSetFigureType.setAccessible(true);
+			testSetFigureType.invoke(testFigure[0], GamePosition.HOME);
+			
+            Field testGetObject = Player.class.getDeclaredField("dice");
+            
+        	Field setDice = Dice.class.getDeclaredField("currentDice");
+           	setDice.setAccessible(true);
+        	setDice.set(testDice, 3);        
+            testGetObject.setAccessible(true);
+
+            testGetObject.set(testPlayer, testDice);
+            
+            JSONObject expectedObject = new JSONObject();
+            expectedObject.put("type", GamePosition.HOME.toString());
+            expectedObject.put("index", 3);
+
+			Object[] setUp = {testColor, testFigure[0] , players, false};			
+			assertEquals(expectedObject.toString() ,(String)testInstance.invoke(testRuleSet, setUp).toString());
+		}
+		catch (Exception e) {e.printStackTrace();}	
+	}
 	
+	//Unit-Test for the rules-method found in the RuleSet class without forcing the turn to be executed and testing the movement from Field to Home.
+	@Test
+	public void testRulesToHome() 
+	{
+		try 
+		{			
+			Class<?>[]args = {PlayerColor.class, Figure.class, HashMap.class, Boolean.class};
+			
+			Method testInstance = RuleSet.class.getDeclaredMethod("rules", args);
+			testInstance.setAccessible(true);
+			
+			Field getFigure = Player.class.getDeclaredField("figures");
+			getFigure.setAccessible(true);
+			Figure[] testFigure = (Figure[]) getFigure.get(testPlayer);
+			Method testSetFigureType = Figure.class.getDeclaredMethod("setType", GamePosition.class);
+			testSetFigureType.setAccessible(true);
+			testSetFigureType.invoke(testFigure[0], GamePosition.FIELD);
+			Method testSetFigureIndex = Figure.class.getDeclaredMethod("setIndex", Integer.class);
+			testSetFigureIndex.setAccessible(true);			
+			testSetFigureIndex.invoke(testFigure[0], 38);
+			
+            Field testGetObject = Player.class.getDeclaredField("dice");
+           
+        	Field setDice = Dice.class.getDeclaredField("currentDice");
+           	setDice.setAccessible(true);
+        	setDice.set(testDice, 4);        
+            testGetObject.setAccessible(true);
+
+            testGetObject.set(testPlayer, testDice);
+            
+            JSONObject expectedObject = new JSONObject();
+            expectedObject.put("type", GamePosition.HOME.toString());
+            expectedObject.put("index", 2);
+
+			Object[] setUp = {testColor, testFigure[0] , players, false};		
+			assertEquals(expectedObject.toString() ,(String)testInstance.invoke(testRuleSet, setUp).toString());
+		}
+		catch (Exception e) {e.printStackTrace();}	
+	}
 
 	//Unit-Test for the getNewBoardIndex-Method (private) for the regular move on board using a random dice value and doing 100 iterations of the test in order to test multiple outcomes.
 	@Test
@@ -171,44 +319,4 @@ public class TestRuleSet
         catch (Exception e) {e.printStackTrace();}	        
 	  } 
 	}	
-	
-	/*Unit-Test for the getNewBoardIndex-Method (private) for the regular move around board using a random dice value and doing 100 iterations of the test in order to test multiple outcomes.
-		@Test
-		public void TestGetNewBoardIndexAround() 
-		{
-		  for(int i = 0; i < 10; i++)
-		  {	
-	        try 
-	        {	           
-	        	Class<?>[]args = {Integer.class, PlayerColor.class, Player.class};
-	        	
-	            Method testInstance = RuleSet.class.getDeclaredMethod("getNewBoardIndex", args);
-	            Field testGetObject = Player.class.getDeclaredField("dice");
-	            Method testGetDice = Dice.class.getDeclaredMethod("set");
-	            testGetObject.setAccessible(true);
-	            testInstance.setAccessible(true);
-	            testGetDice.setAccessible(true);            
-	            
-	            //testGetObject.
-	            testGetDice.invoke(testDice);
-	            testGetObject.set(testPlayer, testDice);
-	            
-	            Object[] setUp = {40, testColor, testPlayer};            
-	            
-	            int expectedInteger = -6;
-	            
-	            assertEquals(expectedInteger, (int)testInstance.invoke(testRuleSet, setUp), 12);
-	        } 
-	        catch (Exception e) {e.printStackTrace();}	        
-		  } 
-		}*/
-	
-	
-	
-	
-		
-		
-	
-	
-	
 }
