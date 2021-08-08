@@ -1,7 +1,6 @@
 package client;
 
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
@@ -247,13 +246,22 @@ public class GameWindow extends JFrame {
 		diceArea.add(smessager);
 		
 		smessager.addActionListener(e -> { 
+			if(smessager.isVisible()) {
+				showMessager = true;
+				smessager.setText("Close Chat");
+			}
+			else {
+				smessager.setText("Open Chat");
+				showMessager = false;
+			}
 			
-			System.out.println("ich würde geklickt");
 			if (showMessager) {
+				smessager.setText("Close Chat");
 				showMessager = false;
 				messager.displayMassager(true);
 			}
 			else {
+				smessager.setText("Open Chat");
 				showMessager = true;
 				messager.displayMassager(false);
 			}

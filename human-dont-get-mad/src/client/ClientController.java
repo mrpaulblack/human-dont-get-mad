@@ -1,21 +1,9 @@
 package client;
 
 import java.awt.Color;
-import java.awt.Image;
 import java.awt.event.ActionListener;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import java.lang.reflect.Array;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Random;
-import java.util.Timer;
 import java.util.concurrent.TimeUnit;
 
-import javax.imageio.ImageIO;
-import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -27,7 +15,6 @@ import org.json.JSONObject;
 import game.Log;
 import game.LogController;
 import game.MsgType;
-import server.ClientThread;
 /**
 * <h1>ClientController</h1>
 * <p>The ClientController class is a abstraction that can send json messages
@@ -130,6 +117,8 @@ public class ClientController {
 	 */
 	protected void sendRegister() {
 		
+		ReadysendText();	//just need to be called to send messages
+		
 		JSONObject json = new JSONObject();
 		JSONObject data = new JSONObject();
 		json.put("type", MsgType.REGISTER.toString());
@@ -170,6 +159,21 @@ public class ClientController {
 		LogController.log(Log.DEBUG, "TX:  SendMove: " + data.toString());
 	}
 	
+	/**
+	 *	<h1><i>sendMessage</i></h1>
+	 * <p>Send The current move.</p>
+	 */
+	protected void sendMessage(String messageToSend) {
+		JSONObject json = new JSONObject();
+		JSONObject data = new JSONObject();
+		json.put("type", MsgType.MESSAGE.toString());
+		json.put("message", messageToSend);
+		data.put("broadcast", true);
+		json.put("data", data);
+		player.out(json.toString());
+		LogController.log(Log.DEBUG, "TX:  SendMessage: " + messageToSend);
+	}
+	
 	
 	/**
 	 *	<h1><i>decoder</i></h1>
@@ -182,6 +186,8 @@ public class ClientController {
 		JSONObject data = new JSONObject(json.getJSONObject("data").toString());
 		LogController.log(Log.DEBUG, json.get("type") + ": " + data);
 
+		
+		
 		if (json.get("type").equals(MsgType.WELCOME.toString())) {
 			sendRegister();
 		}
@@ -582,6 +588,15 @@ public class ClientController {
 	 * <p>will controll the message screen.</p>
 	 */
 	public void displayMessage(JSONObject data) {
-		
+		System.out.println("got sometinh");
+		JSONObject newMessage = new JSONObject(data.getString("message"));
+		messager.incommingText.setText(newMessage.get("message").toString());
+		LogController.log(Log.DEBUG, "RX Message: " + newMessage.get("message").toString());
+	}
+	
+	public void ReadysendText() {
+		messager.send.addActionListener(e -> {
+			sendMessage(messager.outgoingText.getText());
+		});
 	}
 }
