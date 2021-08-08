@@ -145,9 +145,10 @@ public class ServerController {
 	 */
 	protected synchronized void disconnect(ClientThread client) {
 		if (clients.containsKey(client)) {
-			broadcastPlayerDisconnected(client);
 			game.remove(clients.get(client));
+			broadcastPlayerDisconnected(client);
 			clients.remove(client, clients.get(client));
+			broadcastUpdate();
 			if (clients.size() <= 0) {
 				LogController.log(Log.INFO, "All Players left; resetting game.");
 				game = new Game();
@@ -209,7 +210,6 @@ public class ServerController {
 					sendError(client, MsgError.ILLEGALMOVE);
 					broadcastUpdate();
 					sendTurn();
-					//TODO send last broadcast after game state finished and won
 				}
 				else {
 					broadcastUpdate();
