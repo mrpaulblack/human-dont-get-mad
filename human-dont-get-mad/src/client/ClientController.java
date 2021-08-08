@@ -189,7 +189,6 @@ public class ClientController {
 			sendRegister();
 		}
 		else if (json.get("type").equals(MsgType.ASSIGNCOLOR.toString())) {
-			updateReadyScreen();
 			gameWindow.setTitle("Human-Dont-Get-Mad: " + data.getString("color"));
 		}
 		else if (json.get("type").equals(MsgType.UPDATE.toString())) {
@@ -199,26 +198,16 @@ public class ClientController {
 			updateTurns(data);
 		}
 		else if (json.get("type").equals(MsgType.PLAYERDISCONNECTED.toString())) {
-			//TODO update stats; asynchron
+			// player disconnected from game
 		}
 		else if (json.get("type").equals(MsgType.MESSAGE.toString())) {
 			displayMessage(json, data);
 		}
 		else if (json.get("type").equals(MsgType.ERROR.toString())) {
-			//TODO depends; maybe disconnect
+			LogController.log(Log.ERROR, "Error from server: " + json.get("type"));
 		}
 		else {
-			//TODO wrong data terminate connection
-		}
-	}
-	
-	
-	public void updateReadyScreen() {
-		if (gameIsStarted) {
-			//TODO got executed if the game has started after the pregame screen
-		}
-		else {
-			//TODO should be executed befor the game started -> if a player pressed ready, set it everywhere green
+			LogController.log(Log.DEBUG, "Could not read data: " + json);
 		}
 	}
 	
