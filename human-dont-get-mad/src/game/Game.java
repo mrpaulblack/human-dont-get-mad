@@ -44,8 +44,7 @@ public class Game implements GameController {
 			players.remove(color, players.get(color));
 		}
 		else if (state == GameState.RUNNING) {
-			PlayerColor.setAvail(color);
-			//TODO replace player in running game with BOT
+			players.get(color).setToBot("Bot", "human-dont-get-mad-bot", 01.f);
 		}
 	}
 
@@ -58,8 +57,9 @@ public class Game implements GameController {
 			}
 		}
 		if (counter >= players.size()) {
-			if (players.size() < 4) {
-				//TODO fill the rest with BOTS
+			while (players.size() < 4) {
+				PlayerColor assignedColor = PlayerColor.getAvail(null);
+				players.put(assignedColor, new Player(assignedColor, "Bot", "human-dont-get-mad-bot", 0.1f, true));
 			}
 			state = GameState.RUNNING;
 			for (Integer i = 0; i < 4; i++) {
@@ -70,6 +70,10 @@ public class Game implements GameController {
 			}
 			players.get(currentPlayer).dice.setStart();
 			LogController.log(Log.INFO, "Game started: " + players);
+			// TODO workaround if the first player is type BOT; fix broadcast update
+			while(currentPlayerIsBot()) {
+				botTurn();
+			}
 			return true;
 		}
 		else {
@@ -85,6 +89,13 @@ public class Game implements GameController {
 
 	public PlayerColor currentPlayer() {
 		return currentPlayer;
+	}
+
+	public Boolean currentPlayerIsBot() {
+		if (players.get(currentPlayer).getType()) {
+			return true;
+		}
+		else { return false; }
 	}
 
 	public JSONObject toJSON() {
@@ -143,6 +154,19 @@ public class Game implements GameController {
 			return data;
 		}
 		else { return data; }
+	}
+	
+	public void botTurn() {
+		turn(null);
+		if (currentTurn.size() <= 0) {
+			turn(-1);
+		}
+		else {
+			turn(players.get(currentPlayer).dice.getRandomInt(0, currentTurn.size() -1));
+		}
+		try {
+			Thread.sleep(1000);
+		} catch (InterruptedException e) { LogController.log(Log.ERROR, e.toString()); }
 	}
 	
 	/**

@@ -64,6 +64,14 @@ public interface GameController {
 	public PlayerColor currentPlayer();
 
 	/**
+	 * <h1><i>currentPlayerIsBot</i></h1>
+	 * <p>This method returns false if the current player is type player
+	 * and true if the current player on the other hand is type BOT.</p>
+	 * @return Boolean - true if current player is BOT; else false
+	 */
+	public Boolean currentPlayerIsBot();
+
+	/**
 	 * <h1><i>toJSON</i></h1>
 	 * <p>This method is like a toString() and returns the current game state and all players
 	 * with their attributes and figure positions as JSON. It supports the MAEDN protocol
@@ -78,9 +86,16 @@ public interface GameController {
 	 * Dry run, which is called with null and returns the turn options for
 	 * the current player and second, execute, which is called by an integer starting with
 	 * -1 up to the amount of turn options. After execution it returns OK for successful or finished, if
-	 * the player won the game</p>
+	 * the player won the game.</p>
 	 * @param selected - Integer with the selected option or null
 	 * @return JSONObject - returns the turn as JSON or if execute was successful
 	 */
 	public JSONObject turn(Integer selected);
+
+	/**
+	 * <h1><i>botTurn</i></h1>
+	 * <p>This method executes the turn for the current player automatically and also sets the next player
+	 * in line, after it is finished.</p>
+	 */
+	public void botTurn();
 }

@@ -145,13 +145,22 @@ public class ServerController {
 	 */
 	protected synchronized void disconnect(ClientThread client) {
 		if (clients.containsKey(client)) {
-			game.remove(clients.get(client));
+			PlayerColor tempColor = clients.get(client);
+			game.remove(tempColor);
 			broadcastPlayerDisconnected(client);
 			clients.remove(client, clients.get(client));
-			broadcastUpdate();
 			if (clients.size() <= 0) {
 				LogController.log(Log.INFO, "All Players left; resetting game.");
 				game = new Game();
+				PlayerColor.resetAvail();
+			}
+			else if (tempColor == game.currentPlayer() && game.getState() == GameState.RUNNING) {
+				while (game.currentPlayerIsBot()) {
+					broadcastUpdate();
+					game.botTurn();
+				}
+				broadcastUpdate();
+				sendTurn();
 			}
 		}
 	}
@@ -212,6 +221,11 @@ public class ServerController {
 					sendTurn();
 				}
 				else {
+					// run turns for the BOTS following the current player
+					while (game.currentPlayerIsBot()) {
+						broadcastUpdate();
+						game.botTurn();
+					}
 					broadcastUpdate();
 					sendTurn();
 				}
