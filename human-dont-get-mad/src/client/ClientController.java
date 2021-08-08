@@ -257,6 +257,8 @@ public class ClientController {
 		JSONObject playert = new JSONObject(players.get(0).toString());
 		gameWindow.dice.setBackground(Color.white);
 		
+		dice = (playert.getInt("dice"));
+		rollDice();
 		
 		if(data.getString("state").equals("waitingForPlayers")) {
 			
@@ -297,8 +299,6 @@ public class ClientController {
 				
 				JSONObject player = new JSONObject(players.get(i).toString());
 				LogController.log(Log.DEBUG, "Player Array " + player);
-						
-				System.out.println(player.getString("color"));
 				
 					for (int j = 0; j <= 3; j++) {
 						
@@ -357,9 +357,9 @@ public class ClientController {
 					}
 				}
 			}
-		
-		dice = (playert.getInt("dice"));
-		rollDice();
+			else if (data.getString("state").equals("finished")) {
+				
+			}
 		}
 	
 	//NOT TESTET JET BECAUSE OF MISSING DATA
@@ -389,23 +389,26 @@ public class ClientController {
 						if (oldPosition.get("type").equals("start")) {
 							gameWindow.redBases[oldPosition.getInt("index")].setBackground(Color.black);
 							gameWindow.redBases[oldPosition.getInt("index")].addActionListener(e -> {
+								removeAL();
 								sendMove(k);
-								 removeAL();
+								 
 							gameWindow.redBases[oldPosition.getInt("index")].setBackground(Color.LIGHT_GRAY);
 							});;
 						}
 						else if (oldPosition.get("type").equals("field")) {
 							gameWindow.buttons[oldPosition.getInt("index")].setBackground(Color.black);
 							gameWindow.buttons[oldPosition.getInt("index")].addActionListener(e -> {
-								sendMove(k);
 								 removeAL();
+								sendMove(k);
+								
 							});;	
 						}
 						else if (oldPosition.get("type").equals("home")) {
 							gameWindow.redHouses[oldPosition.getInt("index")].setBackground(Color.black);
 							gameWindow.redHouses[oldPosition.getInt("index")].addActionListener(e -> {
+								removeAL();
 								sendMove(k);
-								 removeAL();
+								 
 							});;	
 						}
 						break;
@@ -414,22 +417,22 @@ public class ClientController {
 						if (oldPosition.get("type").equals("start")) {
 							gameWindow.greenBases[oldPosition.getInt("index")].setBackground(Color.black);
 							gameWindow.greenBases[oldPosition.getInt("index")].addActionListener(e -> {
+								removeAL();
 								sendMove(k);
-								 removeAL();
 							});;
 						}
 						else if (oldPosition.get("type").equals("field")) {
 							gameWindow.buttons[oldPosition.getInt("index")].setBackground(Color.black);
 							gameWindow.buttons[oldPosition.getInt("index")].addActionListener(e -> {
+								removeAL();
 								sendMove(k);
-								 removeAL();
 							});;	
 						}
 						else if (oldPosition.get("type").equals("home")) {
 							gameWindow.greenHouses[oldPosition.getInt("index")].setBackground(Color.black);
 							gameWindow.greenHouses[oldPosition.getInt("index")].addActionListener(e -> {
+								removeAL();
 								sendMove(k);
-								 removeAL();
 							});;	
 						}
 						break;
@@ -439,22 +442,22 @@ public class ClientController {
 						if (oldPosition.get("type").equals("start")) {
 							gameWindow.blueBases[oldPosition.getInt("index")].setBackground(Color.black);
 							gameWindow.blueBases[oldPosition.getInt("index")].addActionListener(e -> {
+								removeAL();
 								sendMove(k);
-								 removeAL();
 							});;
 						}
 						else if (oldPosition.get("type").equals("field")) {
 							gameWindow.buttons[oldPosition.getInt("index")].setBackground(Color.black);
 							gameWindow.buttons[oldPosition.getInt("index")].addActionListener(e -> {
+								removeAL();
 								sendMove(k);
-								 removeAL();
 							});;	
 						}
 						else if (oldPosition.get("type").equals("home")) {
 							gameWindow.blueHouses[oldPosition.getInt("index")].setBackground(Color.black);
 							gameWindow.blueHouses[oldPosition.getInt("index")].addActionListener(e -> {
+								removeAL();
 								sendMove(k);
-								 removeAL();
 							});;	
 						}
 						break;
@@ -464,23 +467,23 @@ public class ClientController {
 						if (oldPosition.get("type").equals("start")) {
 							gameWindow.yellowBases[oldPosition.getInt("index")].setBackground(Color.black);
 							gameWindow.yellowBases[oldPosition.getInt("index")].addActionListener(e -> {
+								removeAL();
 								sendMove(k);
-								 removeAL();
 							});;
 							
 						}
 						else if (oldPosition.get("type").equals("field")) {
 							gameWindow.buttons[oldPosition.getInt("index")].setBackground(Color.black);
 							gameWindow.buttons[oldPosition.getInt("index")].addActionListener(e -> {
+								removeAL();
 								sendMove(k);
-								 removeAL();
 							});;	
 						}
 						else if (oldPosition.get("type").equals("home")) {
 							gameWindow.yellowHouses[oldPosition.getInt("index")].setBackground(Color.black);
 							gameWindow.yellowHouses[oldPosition.getInt("index")].addActionListener(e -> {
+								removeAL();
 								sendMove(k);
-								 removeAL();
 							});;	
 						}
 						break;
@@ -498,5 +501,15 @@ public class ClientController {
 		for (JButton btn : gameWindow.buttons)
 			for (ActionListener al : btn.getActionListeners())
 				btn.removeActionListener(al);
+		
+		for (JButton[] btn : gameWindow.bases)
+			for (JButton btnST2 : btn)
+				for (ActionListener al :btnST2.getActionListeners())
+					btnST2.removeActionListener(al);
+		
+		for (JButton[] btn : gameWindow.houses)
+			for (JButton btnST2 : btn)
+				for (ActionListener al :btnST2.getActionListeners())
+					btnST2.removeActionListener(al);
 	}
 }
