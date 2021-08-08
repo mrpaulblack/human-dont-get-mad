@@ -449,8 +449,9 @@ public class ClientController {
 						if (oldPosition.get("type").equals("start")) {
 							gameWindow.redBases[oldPosition.getInt("index")].setBackground(Color.DARK_GRAY);
 							gameWindow.redBases[oldPosition.getInt("index")].addActionListener(e -> {
-								removeAL();
+								
 								sendMove(k);
+								removeAL();
 								 
 							gameWindow.redBases[oldPosition.getInt("index")].setBackground(Color.LIGHT_GRAY);
 							});;
@@ -458,16 +459,18 @@ public class ClientController {
 						else if (oldPosition.get("type").equals("field")) {
 							gameWindow.buttons[oldPosition.getInt("index")].setBackground(Color.DARK_GRAY);
 							gameWindow.buttons[oldPosition.getInt("index")].addActionListener(e -> {
-								 removeAL();
+								
 								sendMove(k);
+								removeAL();
 								
 							});;	
 						}
 						else if (oldPosition.get("type").equals("home")) {
 							gameWindow.redHouses[oldPosition.getInt("index")].setBackground(Color.DARK_GRAY);
 							gameWindow.redHouses[oldPosition.getInt("index")].addActionListener(e -> {
-								removeAL();
+								
 								sendMove(k);
+								removeAL();
 								 
 							});;	
 						}
@@ -477,22 +480,25 @@ public class ClientController {
 						if (oldPosition.get("type").equals("start")) {
 							gameWindow.greenBases[oldPosition.getInt("index")].setBackground(Color.black);
 							gameWindow.greenBases[oldPosition.getInt("index")].addActionListener(e -> {
-								removeAL();
+								
 								sendMove(k);
+								removeAL();
 							});;
 						}
 						else if (oldPosition.get("type").equals("field")) {
 							gameWindow.buttons[oldPosition.getInt("index")].setBackground(Color.black);
 							gameWindow.buttons[oldPosition.getInt("index")].addActionListener(e -> {
-								removeAL();
+								
 								sendMove(k);
+								removeAL();
 							});;	
 						}
 						else if (oldPosition.get("type").equals("home")) {
 							gameWindow.greenHouses[oldPosition.getInt("index")].setBackground(Color.black);
 							gameWindow.greenHouses[oldPosition.getInt("index")].addActionListener(e -> {
-								removeAL();
+								
 								sendMove(k);
+								removeAL();
 							});;	
 						}
 						break;
@@ -502,22 +508,25 @@ public class ClientController {
 						if (oldPosition.get("type").equals("start")) {
 							gameWindow.blueBases[oldPosition.getInt("index")].setBackground(Color.black);
 							gameWindow.blueBases[oldPosition.getInt("index")].addActionListener(e -> {
-								removeAL();
+								
 								sendMove(k);
+								removeAL();
 							});;
 						}
 						else if (oldPosition.get("type").equals("field")) {
 							gameWindow.buttons[oldPosition.getInt("index")].setBackground(Color.black);
 							gameWindow.buttons[oldPosition.getInt("index")].addActionListener(e -> {
-								removeAL();
+								
 								sendMove(k);
+								removeAL();
 							});;	
 						}
 						else if (oldPosition.get("type").equals("home")) {
 							gameWindow.blueHouses[oldPosition.getInt("index")].setBackground(Color.black);
 							gameWindow.blueHouses[oldPosition.getInt("index")].addActionListener(e -> {
-								removeAL();
+								
 								sendMove(k);
+								removeAL();
 							});;	
 						}
 						break;
@@ -527,23 +536,26 @@ public class ClientController {
 						if (oldPosition.get("type").equals("start")) {
 							gameWindow.yellowBases[oldPosition.getInt("index")].setBackground(Color.black);
 							gameWindow.yellowBases[oldPosition.getInt("index")].addActionListener(e -> {
-								removeAL();
+								
 								sendMove(k);
+								removeAL();
 							});;
 							
 						}
 						else if (oldPosition.get("type").equals("field")) {
 							gameWindow.buttons[oldPosition.getInt("index")].setBackground(Color.black);
 							gameWindow.buttons[oldPosition.getInt("index")].addActionListener(e -> {
-								removeAL();
+								
 								sendMove(k);
+								removeAL();
 							});;	
 						}
 						else if (oldPosition.get("type").equals("home")) {
 							gameWindow.yellowHouses[oldPosition.getInt("index")].setBackground(Color.black);
 							gameWindow.yellowHouses[oldPosition.getInt("index")].addActionListener(e -> {
-								removeAL();
+								
 								sendMove(k);
+								removeAL();
 							});;	
 						}
 						break;
@@ -575,6 +587,9 @@ public class ClientController {
 			for (JButton btnST2 : btn)
 				for (ActionListener al :btnST2.getActionListeners())
 					btnST2.removeActionListener(al);
+
+		for (ActionListener al : gameWindow.dice.getActionListeners())
+			gameWindow.dice.removeActionListener(al);
 	}
 	
 	/**
@@ -589,12 +604,15 @@ public class ClientController {
 	}
 	
 	public void ReadysendText() {
+		
 		messager.send.addActionListener(e -> {
+			if (! messager.outgoingText.getText().equals("")) {
 			sendMessage(messager.outgoingText.getText());
-			
+	
 			showtext = showtext + "you" + ": " + messager.outgoingText.getText() + "\n";
 			messager.outgoingText.setText("");
 			messager.incommingText.setText(showtext);
+			}
 		});
 	}
 }

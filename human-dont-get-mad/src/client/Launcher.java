@@ -96,7 +96,7 @@ public class Launcher extends JFrame{
 		JLabel serverAdressLbl = new JLabel();
 		JLabel portLbl = new JLabel();
 		
-	//ComboBox
+	//ComboBox 
 		String[] colorStrings = {"Red", "Blue", "Green", "Yellow"};
 		JComboBox colorSelect = new JComboBox(colorStrings);
 		colorSelect.setSelectedIndex(3);
