@@ -50,12 +50,14 @@ public class ClientController {
 	public String userName = "";
 	public String favColor = "";
 	public Integer selsectedOption = -1;
-	private Integer dice = 0;
 	private double clientVersion = 0.1;
 	
 	private Client player;
 	private GameWindow gameWindow;
+	private Messager messager;
 	UISettings colors = new UISettings();
+	
+	
 	
 //Images
 	 ImageIcon diceOne = new ImageIcon(this.getClass().getResource("/DiceOne.png"));
@@ -67,26 +69,31 @@ public class ClientController {
 	
 	
 	
-	
-	public void rollDice(){	
-		
-		/*
-			Random randomDuration = new Random();
-			Random randomDice = new Random();
-			int showImage = 0;
-			int g = randomDuration.nextInt(30);
-			for (int h = 0; h < 0; h++) {	//Fix later
-				
-				
-				showImage = randomDice.nextInt(6);
-				diceSelection(showImage);
-				System.out.println("CALL");
-			}*/
-			diceSelection(dice);
-			LogController.log(Log.DEBUG, "Current Dice: " + dice);
+	 /**
+	 *	<h1><i>ClientController</i></h1>
+	 * <p>This Constructor sets the Client as as the player attribute.
+	 * Each Method is going to ac on this client.</p>
+	 * @param GameWindow
+	 * @param Messager
+	 */
+	public ClientController(GameWindow gameWindow, Messager messager) {
+		this.gameWindow = gameWindow;
+		this.messager = messager;
 	}
+		
+	public void player(Client player) {
+		this.player = player;
+	} 
 	
+	/**
+	 *	<h1><i>diceSelecion</i></h1>
+	 * <p>chose and print the correct dice to every player.</p>
+	 * @param dice
+	 */
 	public void diceSelection(int t) {
+		
+		System.out.println("t= " +t);
+		
 		switch (t) {
 		case 1:	gameWindow.dice.setIcon(diceOne);
 		LogController.log(Log.DEBUG, "Current dice ONE"); //change to TRACE
@@ -111,22 +118,10 @@ public class ClientController {
 		case 6: gameWindow.dice.setIcon(diceSix);
 		LogController.log(Log.DEBUG, "Current dice SIX");
 			break;
+			
+//		default:rollDice(t);
+//			break;
 		}
-	}
-	
-	
-	/**
-	 *	<h1><i>ClientController</i></h1>
-	 * <p>This Constructor sets the Client as as the player attribute.
-	 * Each Method is going to ac on this client.</p>
-	 * @param player - Client this controller is assigned to
-	 */
-	public ClientController(GameWindow gameWindow) {
-		this.gameWindow = gameWindow;
-	}
-	
-	public void player(Client player) {
-		this.player = player;
 	}
 	
 	/**
@@ -147,6 +142,10 @@ public class ClientController {
 		LogController.log(Log.DEBUG, "TX:  SendRegister: " + data.toString());
 	}
 	
+	/**
+	 *	<h1><i>sendReady</i></h1>
+	 * <p>tranmitt Ready to the server.</p>
+	 */
 	protected void sendReady() {
 		JSONObject json = new JSONObject();
 		JSONObject data = new JSONObject();
@@ -157,6 +156,10 @@ public class ClientController {
 		LogController.log(Log.DEBUG, "TX:  SendReady: " + data.toString());
 	}
 	
+	/**
+	 *	<h1><i>sendMove</i></h1>
+	 * <p>Send The current move.</p>
+	 */
 	protected void sendMove(int option) {
 		JSONObject json = new JSONObject();
 		JSONObject data = new JSONObject();
@@ -196,7 +199,7 @@ public class ClientController {
 			//TODO update stats; asynchron
 		}
 		else if (json.get("type").equals(MsgType.MESSAGE.toString())) {
-			//TODO idk
+			displayMessage(data);
 		}
 		else if (json.get("type").equals(MsgType.ERROR.toString())) {
 			//TODO depends; maybe disconnect
@@ -205,6 +208,7 @@ public class ClientController {
 			//TODO wrong data terminate connection
 		}
 	}
+	
 	
 	public void updateReadyScreen() {
 		if (gameIsStarted) {
@@ -215,6 +219,10 @@ public class ClientController {
 		}
 	}
 	
+	/**
+	 *	<h1><i>updatGameReadyScreen</i></h1>
+	 * <p>in short, it will reprint manuely the complete Gameboard with each update, this is to prevent mistakes.</p>
+	 */
 	public void updateGameScreen(JSONObject data) {
 		
 		for (JLabel JL : gameWindow.playerNames)
@@ -224,6 +232,7 @@ public class ClientController {
 		
 		System.out.println(data.getString("state"));
 		System.out.println(data.has("currentPlayer"));
+		
 		if (data.has("currentPlayer")) {
 			
 			System.out.println(data.getString("currentPlayer"));
@@ -248,17 +257,21 @@ public class ClientController {
 				gameWindow.playerNames[3].setBackground(colors.cYellowPlayer);
 				gameWindow.playerStats[3].setBackground(colors.cYellowPlayer);
 			}
-		
 		}
 		
 		 
 		LogController.log(Log.TRACE, "RX: Update: " + data.toString());
 		JSONArray players = new JSONArray(data.getJSONArray("players"));
-		JSONObject playert = new JSONObject(players.get(0).toString());
 		gameWindow.dice.setBackground(Color.white);
 		
-		dice = (playert.getInt("dice"));
-		rollDice();
+		for (int i = 0; i < players.length(); i++) {
+			
+			JSONObject player = new JSONObject(players.get(i).toString());
+			diceSelection(player.getInt("dice"));
+			
+			gameWindow.playerStats[i].setText("P" + (i + 1) + ": " + player.getString("color"));
+			gameWindow.playerNames[i].setText(player.getString("name"));
+		}
 		
 		if(data.getString("state").equals("waitingForPlayers")) {
 			
@@ -266,9 +279,6 @@ public class ClientController {
 			
 			for (int i = 0; i < players.length(); i++) {
 				JSONObject player = new JSONObject(players.get(i).toString());
-				
-				gameWindow.playerStats[i].setText("P" + (i + 1) + ": " + player.getString("color"));
-				gameWindow.playerNames[i].setText(player.getString("name"));
 				
 				if (player.getBoolean("ready")) {
 					gameWindow.playerStats[i].setBackground(colors.isReadyColor);
@@ -297,6 +307,7 @@ public class ClientController {
 			
 			for (int i = 0; i < players.length(); i++) {
 				
+				
 				JSONObject player = new JSONObject(players.get(i).toString());
 				LogController.log(Log.DEBUG, "Player Array " + player);
 				
@@ -304,7 +315,6 @@ public class ClientController {
 						
 						JSONArray figuers = new JSONArray(player.getJSONArray("figures"));
 						JSONObject figuer = new JSONObject(figuers.get(j).toString());
-						LogController.log(Log.TRACE, "Figure Array " + figuer);
 							
 						if (player.getString("color").equals("red")) {
 							if (figuer.get("type").equals("start")) {
@@ -359,10 +369,60 @@ public class ClientController {
 			}
 			else if (data.getString("state").equals("finished")) {
 				
+				Color winner = new Color(0, 0, 0);
+				
+				if(data.get("winner").equals("red"))
+					winner = colors.cRedPlayer;
+				else if(data.get("winner").equals("yellow"))
+					winner = colors.cYellowPlayer;
+				else if(data.get("winner").equals("green"))
+					winner = colors.cGreenPlayer;
+				else if(data.get("winner").equals("blue"))
+					winner = colors.cBluePlayer;
+					
+				//Win Animation
+				while (true) {
+					try {
+						TimeUnit.MILLISECONDS.sleep(750);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+					
+					for(JButton[] Houses : gameWindow.houses ) 
+						for (JButton subHouses : Houses)
+							subHouses.setBackground(winner);
+									
+					for (JButton[] Bases : gameWindow.bases)
+						for (JButton subBases : Bases)
+							subBases.setBackground(winner);
+						
+					for (JButton field : gameWindow.buttons)
+						field.setBackground(winner);
+					
+					try {
+						TimeUnit.MILLISECONDS.sleep(750);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+					
+					for(JButton[] Houses : gameWindow.houses ) 
+						for (JButton subHouses : Houses)
+							subHouses.setBackground(Color.white);
+									
+					for (JButton[] Bases : gameWindow.bases)
+						for (JButton subBases : Bases)
+							subBases.setBackground(Color.white);
+						
+					for (JButton field : gameWindow.buttons)
+						field.setBackground(Color.white);
+				}
 			}
 		}
 	
-	//NOT TESTET JET BECAUSE OF MISSING DATA
+	/**
+	 *	<h1><i>updateTurn</i></h1>
+	 * <p>will ask the player viualy with turn he wants to make.</p>
+	 */
 	public void updateTurns(JSONObject data) {
 		
 		gameWindow.dice.setText("");
@@ -387,7 +447,7 @@ public class ClientController {
 					case "Human-Dont-Get-Mad: red": 
 						
 						if (oldPosition.get("type").equals("start")) {
-							gameWindow.redBases[oldPosition.getInt("index")].setBackground(Color.black);
+							gameWindow.redBases[oldPosition.getInt("index")].setBackground(Color.DARK_GRAY);
 							gameWindow.redBases[oldPosition.getInt("index")].addActionListener(e -> {
 								removeAL();
 								sendMove(k);
@@ -396,7 +456,7 @@ public class ClientController {
 							});;
 						}
 						else if (oldPosition.get("type").equals("field")) {
-							gameWindow.buttons[oldPosition.getInt("index")].setBackground(Color.black);
+							gameWindow.buttons[oldPosition.getInt("index")].setBackground(Color.DARK_GRAY);
 							gameWindow.buttons[oldPosition.getInt("index")].addActionListener(e -> {
 								 removeAL();
 								sendMove(k);
@@ -404,7 +464,7 @@ public class ClientController {
 							});;	
 						}
 						else if (oldPosition.get("type").equals("home")) {
-							gameWindow.redHouses[oldPosition.getInt("index")].setBackground(Color.black);
+							gameWindow.redHouses[oldPosition.getInt("index")].setBackground(Color.DARK_GRAY);
 							gameWindow.redHouses[oldPosition.getInt("index")].addActionListener(e -> {
 								removeAL();
 								sendMove(k);
@@ -497,6 +557,10 @@ public class ClientController {
 		}
 	}
 	
+	/**
+	 *	<h1><i>removeAL</i></h1>
+	 * <p>removes all Actionlistenser to prevent errors with stupid useres.</p>
+	 */
 	public void removeAL() {
 		for (JButton btn : gameWindow.buttons)
 			for (ActionListener al : btn.getActionListeners())
@@ -511,5 +575,13 @@ public class ClientController {
 			for (JButton btnST2 : btn)
 				for (ActionListener al :btnST2.getActionListeners())
 					btnST2.removeActionListener(al);
+	}
+	
+	/**
+	 *	<h1><i>displaymessage</i></h1>
+	 * <p>will controll the message screen.</p>
+	 */
+	public void displayMessage(JSONObject data) {
+		
 	}
 }

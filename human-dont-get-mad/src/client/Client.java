@@ -33,7 +33,13 @@ public class Client extends Thread{
 	private GameWindow gamewindow;
 	private Launcher launcher;
 	
-	
+	/**
+	 *	<h1><i>Client Constructor</i></h1>
+	 * <p>it will get the Controller gameWindow and Launcher Class.</p>
+	 * @param ClientController
+	 * @param GameWindow
+	 * @param Launcher
+	 */
 	public Client(ClientController controller, GameWindow gamewindow, Launcher launcher) {
 		this.controller = controller;
 		this.gamewindow = gamewindow;
@@ -41,17 +47,28 @@ public class Client extends Thread{
 		
 	}
 	
+	/**
+	 *	<h1><i>run</i></h1>
+	 * <p>is necessary for the multiThreading.</p>
+	 */
 	@Override
 	public void run() {
 		requestConnection();
 	}
 	
-	
+	/**
+	 *	<h1><i>requestConnection</i></h1>
+	 * <p>is necessary for the multiThreading.</p>
+	 */
 	public void requestConnection() {
 		//Client client = new Client(controller);
 		start(serverAdress, port);
 	}
 	
+	/**
+	 *	<h1><i>main</i></h1>
+	 * <p>this is the main for the entirety client handling.</p>
+	 */
 	Main main = new Main();
 	//start client socket and listen for new lines which are getting decoded by controller
 	private void start(String host, Integer port) {
@@ -60,8 +77,7 @@ public class Client extends Thread{
 			LogController.log(Log.INFO, "Connected to server: " + socket);
 			in = new Scanner(socket.getInputStream());
 			out = new PrintWriter(socket.getOutputStream(), true);
-			
-		
+			 
 			gamewindow.setVisible(true);
 			
 			while (in.hasNextLine()) {
@@ -74,7 +90,6 @@ public class Client extends Thread{
 			
 			LogController.log(Log.ERROR, e.toString());
 			}
-		
 		finally {
 			LogController.log(Log.INFO, "Disconnected from server: " + socket);
 			launcher.setVisible(true);
@@ -82,7 +97,10 @@ public class Client extends Thread{
 		}
 	}
 	
-	//transmission / output to server
+	/**
+	 *	<h1><i>out</i></h1>
+	 * <p>transmission / output to server</p>
+	 */
 	public void out(String data) {
 		out.println(data);
 		LogController.log(Log.TRACE, "TX: " + data);

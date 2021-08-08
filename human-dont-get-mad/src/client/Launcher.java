@@ -1,6 +1,8 @@
 package client;
 
 import java.awt.*;
+import java.util.Random;
+
 import game.Log;
 import game.LogController;
 import javax.swing.*;
@@ -173,7 +175,7 @@ public class Launcher extends JFrame{
 		userName.setBounds(new Rectangle(10, 15, 320, 35));
 		userName.setFont(generalFont);
 		userName.setBackground(interactionFields);
-		userName.setText("Username");
+		userName.setText(getRandomUserName());
 		userName.setFont(generalFont);
 		userName.setForeground(uis.textColor);
 		
@@ -229,5 +231,39 @@ public class Launcher extends JFrame{
 			//Main.connectionHandler(this);
 			client.start();
 		});	
+	}
+	
+	
+	public String getRandomUserName() {
+		Random ran = new Random();
+		switch (ran.nextInt(25)) {
+		case 0: return "Admin";
+		case 1: return "Tim";
+		case 2: return "Paul";
+		case 3: return "Konrad";
+		case 4: return "Mayer";
+		case 5: return "Schmid";
+		case 6: return "PeterPan";
+		case 7: return "abcdefgh";
+		case 8: return "NameUSer";
+		case 9: return "Passwort";
+		case 10: return "123";
+		case 11: return "HTWK Player";
+		case 12: return "Bitte Gib";
+		case 13: return "WindowsLover";
+		case 14: return "LinuxHater";
+		case 15: return "LinuxForWin";
+		case 16: return "Uns Eine";
+		case 17: return "JKP";
+		case 18: return "Wer Das Liest is Doof";
+		case 19: return "Hund";
+		case 20: return "Katze";
+		case 21: return "(Hier könnte ihre Werbung stehen)";
+		case 22: return "Hey there iam using Wahtsapp";
+		case 23: return "SUN";
+		case 24: return "Uns 1";
+		case 25: return "Kleines";
+		default: return "";
+		}
 	}
 }
