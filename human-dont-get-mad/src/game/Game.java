@@ -143,8 +143,9 @@ public class Game implements GameController {
 			return data;
 		}
 		else if (currentTurn.containsKey(selected) && ruleset.execute(currentPlayer, currentTurn.get(selected), players)) {
-			LogController.log(Log.DEBUG, "Executed turn succesfully: " + currentTurn.get(selected).getJSON());
+			LogController.log(Log.DEBUG, "Executed turn successfully: " + currentTurn.get(selected).getJSON());
 			if (gameWon()) {
+				LogController.log(Log.INFO, "Game won: " + players.get(winner));
 				data.put("finished", "finished");
 			}
 			else {

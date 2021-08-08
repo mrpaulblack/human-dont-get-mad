@@ -74,15 +74,15 @@ public class Player {
 	/**
 	 * <h1><i>setToBot</i></h1>
 	 * <p>This method turns player into a BOT.</p>
-	 * @param botname - String of the name of the BOT
-	 * @param name - String of the software name of the BOT
-	 * @param version - Float of the version of the BOT
+	 * @param botClient - String of the name of the BOT
+	 * @param botName - String of the software name of the BOT
+	 * @param botVersion - Float of the version of the BOT
 	 */
-	protected void setToBot(String botname, String name, Float version) {
+	protected void setToBot(String botClient, String botName, Float botVersion) {
 		isBot = true;
-		name = botname;
-		clientName = name;
-		clientVersion = version;
+		name = botName;
+		clientName = botClient;
+		clientVersion = botVersion;
 	}
 
 	/**
