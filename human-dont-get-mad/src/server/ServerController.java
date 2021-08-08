@@ -120,7 +120,7 @@ public class ServerController {
 	/**
 	 * <h1><i>broadcastMessage</i></h1>
 	 * <p>This method broadcasts messages from the server or a client
-	 * to all other clients conected to the current game.</p>
+	 * to all other clients connected to the current game.</p>
 	 * @param client - ClientThread with the socket
 	 * @param message - String containing the message that is broadcasted
 	 */
