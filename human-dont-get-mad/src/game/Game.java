@@ -70,10 +70,6 @@ public class Game implements GameController {
 			}
 			players.get(currentPlayer).dice.setStart();
 			LogController.log(Log.INFO, "Game started: " + players);
-			// TODO workaround if the first player is type BOT; fix broadcast update
-			while(currentPlayerIsBot()) {
-				botTurn();
-			}
 			return true;
 		}
 		else {
@@ -143,15 +139,14 @@ public class Game implements GameController {
 			return data;
 		}
 		else if (currentTurn.containsKey(selected) && ruleset.execute(currentPlayer, currentTurn.get(selected), players)) {
-			LogController.log(Log.DEBUG, "Executed turn successfully: " + currentTurn.get(selected).getJSON());
+			LogController.log(Log.DEBUG, "Executed turn " + selected + " successfully: " + currentTurn.get(selected).getJSON());
 			if (gameWon()) {
 				LogController.log(Log.INFO, "Game won: " + players.get(winner));
-				data.put("finished", "finished");
 			}
 			else {
 				nextPlayer();
-				data.put("ok", "ok");
 			}
+			data.put("ok", "ok");
 			return data;
 		}
 		else { return data; }
@@ -217,7 +212,7 @@ public class Game implements GameController {
 				currentPlayer = PlayerColor.valueOf(currentPlayer.getValue() +1);
 			}
 		}
-		if (allFiguresStart(players.get(currentPlayer).figures)) {
+		if (allFiguresBlocked(players.get(currentPlayer).figures)) {
 			players.get(currentPlayer).dice.setStart();
 		}
 		else { players.get(currentPlayer).dice.set(); }
@@ -225,17 +220,16 @@ public class Game implements GameController {
 	}
 
 	/**
-	 * <h1><i>allFiguresStart</i></h1>
+	 * <h1><i>allFiguresBlocked</i></h1>
 	 * <p>This method returns true if all figures in the figure array
-	 * are in the player start.</p>
+	 * are either in the player start or home</p>
 	 * @param figures - Figure[] array of the figures
 	 * @return Boolean - if all figures are in the start or not
 	 */
-	private Boolean allFiguresStart(Figure[] figures) {
-		//TODO implement that if all figures in start or cannot be moved in end -> return true
+	private Boolean allFiguresBlocked(Figure[] figures) {
 		Integer counter = 0;
 		for (Integer i = 0; i < figures.length; i++) {
-			if (figures[i].getType() == GamePosition.START) {
+			if (figures[i].getType() == GamePosition.START || figures[i].getType() == GamePosition.HOME) {
 				counter++;
 			}
 		}

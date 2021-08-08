@@ -154,13 +154,8 @@ public class ServerController {
 				game = new Game();
 				PlayerColor.resetAvail();
 			}
-			else if (tempColor == game.currentPlayer() && game.getState() == GameState.RUNNING) {
-				while (game.currentPlayerIsBot()) {
-					broadcastUpdate();
-					game.botTurn();
-				}
-				broadcastUpdate();
-				sendTurn();
+			else if (tempColor == game.currentPlayer()) {
+				doRound();
 			}
 		}
 	}
@@ -202,8 +197,7 @@ public class ServerController {
 		else if (json.getString("type").equals(MsgType.READY.toString()) && (client.getState() == MsgType.REGISTER || client.getState() == MsgType.READY) && game.getState() == GameState.WAITINGFORPLAYERS) {
 			client.setState(MsgType.READY);
 			if (game.ready(clients.get(client), data.getBoolean("ready"))) {
-				broadcastUpdate();
-				sendTurn();
+				doRound();
 			}
 			else { broadcastUpdate(); }
 		}
@@ -211,23 +205,12 @@ public class ServerController {
 		// move
 		else if (json.getString("type").equals(MsgType.MOVE.toString()) && client.getState() == MsgType.READY && game.getState() == GameState.RUNNING) {
 			if (clients.get(client) == game.currentPlayer()) {
-				JSONObject tempTurn = game.turn(data.getInt("selectedOption"));
-				if (tempTurn.has("finished")) {
-					broadcastUpdate();
-				}
-				else if (!tempTurn.has("ok")) {
+				if (!game.turn(data.getInt("selectedOption")).has("ok")) {
 					sendError(client, MsgError.ILLEGALMOVE);
-					broadcastUpdate();
-					sendTurn();
+					doRound();
 				}
 				else {
-					// run turns for the BOTS following the current player
-					while (game.currentPlayerIsBot()) {
-						broadcastUpdate();
-						game.botTurn();
-					}
-					broadcastUpdate();
-					sendTurn();
+					doRound();
 				}
 			}
 			else {
@@ -236,7 +219,7 @@ public class ServerController {
 		}
 		
 		// message (optional)
-		else if (json.getString("type").equals(MsgType.MESSAGE.toString())) {
+		else if (json.getString("type").equals(MsgType.MESSAGE.toString()) && (client.getState() == MsgType.READY || client.getState() == MsgType.REGISTER)) {
 			//TODO (optional) chat message support
 		}
 		
@@ -249,6 +232,22 @@ public class ServerController {
 		else {
 			sendError(client, MsgError.UNSUPPORTEDMESSAGETYPE);
 			throw new IllegalArgumentException("Message Type not supported or out of order");
+		}
+	}
+
+	/**
+	 * <h1><i>doRound</i></h1>
+	 * <p>This method is basically just doing BOT turns
+	 * and sending turns to the players until someone won.</p>
+	 */
+	private void doRound() {
+		while (game.currentPlayerIsBot() && game.getState() == GameState.RUNNING) {
+			broadcastUpdate();
+			game.botTurn();
+		}
+		broadcastUpdate();
+		if (game.getState() == GameState.RUNNING) {
+			sendTurn();
 		}
 	}
 
