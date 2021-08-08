@@ -146,16 +146,8 @@ public class Launcher extends JFrame{
 		serverAddress.setBackground(interactionFields);	
 		serverAddress.setText("127.0.0.1");
 		serverAddress.setFont(generalFont);
-		serverAddress.setForeground(Color.LIGHT_GRAY);
+		serverAddress.setForeground(uis.textColor);
 	
-		//this kind of if-statement set a low-visible Text as default
-		serverAddress.addActionListener(e -> {
-			if (serverAddress.getText() != "127.0.0.1") {
-				serverAddress.setFont(generalFont);
-				serverAddress.setForeground(Color.BLACK);
-			}
-		});
-		
 	//Port Field Init
 		portLbl.setBounds(new Rectangle(240, 19, 320, 12));
 		portLbl.setFont(labelFont);
@@ -165,13 +157,7 @@ public class Launcher extends JFrame{
 		port.setBackground(interactionFields);	
 		port.setText("2342");
 		port.setFont(generalFont);
-		port.setForeground(Color.LIGHT_GRAY);
-		port.addActionListener(e -> {
-			if (port.getText() != "Server Adresse") {
-				port.setFont(generalFont);
-				port.setForeground(Color.BLACK);
-			}
-		});
+		port.setForeground(uis.textColor);
 		
 		centerInputField.add(userName);
 		centerInputField.add(colorSelect);
@@ -189,13 +175,7 @@ public class Launcher extends JFrame{
 		userName.setBackground(interactionFields);
 		userName.setText("Username");
 		userName.setFont(generalFont);
-		userName.setForeground(Color.LIGHT_GRAY);
-		userName.addActionListener(e -> {
-			if (userName.getText() != "Server Adresse") {
-				userName.setFont(generalFont);
-				userName.setForeground(Color.BLACK);
-			}
-		});
+		userName.setForeground(uis.textColor);
 		
 	//ColorInit
 		colorSelectLbl.setBounds(new Rectangle(10, 51, 320, 12));

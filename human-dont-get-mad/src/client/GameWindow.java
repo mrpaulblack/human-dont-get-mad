@@ -246,7 +246,7 @@ public class GameWindow extends JFrame {
 		dice.setText("PRESS FOR READY");
 		dice.addActionListener(e -> { 
 				if (ClientController.gameIsStarted) {
-						//ClientController.rollDice();
+					removeDiceAL();
 				}
 				
 				else {
