@@ -15,6 +15,7 @@ import org.json.JSONObject;
 import game.Log;
 import game.LogController;
 import game.MsgType;
+import game.PlayerColor;
 /**
 * <h1>ClientController</h1>
 * <p>The ClientController class is a abstraction that can send json messages
@@ -204,10 +205,10 @@ public class ClientController {
 			displayMessage(json, data);
 		}
 		else if (json.get("type").equals(MsgType.ERROR.toString())) {
-			LogController.log(Log.ERROR, "Error from server: " + json.get("type"));
+			LogController.log(Log.ERROR, "Error from server: " + data.get("error"));
 		}
 		else {
-			LogController.log(Log.DEBUG, "Could not read data: " + json);
+			LogController.log(Log.DEBUG, "Could not decode data: " + json);
 		}
 	}
 	
