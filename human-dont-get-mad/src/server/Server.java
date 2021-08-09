@@ -35,9 +35,13 @@ public class Server {
 				System.out.println("The server is listening on 0.0.0.0:2342 by default.\n");
 				System.out.println("The following arguments are supported:");
 				System.out.println("Print this help screen: -h or --help");
+				System.out.println("Set the log format to JSON: -j --json");
 				System.out.println("Set Log Level: -l or --log [error] [info] [debug] [trace]");
 				System.out.println("Set a server port: -p or --port [port]");
 				System.exit(0);
+			}
+			else if ((args[i].toLowerCase().equals("-j") || args[i].toLowerCase().equals("--json"))) {
+				LogController.setGlobalJson(true);
 			}
 			else if ((args[i].toLowerCase().equals("-l") || args[i].toLowerCase().equals("--log")) && i +1 < args.length) {
 				if (args[i +1].toLowerCase().equals("error")) {
@@ -52,9 +56,11 @@ public class Server {
 				else if (args[i +1].toLowerCase().equals("trace")) {
 					LogController.setGlobalLogLvl(Log.TRACE);
 				}
+				i++;
 			}
 			else if ((args[i].toLowerCase().equals("-p") || args[i].toLowerCase().equals("--port")) && i +1 < args.length) {
 				port = Integer.parseInt(args[i+1]);
+				i++;
 			}
 		}
 

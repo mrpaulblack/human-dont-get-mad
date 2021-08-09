@@ -2,6 +2,8 @@ package game;
 
 import java.time.LocalDateTime;
 
+import org.json.JSONObject;
+
 /**
 * <h1>LogController</h1>
 * <p>This method is the global logging facility and is abstract so it cannot be instantiated, since
@@ -18,6 +20,7 @@ import java.time.LocalDateTime;
 public abstract class LogController {
 	private static StackTraceElement element;
 	private static Log globalLogLvl = Log.INFO;
+	private static Boolean jsonOut = false;
 
 	/**
 	 *	<h1><i>setGlobalLogLvl</i></h1>
@@ -27,6 +30,15 @@ public abstract class LogController {
 	 */
 	public static void setGlobalLogLvl(Log logLvl) {
 		globalLogLvl = logLvl;
+	}
+
+	/**
+	 *	<h1><i>setGlobalJson</i></h1>
+	 * <p>Sets the global output to JSON or a more human friendly type.</p>
+	 * @param bool - Boolean if JSON output or not
+	 */
+	public static void setGlobalJson(Boolean bool) {
+		jsonOut = bool;
 	}
 
 	/**
@@ -50,22 +62,54 @@ public abstract class LogController {
 		//error lvl
 		if (globalLogLvl == Log.ERROR && logLvl == Log.ERROR) {
 			element = Thread.currentThread().getStackTrace()[2];
-			System.out.println(LocalDateTime.now() + " [" + logLvl + "] (" + element.getClassName() + ") " + logLine);
+			if (jsonOut) {
+				JSONObject json = new JSONObject();
+				json.put("time", LocalDateTime.now());
+				json.put("level", logLvl);
+				json.put("trace", element.getClassName());
+				json.put("message", logLine);
+				System.out.println(json.toString());
+			}
+			else { System.out.println(LocalDateTime.now() + " [" + logLvl + "] (" + element.getClassName() + ") " + logLine); }
 		}
 		//info lvl
 		else if (globalLogLvl == Log.INFO && (logLvl == Log.ERROR || logLvl == Log.INFO)) {
 			element = Thread.currentThread().getStackTrace()[2];
-			System.out.println(LocalDateTime.now() + " [" + logLvl + "] (" + element.getClassName() + "." + element.getMethodName() + ") " + logLine);
+			if (jsonOut) {
+				JSONObject json = new JSONObject();
+				json.put("time", LocalDateTime.now());
+				json.put("level", logLvl);
+				json.put("trace", element.getClassName() + "." + element.getMethodName());
+				json.put("message", logLine);
+				System.out.println(json.toString());
+			}
+			else { System.out.println(LocalDateTime.now() + " [" + logLvl + "] (" + element.getClassName() + "." + element.getMethodName() + ") " + logLine); }
 		}
 		//debug lvl
 		else if (globalLogLvl == Log.DEBUG && (logLvl == Log.ERROR || logLvl == Log.INFO || logLvl == Log.DEBUG)) {
 			element = Thread.currentThread().getStackTrace()[2];
-			System.out.println(LocalDateTime.now() + " [" + logLvl + "] (" + element.getClassName() + "." + element.getMethodName() + "$" + element.getLineNumber() + ") " + logLine);
+			if (jsonOut) {
+				JSONObject json = new JSONObject();
+				json.put("time", LocalDateTime.now());
+				json.put("level", logLvl);
+				json.put("trace", element.getClassName() + "." + element.getMethodName() + "$" + element.getLineNumber());
+				json.put("message", logLine);
+				System.out.println(json.toString());
+			}
+			else { System.out.println(LocalDateTime.now() + " [" + logLvl + "] (" + element.getClassName() + "." + element.getMethodName() + "$" + element.getLineNumber() + ") " + logLine); }
 		}
 		//trace lvl
 		else if (globalLogLvl == Log.TRACE && (logLvl == Log.ERROR || logLvl == Log.INFO || logLvl == Log.DEBUG || logLvl == Log.TRACE)) {
 			element = Thread.currentThread().getStackTrace()[2];
-			System.out.println(LocalDateTime.now() + " [" + logLvl + "] (" + element.getClassName() + "." + element.getMethodName() + "$" + element.getLineNumber() + ") " + logLine);
+			if (jsonOut) {
+				JSONObject json = new JSONObject();
+				json.put("time", LocalDateTime.now());
+				json.put("level", logLvl);
+				json.put("trace", element.getClassName() + "." + element.getMethodName() + "$" + element.getLineNumber());
+				json.put("message", logLine);
+				System.out.println(json.toString());
+			}
+			else { System.out.println(LocalDateTime.now() + " [" + logLvl + "] (" + element.getClassName() + "." + element.getMethodName() + "$" + element.getLineNumber() + ") " + logLine); }
 		}
 	}
 }
