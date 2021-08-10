@@ -33,7 +33,7 @@ public abstract class LogController {
 	}
 
 	/**
-	 *	<h1><i>setGlobalJson</i></h1>
+	 * <h1><i>setGlobalJson</i></h1>
 	 * <p>Sets the global output to JSON or a more human friendly type.</p>
 	 * @param bool - Boolean if JSON output or not
 	 */

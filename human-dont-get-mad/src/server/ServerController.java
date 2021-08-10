@@ -106,11 +106,15 @@ public class ServerController {
 	 * defined client.</p>
 	 * @param client - ClientThread with the socket
 	 * @param error - MsgError is the error type that is send to the client
+	 * @param message - String with null or a custom message send with the error
 	 */
-	private void sendError(ClientThread client, MsgError error) {
+	private void sendError(ClientThread client, MsgError error, String message) {
 		JSONObject json = new JSONObject();
 		JSONObject data = new JSONObject();
 		json.put("type", MsgType.ERROR.toString());
+		if (message != null) {
+			json.put("message", message);
+		}
 		data.put("error", error.toString());
 		json.put("data", data);
 		client.out(json.toString());
@@ -199,22 +203,28 @@ public class ServerController {
 
 		// register
 		if (json.getString("type").equals(MsgType.REGISTER.toString()) && client.getState() == MsgType.WELCOME && game.getState() == GameState.WAITINGFORPLAYERS) {
-			PlayerColor tempColor;
-			if (data.has("requestedColor")) {
-				tempColor = game.register(decodeColor(data.getString("requestedColor")), data.getString("playerName"), data.getString("clientName"), data.getFloat("clientVersion"));
+			if (data.getString("playerName").length() <= 40 && data.getString("clientName").length() <= 40) {
+				PlayerColor tempColor;
+				if (data.has("requestedColor")) {
+					tempColor = game.register(decodeColor(data.getString("requestedColor")), data.getString("playerName"), data.getString("clientName"), data.getFloat("clientVersion"));
+				}
+				else {
+					tempColor = game.register(null, data.getString("playerName"), data.getString("clientName"), data.getFloat("clientVersion"));
+				}
+				if (tempColor != null) {
+					clients.put(client, tempColor);
+					client.setState(MsgType.REGISTER);
+					sendassignColor(client, tempColor);
+					broadcastUpdate();
+				}
+				else {
+					sendError(client, MsgError.SERVERFULL, null);
+					throw new IllegalArgumentException("server full or game already running");
+				}
 			}
 			else {
-				tempColor = game.register(null, data.getString("playerName"), data.getString("clientName"), data.getFloat("clientVersion"));
-			}
-			if (tempColor != null) {
-				clients.put(client, tempColor);
-				client.setState(MsgType.REGISTER);
-				sendassignColor(client, tempColor);
-				broadcastUpdate();
-			}
-			else {
-				sendError(client, MsgError.SERVERFULL);
-				throw new IllegalArgumentException("server full or game already running");
+				sendError(client, MsgError.UNSUPPORTEDMESSAGETYPE, "Your name or client name exceeded the character limit of 40.");
+				throw new IllegalArgumentException("name or client name to long");
 			}
 		}
 
@@ -231,7 +241,7 @@ public class ServerController {
 		else if (json.getString("type").equals(MsgType.MOVE.toString()) && client.getState() == MsgType.READY && game.getState() == GameState.RUNNING) {
 			if (clients.get(client) == game.currentPlayer()) {
 				if (!game.turn(data.getInt("selectedOption")).has("ok")) {
-					sendError(client, MsgError.ILLEGALMOVE);
+					sendError(client, MsgError.ILLEGALMOVE, null);
 					doRound();
 				}
 				else {
@@ -239,7 +249,7 @@ public class ServerController {
 				}
 			}
 			else {
-				sendError(client, MsgError.NOTYOURTURN);
+				sendError(client, MsgError.NOTYOURTURN, null);
 			}
 		}
 
@@ -261,7 +271,7 @@ public class ServerController {
 		
 		// unsupported
 		else {
-			sendError(client, MsgError.UNSUPPORTEDMESSAGETYPE);
+			sendError(client, MsgError.UNSUPPORTEDMESSAGETYPE, null);
 			throw new IllegalArgumentException("Message Type not supported or out of order");
 		}
 	}

@@ -109,6 +109,6 @@ public class Player {
 	@Override
 	public String toString() {
 		String tempString = isBot ? "Bot": "Player";
-		return tempString + "[Color=" + color + ",Name=" + name + ",Client=" + clientName + clientVersion + "]";
+		return tempString + "[color=" + color + ",name=" + name + ",client=" + clientName + "-v" + clientVersion + "]";
 	}
 }
