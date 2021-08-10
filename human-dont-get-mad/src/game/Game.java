@@ -26,7 +26,7 @@ public class Game implements GameController {
 	private PlayerColor winner = null;
 
 	public PlayerColor register(PlayerColor requestedColor, String name, String clientName, Float clientVersion) {
-		if (players.size() < 4) {
+		if (players.size() < 4 && state == GameState.WAITINGFORPLAYERS) {
 			PlayerColor assignedColor = null;
 			assignedColor = PlayerColor.getAvail(requestedColor);
 			players.put(assignedColor, new Player(assignedColor, name, clientName, clientVersion, false));

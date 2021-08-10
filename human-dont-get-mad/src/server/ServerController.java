@@ -202,7 +202,7 @@ public class ServerController {
 		JSONObject data = new JSONObject(json.get("data").toString());
 
 		// register
-		if (json.getString("type").equals(MsgType.REGISTER.toString()) && client.getState() == MsgType.WELCOME && game.getState() == GameState.WAITINGFORPLAYERS) {
+		if (json.getString("type").equals(MsgType.REGISTER.toString()) && client.getState() == MsgType.WELCOME) {
 			if (data.getString("playerName").length() <= 40 && data.getString("clientName").length() <= 40) {
 				PlayerColor tempColor;
 				if (data.has("requestedColor")) {
