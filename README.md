@@ -7,7 +7,7 @@ https://gitlab.imn.htwk-leipzig.de/aop-pr-fung/maedn-protocol.
 
 
 
-## Deveolpment
+## Defelopmend
 
 * Clone this repo: `git clone https://github.com/MrPaulBlack/human-dont-get-mad`
 
