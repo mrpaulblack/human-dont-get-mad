@@ -1,3 +1,5 @@
+### Archived due to beeing an old non maintained project.
+
 # Human Dont Get Mad
 
 A ludo clone written in java 1.8 with only standard librarys and org.json.
